@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => Yii::t('yii', 'Metrag'),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -36,40 +36,40 @@ AppAsset::register($this);
     ]);
 
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => Yii::t('yii', 'Login'), 'url' => ['/site/login']];
     } else {
         $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => Yii::t('yii', 'Home'), 'url' => ['/site/index']],
         [
             'label' => 'Квартиры',
             'items' => [
-                ['label' => 'Поиск квартир', 'url' => ['/apartment/search']],
-                ['label' => 'Добавить квартиру', 'url' => ['/apartment/update']],
+                ['label' => Yii::t('yii', 'Apartment Search'), 'url' => ['/apartment/search']],
+                ['label' => Yii::t('yii', 'Create Apartment'), 'url' => ['/apartment/create']],
             ]
         ],
         
         [
-            'label' => 'Edit',
+            'label' => Yii::t('yii', 'Edit'),
             'items' => [
-                ['label' => 'Condit', 'url' => ['/condit']],
-                ['label' => 'Cource', 'url' => ['/cource']],
-                ['label' => 'Layout', 'url' => ['/layout']],
-                ['label' => 'Locality', 'url' => ['/locality']],
-                ['label' => 'Mediator', 'url' => ['/mediator']],
-                ['label' => 'Metro', 'url' => ['/metro']],
-                ['label' => 'Region', 'url' => ['/region']],
-                ['label' => 'Region Kharkiv', 'url' => ['/region-kharkiv']],
-                ['label' => 'Region Kharkiv Admin', 'url' => ['/region-kharkiv-admin']],
-                ['label' => 'Source Info', 'url' => ['/source-info']],
-                ['label' => 'Street', 'url' => ['/street']],
-                ['label' => 'Type Object', 'url' => ['/type-object']],
-                ['label' => 'Wall Material', 'url' => ['/wall-material']],
-                ['label' => 'Wc', 'url' => ['/wc']],
+                ['label' => Yii::t('yii', 'Condit'), 'url' => ['/condit']],
+                ['label' => Yii::t('yii', 'Cource'), 'url' => ['/course']],
+                ['label' => Yii::t('yii', 'Layout'), 'url' => ['/layout']],
+                ['label' => Yii::t('yii', 'Locality'), 'url' => ['/locality']],
+                ['label' => Yii::t('yii', 'Mediator'), 'url' => ['/mediator']],
+                ['label' => Yii::t('yii', 'Metro'), 'url' => ['/metro']],
+                ['label' => Yii::t('yii', 'Region'), 'url' => ['/region']],
+                ['label' => Yii::t('yii', 'Region Kharkiv'), 'url' => ['/region-kharkiv']],
+                ['label' => Yii::t('yii', 'Region Kharkiv Admin'), 'url' => ['/region-kharkiv-admin']],
+                ['label' => Yii::t('yii', 'Source Info'), 'url' => ['/source-info']],
+                ['label' => Yii::t('yii', 'Street'), 'url' => ['/street']],
+                ['label' => Yii::t('yii', 'Type Object'), 'url' => ['/type-object']],
+                ['label' => Yii::t('yii', 'Wall Material'), 'url' => ['/wall-material']],
+                ['label' => Yii::t('yii', 'Wc'), 'url' => ['/wc']],
                 
             ]
         ],
         [
-            'label' => 'Admin',
+            'label' => Yii::t('yii', 'Administration'),
             'items' => [
                  ['label' => Yii::t('yii', 'Create user'), 'url' => ['/admin/user/create-user']],
                  '<li class="divider"></li>',
@@ -86,7 +86,7 @@ AppAsset::register($this);
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                \Yii::t('yii', 'Logout') .'(' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -112,7 +112,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= Yii::t('yii', 'Metrag')?> <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

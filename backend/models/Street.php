@@ -37,7 +37,7 @@ class Street extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'street_id' => Yii::t('app', 'Street ID'),
+            'street_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

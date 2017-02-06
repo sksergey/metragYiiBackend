@@ -84,14 +84,14 @@ class Apartment extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    /*public function attributeLabels()
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'type_object_id' => Yii::t('app', 'Type Object'),
-            'count_room' => Yii::t('app', 'Count Room'),
-            'layout_id' => Yii::t('app', 'Layout'),
-            'floor' => Yii::t('app', 'Floor'),
+            'type_object_id' => \Yii::t('app', 'Type Object'),
+            'count_room' => \Yii::t('app', 'Count Room'),
+            'layout_id' => \Yii::t('app', 'Layout'),
+            'floor' => \Yii::t('app', 'Floor'),
             'floor_all' => Yii::t('app', 'Floor All'),
             'city_or_region' => Yii::t('app', 'City Or Region'),
             'region_kharkiv_admin_id' => Yii::t('app', 'Region Kharkiv Admin'),
@@ -133,7 +133,59 @@ class Apartment extends \yii\db\ActiveRecord
             'update_photo_user_id' => Yii::t('app', 'Update Photo User'),
             'enabled' => Yii::t('app', 'Enabled'),
         ];
+    }*/
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('yii', 'ID'),
+            'type_object_id' => \Yii::t('yii', 'Type Object'),
+            'count_room' => \Yii::t('yii', 'Count Room'),
+            'layout_id' => \Yii::t('yii', 'Layout'),
+            'floor' => \Yii::t('yii', 'Floor'),
+            'floor_all' => Yii::t('yii', 'Floor All'),
+            'city_or_region' => Yii::t('yii', 'City Or Region'),
+            'region_kharkiv_admin_id' => Yii::t('yii', 'Region Kharkiv Admin'),
+            'locality_id' => Yii::t('yii', 'Locality'),
+            'course_id' => Yii::t('yii', 'Course'),
+            'region_id' => Yii::t('yii', 'Region'),
+            'region_kharkiv_id' => Yii::t('yii', 'Region Kharkiv'),
+            'street_id' => Yii::t('yii', 'Street'),
+            'number_building' => Yii::t('yii', 'Number Building'),
+            'corps' => Yii::t('yii', 'Corps'),
+            'number_apartment' => Yii::t('yii', 'Number Apartment'),
+            'exchange' => Yii::t('yii', 'Exchange'),
+            'exchange_formula' => Yii::t('yii', 'Exchange Formula'),
+            'landmark' => Yii::t('yii', 'Landmark'),
+            'condit_id' => Yii::t('yii', 'Condit'),
+            'source_info_id' => Yii::t('yii', 'Source Info'),
+            'price' => Yii::t('yii', 'Price'),
+            'mediator_id' => Yii::t('yii', 'Mediator'),
+            'metro_id' => Yii::t('yii', 'Metro'),
+            'phone' => Yii::t('yii', 'Phone'),
+            'total_area' => Yii::t('yii', 'Total Area'),
+            'floor_area' => Yii::t('yii', 'Floor Area'),
+            'kitchen_area' => Yii::t('yii', 'Kitchen Area'),
+            'wc_id' => Yii::t('yii', 'Wc'),
+            'wall_material_id' => Yii::t('yii', 'Wall Material'),
+            'count_balcony' => Yii::t('yii', 'Count Balcony'),
+            'count_balcony_glazed' => Yii::t('yii', 'Count Balcony Glazed'),
+            'exclusive_user_id' => Yii::t('yii', 'Exclusive User'),
+            'phone_line' => Yii::t('yii', 'Phone Line'),
+            'bath' => Yii::t('yii', 'Bath'),
+            'comment' => Yii::t('yii', 'Comment'),
+            'note' => Yii::t('yii', 'Note'),
+            'notesite' => Yii::t('yii', 'Notesite'),
+            'date_added' => Yii::t('yii', 'Date Added'),
+            'date_modified' => Yii::t('yii', 'Date Modified'),
+            'date_modified_photo' => Yii::t('yii', 'Date Modified Photo'),
+            'author_id' => Yii::t('yii', 'Author'),
+            'update_author_id' => Yii::t('yii', 'Update Author'),
+            'update_photo_user_id' => Yii::t('yii', 'Update Photo User'),
+            'enabled' => Yii::t('yii', 'Enabled'),
+        ];
     }
+
 
     public function behaviors()
     {

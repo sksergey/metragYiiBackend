@@ -12,6 +12,8 @@ use app\models\Layout;
 use app\models\TypeObject;
 use app\models\Users;
 
+
+
 $this->title = Yii::t('app', 'Apartments');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -21,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Apartment'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('yii', 'Create Apartment'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,

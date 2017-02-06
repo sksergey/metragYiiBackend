@@ -39,7 +39,7 @@ class Mediator extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'mediator_id' => Yii::t('app', 'Mediator ID'),
+            'mediator_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
             'phone' => Yii::t('app', 'Phone'),
         ];

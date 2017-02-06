@@ -37,7 +37,7 @@ class SourceInfo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'source_info_id' => Yii::t('app', 'Source Info ID'),
+            'source_info_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

@@ -37,8 +37,8 @@ class Condit extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'condit_id' => Yii::t('app', 'Condit ID'),
-            'name' => Yii::t('app', 'Name'),
+            'condit_id' => Yii::t('yii', 'ID'),
+            'name' => Yii::t('yii', 'Name'),
         ];
     }
 }

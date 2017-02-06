@@ -5,20 +5,20 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "type_object".
+ * This is the model class for table "type_realty".
  *
- * @property integer $type_object_id
  * @property integer $type_realty_id
  * @property string $name
+ * @property string $name_table
  */
-class TypeObject extends \yii\db\ActiveRecord
+class TypeRealty extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'type_object';
+        return 'type_realty';
     }
 
     /**
@@ -27,9 +27,8 @@ class TypeObject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_realty_id', 'name'], 'required'],
-            [['type_realty_id'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'name_table'], 'required'],
+            [['name', 'name_table'], 'string', 'max' => 255],
         ];
     }
 
@@ -39,9 +38,9 @@ class TypeObject extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'type_object_id' => Yii::t('app', 'ID'),
             'type_realty_id' => Yii::t('app', 'Type Realty ID'),
             'name' => Yii::t('app', 'Name'),
+            'name_table' => Yii::t('app', 'Name Table'),
         ];
     }
 }

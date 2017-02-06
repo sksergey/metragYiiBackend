@@ -37,7 +37,7 @@ class Locality extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'locality_id' => Yii::t('app', 'Locality ID'),
+            'locality_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

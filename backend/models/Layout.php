@@ -37,7 +37,7 @@ class Layout extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'layout_id' => Yii::t('app', 'Layout ID'),
+            'layout_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

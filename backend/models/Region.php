@@ -37,7 +37,7 @@ class Region extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'region_id' => Yii::t('app', 'Region ID'),
+            'region_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

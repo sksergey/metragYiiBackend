@@ -37,7 +37,7 @@ class RegionKharkiv extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'region_kharkiv_id' => Yii::t('app', 'Region Kharkiv ID'),
+            'region_kharkiv_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

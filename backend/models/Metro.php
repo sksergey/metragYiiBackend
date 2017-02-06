@@ -37,7 +37,7 @@ class Metro extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'metro_id' => Yii::t('app', 'Metro ID'),
+            'metro_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }
