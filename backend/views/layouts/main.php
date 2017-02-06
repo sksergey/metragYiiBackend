@@ -49,6 +49,26 @@ AppAsset::register($this);
         ],
         
         [
+            'label' => 'Edit',
+            'items' => [
+                ['label' => 'Condit', 'url' => ['/condit']],
+                ['label' => 'Cource', 'url' => ['/cource']],
+                ['label' => 'Layout', 'url' => ['/layout']],
+                ['label' => 'Locality', 'url' => ['/locality']],
+                ['label' => 'Mediator', 'url' => ['/mediator']],
+                ['label' => 'Metro', 'url' => ['/metro']],
+                ['label' => 'Region', 'url' => ['/region']],
+                ['label' => 'Region Kharkiv', 'url' => ['/region-kharkiv']],
+                ['label' => 'Region Kharkiv Admin', 'url' => ['/region-kharkiv-admin']],
+                ['label' => 'Source Info', 'url' => ['/source-info']],
+                ['label' => 'Street', 'url' => ['/street']],
+                ['label' => 'Type Object', 'url' => ['/type-object']],
+                ['label' => 'Wall Material', 'url' => ['/wall-material']],
+                ['label' => 'Wc', 'url' => ['/wc']],
+                
+            ]
+        ],
+        [
             'label' => 'Admin',
             'items' => [
                  ['label' => Yii::t('yii', 'Create user'), 'url' => ['/admin/user/create-user']],
