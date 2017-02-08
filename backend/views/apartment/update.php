@@ -142,7 +142,7 @@ use yii\helpers\Url;
 				if($images){
 					foreach ($images as $image){
 						//$img[] = Yii::getAlias('@webroot').'/'.$image->getPathToOrigin();
-						$img[] = 'http://metrag.dev.itgo-solutions.com/frontend/web/'.$image->getPathToOrigin();
+						$img[] = 'http://metrag.dev.itgo-solutions.com/backend/web/'.$image->getPathToOrigin();
 					 }
 				}
 	?>
@@ -197,7 +197,7 @@ use yii\helpers\Url;
 </script>
 
 <script>
-$("#input-702").fileinput({
+/*$("#input-702").fileinput({
     uploadUrl: "http://localhost/file-upload-single/1", // server upload action
     uploadAsync: true,
     minFileCount: 1,
@@ -217,5 +217,5 @@ $("#input-702").fileinput({
         img_key: "1000",
         img_keywords: "happy, places",
     }
-});
+});*/
 </script>
