@@ -44,4 +44,9 @@ class TypeObject extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
         ];
     }
+
+    public function getTypeObject()
+    {
+        return TypeObject::findOne($this->type_object_id);
+    }
 }

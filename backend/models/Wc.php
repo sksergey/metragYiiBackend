@@ -37,7 +37,7 @@ class Wc extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'wc_id' => Yii::t('app', 'Wc ID'),
+            'wc_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }

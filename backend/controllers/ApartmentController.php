@@ -301,4 +301,42 @@ class ApartmentController extends Controller
         $apart = Apartment::findOne($data['id']);
         return $this->render('view', ['data' => $data, 'model' => $apart]);
     }
+
+    public function actionLinkConvertor()
+    {
+        $count = Apartment::find()->count();
+
+        return $this->render('linkconvertor', ['count' => $count]);
+    }
+
+    public function actionLinkimages($start = 0)
+    {
+        $posts = Yii::$app->db->createCommand("SELECT * FROM apartment ORDER BY id desc LIMIT $start, 50")
+                ->queryAll();
+            foreach ($posts as $post)
+            {
+                $photos = Yii::$app->db->createCommand("SELECT * FROM photo WHERE  `type_realty_id`= 2 AND `object_id`= {$post['id']}")
+                    ->queryAll();
+                if(!empty($photos))  
+                {
+                    foreach ($photos as $photo)
+                            {
+                                $model = Apartment::findOne($post['id']);
+                                $ph_path = explode('/upload/images', $photo['path']);
+                                $path = Yii::getAlias('@webroot')."/../../upload".$ph_path['1'];
+                                //$path = Yii::getAlias('@webroot')."/../..".$photo['path'];
+                                if(file_exists($path)){
+                                $model->attachImage($path);
+                                //echo "ok ".$post['id']."--".$path."<br>";
+                                }
+                                /*else
+                                    echo "no photo in folder by id". $post['id'] . "!!".$path."<br>";*/
+                            }}
+                /*else
+                    echo "no photo by id". $post['id'] . "!!<br>";*/
+
+            }
+            $start += 50;
+        echo $start;
+    }
 }

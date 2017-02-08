@@ -37,7 +37,7 @@ class WallMaterial extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'wall_material_id' => Yii::t('app', 'Wall Material ID'),
+            'wall_material_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }
