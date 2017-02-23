@@ -73,15 +73,21 @@ use yii\helpers\Url;
     		Layout::find()->select(['name', 'layout_id'])->orderby('name')->indexBy('layout_id')->column(),['prompt'=>'Выберите тип...'])->label('Тип планировки'); ?>
     	<?= $form->field($model,'floor')->textInput()->label('Этаж'); ?>
 		<?= $form->field($model,'floor_all')->textInput()->label('Этажность',['class'=>'required']); ?>
-		<?= $form->field($model,'city_or_region',['inline' => true])->radiolist(['1' => 'Харьков', '0' => 'Пригород'])->label(false); ?>
+
+		<?= $form->field($model,'city_or_region',['inline' => true, 'template' => '{input}'])->radiolist(['0' => 'Харьков', '1' => 'Пригород'])->label(false); ?>
+
 		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков',['class'=>'required']); ?>
+		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
+    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков',['class'=>'required']); ?>
+		<?= $form->field($model, 'metro_id')->dropdownList(
+    		Metro::find()->select(['name', 'metro_id'])->orderby('name')->indexBy('metro_id')->column(),['prompt'=>'Выберите станцию метро...'])->label('Метро'); ?>
+		
 		<?= $form->field($model, 'locality_id')->dropdownList(
 			Locality::find()->select(['name', 'locality_id'])->orderby('name')->indexBy('locality_id')->column(),['prompt'=>'Выберите населенный пункт...'])->label('Населенный пункт',['class'=>'required']); ?>
 		<?= $form->field($model, 'course_id')->dropdownList(
     		Course::find()->select(['name', 'course_id'])->orderby('name')->indexBy('course_id')->column(),['prompt'=>'Выберите направление...'])->label('Направление',['class'=>'required']); ?>
-		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
-    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков',['class'=>'required']); ?>
 		<?= $form->field($model, 'region_id')->dropdownList(Region::find()->select(['name', 'region_id'])->orderby('name')->indexBy('region_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Область',['class'=>'required']); ?>
+    	
 		<?= $form->field($model, 'street_id')->dropdownList(
     		Street::find()->select(['name', 'street_id'])->orderby('name')->indexBy('street_id')->column(),['prompt'=>'Выберите улицу...'])->label('Улица',['class'=>'required']); ?>
 		<?= $form->field($model,'number_building')->textInput()->label('Номер дома',['class'=>'required']); ?>
@@ -94,8 +100,6 @@ use yii\helpers\Url;
     		Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
     	<?= $form->field($model, 'mediator_id')->dropdownList(
     		Mediator::find()->select(['name', 'mediator_id'])->orderby('name')->indexBy('mediator_id')->column(),['prompt'=>'Выберите посредника...'])->label('Посредник'); ?>
-		<?= $form->field($model, 'metro_id')->dropdownList(
-    		Metro::find()->select(['name', 'metro_id'])->orderby('name')->indexBy('metro_id')->column(),['prompt'=>'Выберите станцию метро...'])->label('Метро'); ?>
 		<?= $form->field($model,'landmark')->textInput()->label('Ориентир'); ?>
 		<?= $form->field($model,'comment')->textInput()->label('Причина удаления/восстановления'); ?>
 		<?= $form->field($model,'exchange')->checkbox()->label('Обмен'); ?>
@@ -119,17 +123,37 @@ use yii\helpers\Url;
 		<?= $form->field($model,'bath')->checkbox()->label('Ванна'); ?>
 		<?= $form->field($model,'count_balcony')->textInput()->label('Количество балконов',['class'=>'required']); ?>
 		<?= $form->field($model,'count_balcony_glazed')->textInput()->label('Застекленных балконов',['class'=>'required']); ?>
-		<?= $form->field($model, 'author_id')->textInput(['readonly' => 'true'])->label('Автор'); ?>
-    	<?= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true'])->label('Изменил дпи'); ?>
-		<?= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true'])->label('Кто обновил фото'); ?>
+		<?= $form->field($model, 'author_id')->dropdownList(
+    		Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
+		<?//= $form->field($model, 'author_id')->textInput(['readonly' => 'true'])->label('Автор'); ?>
+		<?= $form->field($model, 'update_author_id')->dropdownList(
+    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
+    	<?//= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true'])->label('Изменил дпи'); ?>
+    	<?= $form->field($model, 'update_photo_user_id')->dropdownList(
+    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
+		<?//= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true'])->label('Кто обновил фото'); ?>
 	</div>
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model, 'note')->textarea(['rows'=>6])->label('Заметки'); ?>
 		<?= $form->field($model, 'notesite')->textarea(['rows'=>6])->label('Информация для показа на сайте'); ?>
 		<?= $form->field($model, 'phone')->listBox(
 			Apartment::getPhonesArr($model->phone))->label('Телефоны',['class'=>'required']); ?>
-		<?= Html::button('Добавить', ['class' => 'btn btn-primary']) ?>
-		<?= Html::button('Удалить', ['class' => 'btn btn-primary']) ?>
+		<?//= Html::button('Добавить', ['class' => 'btn btn-primary']) ?>
+		<?//= Html::button('Удалить', ['class' => 'btn btn-primary']) ?>
+		
+		<?//= Html::a(Yii::t('app', 'Add'), ['test'], ['class' => 'btn btn-primary']) ?>
+        <?//= Html::a(Yii::t('app', 'Delete'), ['test', 'id' => $model->course_id], [
+          //  'class' => 'btn btn-danger',
+          //  'data' => [
+          //      'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+          //      'method' => 'post',
+          //  ],
+        //]) ?>
+
+
+
+
+
 		<?= $form->field($model,'enabled')->checkbox()->label('Активное') ?>
 
 	</div> 
@@ -138,47 +162,46 @@ use yii\helpers\Url;
 
 	<? $images = $model->getImages();
 	        	$img = [];
-		
-				if($images){
+	        	$keys = [];
+	        	
 					foreach ($images as $image){
+						if($image){
 						//$img[] = Yii::getAlias('@webroot').'/'.$image->getPathToOrigin();
-						$img[] = 'http://metrag.dev.itgo-solutions.com/backend/web/'.$image->getPathToOrigin();
-					 }
-				}
+							$img[] = 'http://metrag.dev.itgo-solutions.com/frontend/web/'.$image->getPathToOrigin();
+							$keys[] = ['key' => $image->id];
+						 }
+					}	
 	?>
+	
 	<?= $form->field($model, 'imageFiles[]')->widget(FileInput::classname(), [
     'options' => ['multiple' => true, 'accept' => 'image/*'],
     'pluginOptions' => [
     
+    'initialPreview' => $img,
+    'initialPreviewAsData'=>true,
+        
+    'initialPreviewConfig'=> $keys,
+   
+    'deleteUrl' => "file-delete",
+    'overwriteInitial' => false,
+    
     //'browseOnZoneClick' => true,
-    'initialPreviewShowDelete' => false,
-
-    'showCaption' => false,
+    'initialPreviewShowDelete' => true,
+    'initialPreviewShowUpload' => false,
+    //'showCaption' => true,
     'showRemove' => false,
     'showUpload' => false,
 
-    'previewFileType' => 'image',
+    //'previewFileType' => 'image',
     
-    'uploadUrl' => Url::to(['apartment/add']),
-    'deleteUrl' => "/apartment/image-delete",
-    //'uploadUrl' => '',
-    'overwriteInitial' => false,
-    'maxFileCount' => 10,
-    'initialPreview'=> $img ,
-    
-    'initialPreviewAsData'=>true,
-    ],
-    'pluginEvents' => [
-    'filepredelete' => 'function() { console.log("filepredelete!!!!"); }',
-    'filedeleted' => 'function() { console.log("filedeleted!!!!"); }',
-    'fileclear' => 'function() { console.log("fileclear!!!!"); }',
-    'filecleared' => 'function() { console.log("filecleared!!!!"); }',
-    'filedeleteerror' => 'function() { console.log("filedeleteerror!!!!"); }',
-    'filereset' => 'function() { console.log("filereset!!!!"); }',
-
-    ],
+    //'uploadUrl' => Url::to(['apartment/add']),
+    'uploadUrl' => 'app',
+        
+    //'maxFileCount' => 10,
+    //'initialPreview'=> $img ,
+     
+    ]
 		]); ?>
-		
 	
 	</div>
 
@@ -187,35 +210,31 @@ use yii\helpers\Url;
 <?php ActiveForm::end(); ?>
 
 
-<script>
-	$(document).ready(function(){
-    $("button").click(function(){
-        //$(this).hide();
-        console.log("click!");
-    });
-});
-</script>
-
-<script>
-/*$("#input-702").fileinput({
-    uploadUrl: "http://localhost/file-upload-single/1", // server upload action
-    uploadAsync: true,
-    minFileCount: 1,
-    maxFileCount: 5,
-    overwriteInitial: false,
-    initialPreview: [
-        "http://lorempixel.com/1920/1080/people/1",
-        "http://lorempixel.com/1920/1080/people/2"
-    ],
-    initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-    initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-    initialPreviewConfig: [
-        {caption: "People-1.jpg", size: 576237, width: "120px", url: "/site/file-delete", key: 1},
-        {caption: "People-2.jpg", size: 932882, width: "120px", url: "/site/file-delete", key: 2}, 
-    ],
-    uploadExtraData: {
-        img_key: "1000",
-        img_keywords: "happy, places",
+<?
+    $this->registerJs(
+    '$(document).ready(function () {
+    change_location();
+    }); 
+    function change_location(){ 
+        var selectVal = $(\'#apartment-city_or_region\').val();
+        if (selectVal == \'0\') { 
+            $(\'#apartment-region_kharkiv_admin_id\').show();
+            $(\'#apartment-region_kharkiv_id\').show();
+            $(\'#apartment-metro_id\').show();
+            $(\'#apartment-locality_id\').hide(); 
+            $(\'#apartment-course_id\').hide(); 
+            $(\'#apartment-region_id\').hide(); 
+        } 
+        else if (selectVal == \'1\'){
+          	$(\'#apartment-region_kharkiv_admin_id\').hide();
+            $(\'#apartment-region_kharkiv_id\').hide();
+            $(\'#apartment-metro_id\').hide();
+            $(\'#apartment-locality_id\').show(); 
+            $(\'#apartment-course_id\').show(); 
+            $(\'#apartment-region_id\').show(); 
+        } 
     }
-});*/
-</script>
+
+    $(\'#apartment-city_or_region\').change(change_location);'
+    );
+?>

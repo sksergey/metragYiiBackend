@@ -24,13 +24,23 @@ class ApartmentFind extends Apartment
     public $floor_areaTo;
     public $kitchen_areaFrom;
     public $kitchen_areaTo;
+	public $date_addedFrom;
+    public $date_addedTo;
 
     public $city_or_region = '1';
-    public $enabled = '1';
+    
     public $image;
     public $imageFiles;
     public $file;
     public $del_img;
+
+    public $middle_floor = '2';
+    public $no_mediators = '2';
+    public $exchange = '2';
+    public $enabled = '1';
+    public $note = '2';
+    public $phone;
+
     
 }
 

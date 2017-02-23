@@ -21,7 +21,7 @@ return [
             //'imagesUploadPath' => '/advanced/frontend/web/upload/store', //path to origin images
             'imagesCachePath' => 'upload/cache', //path to resized copies
             'graphicsLibrary' => 'Imagick', //but GD really its better to use 'Imagick' 
-            'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
+            //'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
         ],
         'admin' => [
             'class' => 'mdm\admin\Module',

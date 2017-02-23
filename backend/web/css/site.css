@@ -1,6 +1,8 @@
 html,
 body {
     height: 100%;
+    color: #333333;
+    background: url(../images/bg.png) top center no-repeat fixed;
 }
 
 .wrap {
@@ -117,4 +119,72 @@ a.desc:after {
 
 .nav > li > form > button.logout:focus {
     outline: none;
+}
+
+.scroolbox-container{
+    height: 250px;
+
+}
+
+.scrollbox {
+    border: 1px solid #CCCCCC;
+    background: #FFFFFF;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    line-height: 20px;
+    font-size: 14px;
+    width: 90%;
+    margin: 0px 0px 20px 0px;
+    height: 200px;
+}
+
+.scrollbox > div {
+    white-space: nowrap;
+}
+
+.fast-search-input{
+    width: 90%;
+}
+
+.main-content{
+    background-color: #eeeeee;
+    border: 1px solid #919191;
+}
+
+.main-content-header{
+    border: 1px solid #919191;
+    padding: 10px;
+    #margin-bottom: 10px;
+    margin: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 30px;
+    color: inherit;
+    background-color: #eeeeee;
+    height: 60px;
+}
+
+.label-padding{
+    padding-right: 5px;
+    padding-left: 5px;
+    float: left;
+}
+
+.find-input{
+    width: 75%;
+    padding: 0;
+}
+
+.radio-btn-gp-label{
+    font-size: 12px;
+}
+
+.padding-null{
+    padding: 0;
+
+}
+.wrap-find{
+    padding-right: 5px;
+    padding-left: 5px;
+    display: inline-block;
 }

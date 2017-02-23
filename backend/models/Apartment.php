@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\Image;
 
 /**
  * This is the model class for table "apartment".
@@ -225,6 +226,18 @@ class Apartment extends \yii\db\ActiveRecord
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static function deleteImage($id)
+    {
+        $image = Image::findOne($id);
+        $model = Apartment::findOne($image->itemId);
+        $images = $model->getImages();
+        foreach ($images as $img)
+        {
+            if ($img->id == $id)
+                $model->removeImage($img);
         }
     }
 }

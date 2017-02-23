@@ -191,8 +191,14 @@ class ApartmentController extends Controller
     {
         $get = Yii::$app->request->get();
 
-        $query = Apartment::find();
+        //$query = Apartment::find();
+        //echo $get['ApartmentFind']['date_addedTo'];
+        //echo Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss');
+        //die;
 
+        $query = (new \yii\db\Query())->from('apartment');
+
+        
         if(!empty($get['ApartmentFind']['idFrom']))
         $query->andFilterWhere(['>=', 'id', $get['ApartmentFind']['idFrom']]);
         if(!empty($get['ApartmentFind']['idTo']))
@@ -225,6 +231,15 @@ class ApartmentController extends Controller
         $query->andFilterWhere(['>=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaFrom']]);
         if(!empty($get['ApartmentFind']['kitchen_areaTo']))
         $query->andFilterWhere(['<=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaTo']]);
+        //if(!empty($get['ApartmentFind']['date_addedFrom']))
+        //        $query->andFilterWhere(['>=', 'date_added', $get['ApartmentFind']['kitchen_areaFrom']]);
+        //if(!empty($get['ApartmentFind']['date_addedTo']))
+        //        $query->andFilterWhere(['<=', 'date_added', $get['ApartmentFind']['date_addedTo']]);
+        
+        if(!empty($get['ApartmentFind']['date_addedFrom']))
+                $query->andFilterWhere(['>=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss')]);
+        if(!empty($get['ApartmentFind']['date_addedTo']))
+                $query->andFilterWhere(['<=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedTo'], 'yyyy-MM-dd HH:mm:ss')]);
 
         if(!empty($get['TypeObject']['type_object_id']))
         $query->andwhere(['type_object_id' => $get['TypeObject']['type_object_id']]);
@@ -255,6 +270,14 @@ class ApartmentController extends Controller
         if(!empty($get['Users']['exclusive_user_id']))
         $query->andwhere(['exclusive_user_id' => $get['Users']['exclusive_user_id']]);
         
+        if($get['ApartmentFind']['middle_floor'] == '0'){
+            $query->andWhere(['floor' => '1']);    
+            //$query->orWhere(['like', 'floor', apartment.floor_all]);    
+        }
+        
+        
+        
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -338,5 +361,22 @@ class ApartmentController extends Controller
             }
             $start += 50;
         echo $start;
+    }
+
+    public function actionFileDelete()
+    {
+        echo $id = Yii::$app->request->post('key');
+        echo Apartment::deleteImage($id);
+        /*
+        var_dump($key) ;
+        $post = Yii::$app->request->post();
+        var_dump($post);
+        $get = Yii::$app->request->get();
+        var_dump($get);*/
+    }
+
+    public function test()
+    {
+        echo "test";
     }
 }

@@ -103,8 +103,9 @@ $this->params['breadcrumbs'][] = $this->title;
         $images = $model->getImages();
                 $img = [];
         
-                if($images){
+                
                     foreach ($images as $image){
+                        if($image){
                         $img[] = '<img src="'. $image->getUrl('600x'). '" alt="">';
                      }
                 }

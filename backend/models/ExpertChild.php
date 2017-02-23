@@ -50,4 +50,18 @@ class ExpertChild extends \yii\db\ActiveRecord
         $this->child_id = $child_id;
         $this->save();
     }
+
+    public static function getExpert($child_id)
+    {
+        $expert = ExpertChild::find()->where(['child_id' => $child_id])->one();
+        return $expert;
+    }
+
+    public function getExpertId($child_id)
+    {
+        $expert = ExpertChild::find()->where(['child_id' => $child_id])->one();
+        return $expert->id;
+    }
+
+
 }

@@ -125,8 +125,11 @@ class ExpertChildController extends Controller
     public static function createChild($expert_id, $child_id)
     {
         $model = new ExpertChild();
-        $model->expert_id = $expert_id;
-        $model->child_id = $child_id;
-        $model->save();
+        $model->create($expert_id, $child_id);
+        //$model->expert_id = $expert_id;
+        //$model->child_id = $child_id;
+        //$model->save();
     }
+
+
 }
