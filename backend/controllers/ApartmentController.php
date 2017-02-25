@@ -191,12 +191,12 @@ class ApartmentController extends Controller
     {
         $get = Yii::$app->request->get();
 
-        //$query = Apartment::find();
+        $query = Apartment::find();
         //echo $get['ApartmentFind']['date_addedTo'];
         //echo Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss');
         //die;
 
-        $query = (new \yii\db\Query())->from('apartment');
+        //$query = (new \yii\db\Query())->from('apartment');
 
         
         if(!empty($get['ApartmentFind']['idFrom']))

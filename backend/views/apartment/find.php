@@ -3,7 +3,7 @@ use yii\helpers\Html;
 //use yii\widgets\ActiveForm;
 use yii\bootstrap\ActiveForm;
 //use yii\jui\DatePicker;
-use kartik\widgets\DatePicker;
+use kartik\date\DatePicker;
 
 use app\models\Apartment;
 use app\models\ApartmentFind;
@@ -43,74 +43,91 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="container-fluid">
-    <?$template = "<div class=\"wrap-find\"><div class=\"col-lg-3 padding-null\">{label}</div>\n<div class=\"col-lg-9 find-input\">{input}</div>\n</div>" ?>
+    <?$template = "<div class=\"wrap-find\"><div class=\"col-lg-2 padding-null\">{label}</div>\n<div class=\"col-lg-10 find-input\">{input}</div>\n</div>" ?>
         
     <div class="col-xs-12 col-sm-12 col-md-12 ">
             <div class="col-xs-6 col-sm-2 col-md-1">
-            <label for="">ID</label>    
+            <label for="" class="from-to-label">ID</label>    
             <?= $form->field($model['ApartmentFind'],'idFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
                 <?= $form->field($model['ApartmentFind'],'idTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>                  
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Комнат</label>    
+            <label for="" class="from-to-label">Комнат</label>    
             <?= $form->field($model['ApartmentFind'],'count_roomFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'count_roomTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Цена</label>  
+            <label for="" class="from-to-label">Цена</label>  
             <?= $form->field($model['ApartmentFind'],'priceFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'priceTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Этаж</label>  
+            <label for="" class="from-to-label">Этаж</label>  
             <?= $form->field($model['ApartmentFind'],'floorFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'floorTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Этажность</label> 
+            <label for="" class="from-to-label">Этажность</label> 
             <?= $form->field($model['ApartmentFind'],'floor_allFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'floor_allTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Пл общ</label>    
+            <label for="" class="from-to-label">Пл общ</label>    
             <?= $form->field($model['ApartmentFind'],'total_areaFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'total_areaTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Пл жил</label>    
+            <label for="" class="from-to-label">Пл жил</label>    
             <?= $form->field($model['ApartmentFind'],'floor_areaFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'floor_areaTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Пл кухни</label>  
+            <label for="" class="from-to-label">Пл кухни</label>  
             <?= $form->field($model['ApartmentFind'],'kitchen_areaFrom', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','from')); ?>
             <?= $form->field($model['ApartmentFind'],'kitchen_areaTo', [
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
-            <div class="col-xs-6 col-sm-2 col-md-1 ">
-            <label for="">Дата доб</label>
-            <?= $form->field($model['ApartmentFind'], 'date_addedFrom', [
-                    'template' => $template, 'labelOptions' => ['class' => '']])->widget(DatePicker::className(),['dateFormat'=>'php:Y-m-d'])->label(\Yii::t('yii','from')); ?>    
-            <?= $form->field($model['ApartmentFind'], 'date_addedTo', [
-                    'template' => $template, 'labelOptions' => ['class' => '']])->widget(DatePicker::className(),['dateFormat'=>'php:Y-m-d'])->label(\Yii::t('yii','to')); ?>  
-            </div>
+            <? $template_date = "<div class=\"wrap-find\"><div class=\"col-lg-1 padding-null\">{label}</div>\n<div class=\"col-lg-11 find-input\">{input}</div>\n</div>"?>
+            <div class="col-xs-6 col-sm-3 col-md-2 ">
+           <label for="" class="from-to-label">Дата доб</label>
+           <?= $form->field($model['ApartmentFind'], 'date_addedFrom', [
+                   'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
+    'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
+    'type' => DatePicker::TYPE_COMPONENT_APPEND,
+    'pluginOptions' => [
+        'autoclose'=>true,
+        'format' => 'yyyy-mm-dd',
+        'todayHighlight' => true,
+    ]
+])->label(\Yii::t('yii','from')); ?>    
+           <?= $form->field($model['ApartmentFind'], 'date_addedTo', [
+                   'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
+    'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
+    'type' => DatePicker::TYPE_COMPONENT_APPEND,
+    'pluginOptions' => [
+        'autoclose'=>true,
+        'format' => 'yyyy-mm-dd',
+        'todayHighlight' => true,
+    ]
+])->label(\Yii::t('yii','to')); ?>  
+           </div>
 <?
-            echo DatePicker::widget([
+    /*        echo DatePicker::widget([
     'name' => 'dp_3',
     'type' => DatePicker::TYPE_COMPONENT_APPEND,
     'value' => '23-Feb-1982',
@@ -118,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'autoclose'=>true,
         'format' => 'dd-M-yyyy'
     ]
-]);
+]);*/
 ?>
         </div>
 
