@@ -7,11 +7,20 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\Pagination;
+
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+
+use common\models\CompanyInfo;
+use common\models\Addsite;
+use common\models\Apartment;
+use common\models\Review;
+use common\models\News;
+use common\models\Article;
 
 /**
  * Site controller
@@ -210,4 +219,97 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionApartment()
+    {
+        $query = Addsite::find()->where(['base' => 'apartment']);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+        $models = $query->offset($pages->offset)
+        ->limit($pages->limit)
+        ->all();
+
+        $apartments = [];
+        foreach ($models as $item) {
+                        $apartments[$item['idbase']] = Apartment::find()
+                                                    ->where(['id' => $item['idbase']])
+                                                    ->one();
+                        }
+
+        return $this->render('apartment', ['apartments' => $apartments, 'pages' => $pages]);
+    }
+
+    public function actionApartmentDetail($id)
+    {
+        $apartment = Apartment::findOne($id);
+        return $this->render('apartmentDetail',['apartment' => $apartment]);
+    }
+
+    public function actionCompanyHistory()
+    {
+        $history = CompanyInfo::findOne(['name' => 'history'])->data;
+        return $this->render('history',['history' => $history]);
+    }
+
+    public function actionVacancy()
+    {
+        $vacancy = [];
+        $info = CompanyInfo::findAll(['name' => 'vacancy']);
+        foreach ($info as $key) {
+            $vacancy[] = $key->data;
+        }
+        return $this->render('vacancy',['vacancy' => $vacancy]);
+    }
+
+    public function actionCarier()
+    {
+        $carier = CompanyInfo::findOne(['name' => 'carier'])->data;
+        return $this->render('carier',['carier' => $carier]);
+    }
+
+    public function actionBestRieltors()
+    {
+        $best_rieltors = CompanyInfo::findOne(['name' => 'best_rieltors'])->data;
+        return $this->render('best_rieltors',['best_rieltors' => $best_rieltors]);
+    }
+
+    public function actionReview()
+    {
+        $review = Review::find()->where(['status' => '1'])->orderBy('date','asc')->all();
+        return $this->render('review',['review' => $review]);
+    }
+
+    public function actionContacts()
+    {
+        return $this->render('contacts');
+    }
+
+    public function actionNews()
+    {
+        $query = News::find();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '2']);
+        $news = $query->offset($pages->offset)
+        ->limit($pages->limit)
+        ->all();
+        
+        return $this->render('news', ['news' => $news, 'pages' => $pages]);
+    }
+
+    public function actionArticle()
+    {
+        $query = Article::find();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '2']);
+        $article = $query->offset($pages->offset)
+        ->limit($pages->limit)
+        ->all();
+        
+        return $this->render('article', ['article' => $article, 'pages' => $pages]);
+    }
+
+
+
+
+
 }

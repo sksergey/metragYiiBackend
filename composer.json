@@ -22,7 +22,8 @@
         "kartik-v/yii2-widget-fileinput": "@dev",
         "costa-rico/yii2-images": "dev-master",
         "yiisoft/yii2-jui": "^2.0",
-        "kartik-v/yii2-widget-datepicker": "@dev"
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "evgeniyrru/yii2-slick": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

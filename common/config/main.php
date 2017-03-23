@@ -9,11 +9,19 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
-        /*'i18n' => [
+
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                
+            ],
+        ],
+        'i18n' => [
         'translations' => [
             'app*' => [
                 'class' => 'yii\i18n\PhpMessageSource',
-                'basePath' => '@app/messages',
+                'basePath' => '@yii/messages',
                 'sourceLanguage' => 'en-US',
                 'fileMap' => [
                     'app'       => 'app.php',
@@ -21,7 +29,25 @@ return [
                     ],
                 ],
             ],
-        ],*/
+        ],
+    ],
+    'modules' => [
+            'yii2images' => [
+            'class' => 'rico\yii2images\Module',
+            //be sure, that permissions ok 
+            //if you cant avoid permission errors you have to create "images" folder in web root manually and set 777 permissions
+            'imagesStorePath' => 'upload/store', //path to origin images
+            //'imagesStorePath' => '/backend/web/upload/store', //path to origin images
+            //'imagesUploadPath' => '/advanced/frontend/web/upload/store', //path to origin images
+            'imagesCachePath' => 'upload/cache', //path to resized copies
+            'graphicsLibrary' => 'Imagick', //but GD really its better to use 'Imagick' 
+            //'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
+        ],
+
+        'olxparser' => [
+            'class' => 'app\modules\olxparser\Module',
+        ],
+
     ],
     
         

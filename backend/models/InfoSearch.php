@@ -1,16 +1,16 @@
 <?php
 
-namespace app;
+namespace app\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Wc;
+use app\models\Info;
 
 /**
- * modelsWcSearch represents the model behind the search form about `app\models\Wc`.
+ * InfoSearch represents the model behind the search form about `app\models\Info`.
  */
-class modelsWcSearch extends Wc
+class InfoSearch extends Info
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class modelsWcSearch extends Wc
     public function rules()
     {
         return [
-            [['wc_id'], 'integer'],
-            [['name'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'data'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class modelsWcSearch extends Wc
      */
     public function search($params)
     {
-        $query = Wc::find();
+        $query = Info::find();
 
         // add conditions that should always apply here
 
@@ -59,10 +59,11 @@ class modelsWcSearch extends Wc
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'wc_id' => $this->wc_id,
+            'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'data', $this->data]);
 
         return $dataProvider;
     }

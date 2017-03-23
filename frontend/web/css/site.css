@@ -4,14 +4,14 @@ body {
 }
 
 .wrap {
-    min-height: 100%;
+    #min-height: 100%;
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
 }
 
 .wrap > .container {
-    padding: 70px 15px 20px;
+    #padding: 70px 15px 20px;
 }
 
 .footer {
@@ -117,4 +117,14 @@ a.desc:after {
 
 .nav > li > form > button.logout:focus {
     outline: none;
+}
+
+pre.description{
+    font-size: 15px !important;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.42857143;
+    color: #333333;
+    background-color: #fff;
+    border: none;
+    width: 70%;
 }

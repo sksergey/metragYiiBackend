@@ -81,6 +81,13 @@ AppAsset::register($this);
                  ['label' => Yii::t('yii', 'Users'), 'url' => ['/admin/user']],
         ],
         ],
+        [
+            'label' => Yii::t('yii', 'Parser'),
+            'items' => [
+                 ['label' => Yii::t('yii', 'OLX apartments'), 'url' => ['/olxparser']],
+                 
+            ],
+        ],
         ];
 
         $menuItems[] = '<li>'

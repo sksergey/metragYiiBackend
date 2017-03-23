@@ -103,7 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <? $template_date = "<div class=\"wrap-find\"><div class=\"col-lg-1 padding-null\">{label}</div>\n<div class=\"col-lg-11 find-input\">{input}</div>\n</div>"?>
-            <div class="col-xs-6 col-sm-3 col-md-2 ">
+            <div class="col-xs-6 col-sm-4 col-md-3 ">
            <label for="" class="from-to-label">Дата доб</label>
            <?= $form->field($model['ApartmentFind'], 'date_addedFrom', [
                    'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [

@@ -1,53 +1,150 @@
-<?php
+    <div id="wrapper">
+     <div class="flex-container">
+        <div class="flexslider">
+            <ul class="slides">
+                <li>
+                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                    <div class="content">
 
-/* @var $this yii\web\View */
+                        <img class="hot" src="images/slide1-content.png" alt="">
+                        <span class="hot-h1">Горячее предложение</span>
+                        <p class="hot-desc">Однокомнатная квартира в центре города. Мебелированная,<br /> есть технка для дома.</p>
+                        <span class="hot-price"><span>5 000</span> в месяц</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                   <div class="content"></div>
+                </li>
+                <li>
+                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                    <div class="content"></div>
 
-$this->title = 'My Yii Application';
-?>
-<div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+                </li>
+            </ul>
+        </div>
     </div>
+        <div class="category">
+            <div class="content">
+                <div class="line">
 
-    <div class="body-content">
+                    <span>
+                        <h1>категории</h1>
+                        <img src="images/category-home.png" alt="">
+                    </span>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                    <img src="images/1.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="index.php?r=rent&vs=1">    <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">01</span>
+                        <span class="name">Аренда</span>
+                    </div>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                        <img src="images/2.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="site/apartment">   <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">02</span>
+                        <span class="name">квартиры</span>
+                    </div>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                        <img src="images/3.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="index.php?r=building&vs=1">    <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">03</span>
+                        <span class="name">новостройки</span>
+                    </div>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                        <img src="images/4.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="index.php?r=house&vs=1">   <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">04</span>
+                        <span class="name" >дома</span>
+                    </div>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                        <img src="images/5.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="index.php?r=area&vs=1">    <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">05</span>
+                        <span class="name">участки</span>
+                    </div>
+                </div>
+                <div class="item-cat">
+                    <div class="item-cat-img">
+                        <img src="images/6.png" alt="">
+                        <div class="caption">
+                            <div class="blur"></div>
+                            <a href="index.php?r=commercial&vs=1">  <div class="caption-text">
+                                <img src="images/house.png"  alt="">
+                            </div></a>
+                        </div>
+                    </div>
+                    <div class="item-cat-text">
+                        <span class="number">06</span>
+                        <span class="name">коммерция</span>
+                    </div>
+                </div>
             </div>
         </div>
-
+        <?php
+        /*
+                 </ul>
+                 </div>
     </div>
-</div>
+    */
+    ?>
+<?php
+//include ("footer.php");
+?>
+
+    
+     <?
+    $this->registerJs('
+    $(document).ready(function() {
+        $(\'.flexslider\').flexslider({
+            animation: \'fade\',
+            controlsContainer: \'.flexslider\'
+        });
+    });
+    ')
+    ?>
