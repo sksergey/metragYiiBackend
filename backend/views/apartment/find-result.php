@@ -5,15 +5,16 @@
 	use yii\data\ActiveDataProvider;
 	use yii\grid\GridView;
 
-	use app\models\RegionKharkivAdmin;
-	use app\models\Layout;
-	use app\models\TypeObject;
-	use app\models\Users;
+	use backend\models\RegionKharkivAdmin;
+	use backend\models\Layout;
+	use backend\models\TypeObject;
+	use backend\models\Users;
 ?>
 
 <?
 	echo GridView::widget([
 	    'dataProvider' => $dataProvider,
+	    //'filterModel' => $searchModel,
 	    'columns' => [
 	        ['class' => 'yii\grid\SerialColumn'],
 	        [

@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Users;
+use backend\models\Users;
 
 /**
- * UsersSearch represents the model behind the search form about `app\models\Users`.
+ * UsersSearch represents the model behind the search form about `backend\models\Users`.
  */
 class UsersSearch extends Users
 {

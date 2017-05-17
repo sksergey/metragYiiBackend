@@ -6,12 +6,26 @@ use Exception;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 
-use app\modules\olxparser\models\ParsercdSearch;
+use app\modules\olxparser\models\ParserSearch;
 use app\modules\olxparser\models\ParserOlxParams;
 use app\modules\olxparser\olxParserHelper;
+use yii\web\Response;
+use app\modules\olxparser\models\ParserOlxLog;
+
+
+/**
+ * CREATE TABLE `metragYiiNew`.`new_parser_olx_links_list` (
+ * `link_id` INT NOT NULL AUTO_INCREMENT ,
+ * `link` VARCHAR(255) NOT NULL ,
+ * `status` ENUM('wait','ready') NOT NULL DEFAULT 'wait' ,
+ * PRIMARY KEY (`link_id`)) ENGINE = InnoDB;
+ * */
+
 
 /**
  * Default controller for the `olxparser` module
@@ -34,6 +48,9 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+
+        \app\modules\olxparser\OlxAssetsBundle::register($this->view);
+
         // создание таблицы с опциями
         if (false === olxParserHelper::tableExists('new_parser_olx_params')) {
             Yii::$app->db->createCommand("CREATE TABLE `new_parser_olx_params` (
@@ -57,7 +74,7 @@ class DefaultController extends Controller
 
         }
 
-        $searchModel = new ParsercdSearch();
+        $searchModel = new ParserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $result = [
@@ -72,7 +89,7 @@ class DefaultController extends Controller
             $flats = olxParserHelper::tableExists('new_parser_olx_links_list') ? Yii::$app->db->createCommand('SELECT COUNT(`link`) FROM `new_parser_olx_links_list`')->queryScalar() : 0;
 
             // Количество обработанных уникальных ссылок
-            $count_true_links_list = olxParserHelper::tableExists('new_parser_olx_parsercd') ? Yii::$app->db->createCommand('SELECT COUNT(`advert_id`) FROM `new_parser_olx_parsercd`')->queryScalar() : 0;
+            $count_true_links_list = olxParserHelper::tableExists('new_parser_olx_parser') ? Yii::$app->db->createCommand('SELECT COUNT(`advert_id`) FROM `new_parser_olx_parser`')->queryScalar() : 0;
 
             // Общее количество страниц
             $count_pages_list = Yii::$app->db->createCommand('SELECT COUNT(*) FROM `new_parser_olx_pages_list`')->queryScalar();
@@ -92,9 +109,17 @@ class DefaultController extends Controller
         return $this->render('first-call', $result);
     }
 
+    public function actionProcessInfo()
+    {
+        //Yii::$app->response->format = Response::FORMAT_JSON;
+        $pages_total = Yii::$app->db->createCommand("SELECT COUNT(*) FROM `new_parser_olx_pages_list`")->queryScalar();
+        $pages_ready = Yii::$app->db->createCommand("SELECT COUNT(*) FROM `new_parser_olx_pages_list` WHERE `status` ='ready'")->queryScalar();
+        echo Json::encode(["total"=>$pages_total,"ready" => $pages_ready]);
+        Yii::$app->end();
+    }
+
     public function actionHandler()
     {
-
         // Инициализируем переменные
         $all_links = $all_links_flip = $unique_all_links = array();
         $total_page = $location_url = '';
@@ -104,9 +129,9 @@ class DefaultController extends Controller
 
         // Инициализируем cURL-сессию
         // $cookie = tempnam ("/tmp", "CURLCOOKIE");
-        ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '1024M');
-        ini_set('max_input_time', -1);
+        //ini_set('max_execution_time', 0);
+        //ini_set('memory_limit', '1024M');
+        //ini_set('max_input_time', -1);
         $ch = curl_init();
 
         if (isset($_POST['continue']) && !empty($_POST['continue'])) {
@@ -119,12 +144,17 @@ class DefaultController extends Controller
                 $count_list_proxy = count($list_proxy) - 1;
                 $count_list_users_agents = count($list_users_agents) - 1;
 
+                //proxy change
+                // TODO first local - proxy - local
+                $proxy_ip = $list_proxy[mt_rand(0, $count_list_proxy)];
+                $proxy_ua = $list_users_agents[mt_rand(0, $count_list_users_agents)];
+
                 $all_links_tmp = [];
                 foreach ($continue_parsing as $i) {
                     /* Настраиваем опции */
                     curl_setopt($ch, CURLOPT_URL, "$root_url?page=$i");
-                    curl_setopt($ch, CURLOPT_PROXY, $list_proxy[rand(0, $count_list_proxy)]);
-                    curl_setopt($ch, CURLOPT_USERAGENT, $list_users_agents[rand(0, $count_list_users_agents)]);
+                    curl_setopt($ch, CURLOPT_PROXY, $proxy_ip);
+                    curl_setopt($ch, CURLOPT_USERAGENT, $proxy_ua);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     curl_setopt($ch, CURLOPT_HEADER, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -212,7 +242,8 @@ class DefaultController extends Controller
 
             // Создаём таблицу для хранения страниц, по которым мы уже пробежались и собрали уникальные ссылки
             Yii::$app->db->createCommand("CREATE TABLE IF NOT EXISTS `new_parser_olx_pages_list` (
-					`page_number` int(11) NOT NULL,
+                    
+					`page_url` TEXT NOT NULL,
 					`status` tinyint(1) DEFAULT NULL
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8")->execute();
 
@@ -381,16 +412,17 @@ class DefaultController extends Controller
 
     /**
      * @return \yii\web\Response
+     * Запускает обработку всех ссылок на объекты
      */
-    public function actionHandlerUniqueLinks()
+    public function actionHandleUniqueLinks()
     {
         extract(ParserOlxParams::params());
 
         // Создаём таблицу для хранения информации с распаршенных страниц
-        Yii::$app->db->createCommand("CREATE TABLE IF NOT EXISTS `new_parser_olx_parsercd` (
+        Yii::$app->db->createCommand("CREATE TABLE IF NOT EXISTS `new_parser_olx_parser` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
 		`advert_id` int(11) NOT NULL UNIQUE,
-		`silka` text NOT NULL,
+		`link` text NOT NULL,
 		`path` text NOT NULL,
 		`date` varchar(255) NOT NULL,
 		`type_object_id` int(11) NOT NULL,
@@ -416,7 +448,7 @@ class DefaultController extends Controller
 
         // Инициализируем переменные
         $unique_all_links = $array_flat_properties = array();
-        $silka = $path = $date = $price = $note = $phone = $image = $advert_from = $type = $type_flat = '';
+        $link = $path = $date = $price = $note = $phone = $image = $advert_from = $type = $type_flat = '';
         $count_apartment_parsing = $count_fail_apartment_parsing = $advert_id = $kolfoto = $count_room = $floor = $floor_all = $total_area = $floor_area = $kitchen_area = 0;
 
         // Получаем все собранные на данный момент уникальные ссылки
@@ -463,13 +495,13 @@ class DefaultController extends Controller
                 }
 
                 // Ссылка на объявление
-                $silka = $apartment_link;
+                $link = $apartment_link;
 
 
                 // Находим контейнер с необходимой информацией о заголовке объяления
                 if (preg_match($_pattern_search_title_publication, $output, $matches)) {
                     $title_publication = trim(strip_tags($matches['1']));
-                    $path = "<a href='$silka' target='_blank'>$title_publication</a>";
+                    $path = "<a href='$link' target='_blank'>$title_publication</a>";
                 }
 
                 // Находим контейнер с необходимой информацией о дате публикации и об ID объяления
@@ -575,9 +607,9 @@ class DefaultController extends Controller
                 try {
                     // Наполняем таблицу распаршенными данными
                     Yii::$app->db->createCommand()
-                        ->insert('new_parser_olx_parsercd', [
+                        ->insert('new_parser_olx_parser', [
                             'advert_id' => $advert_id,
-                            'silka' => $silka,
+                            'link' => $link,
                             'path' => $path,
                             'date' => $date,
                             'type_object_id' => 12,
@@ -602,7 +634,9 @@ class DefaultController extends Controller
                     continue;
                 }
 
-                Yii::$app->db->createCommand()->update('new_parser_olx_links_list', ['status' => 1], ['link' => $silka])->execute();
+                Yii::$app->db->createCommand()
+                    ->update('new_parser_olx_links_list', ['status' => 1], ['link' => $link])
+                    ->execute();
 
                 if ($count_apartment_parsing == $_count_true_pages_list) break;
             }
@@ -629,7 +663,7 @@ class DefaultController extends Controller
 
     public function actionHandlerDropTables()
     {
-        $sql = "DROP TABLE IF EXISTS `new_parser_olx_links_list`, `new_parser_olx_pages_list`, `new_parser_olx_parsercd`, `new_parser_olx_options`";
+        $sql = "DROP TABLE IF EXISTS `new_parser_olx_links_list`, `new_parser_olx_pages_list`, `new_parser_olx_parser`, `new_parser_olx_options`";
         Yii::$app->db->createCommand($sql)->execute();
         return $this->redirect(['/olxparser/default/index']);
     }
@@ -696,11 +730,11 @@ class DefaultController extends Controller
     background-size:cover;}
 .fixedFormButton {
     display: block;
-    position:fixed;
+    position:absolute;
     width: 30px;
     height:30px;
     right: 20px;
-    bottom: 50px;
+    top: 65px;
     background: url(http://s1.iconbird.com/ico/2014/1/625/w128h1281390855539deletedatabase128.png);
     background-size: contain;
     cursor: pointer;
@@ -877,8 +911,17 @@ class DefaultController extends Controller
 CSS;
 
         Yii::$app->view->registerCss($css);
-        $js = <<<JS
 
+
+        Yii::$app->view->registerJs(
+            "var main_url = '" . Url::to(['default/get-pages']) . "';",
+            \yii\web\View::POS_HEAD,
+            'yiiOptions'
+        );
+
+        $js = <<<JS
+        
+        
 $(document).ready(function(){
       $('[name = startparsing], [name = startUniqueParsing], a > .showTable').on('click', function(){
        $('#hellopreloader').show(); 
@@ -948,4 +991,705 @@ JS;
 
         return true;
     }
+
+
+    public function actionClearTables()
+    {
+        //TRUNCATE TABLE `new_parser_olx_links_list`
+        Yii::$app->db->createCommand("TRUNCATE TABLE new_parser_olx_pages_list")->execute();
+        Yii::$app->db->createCommand("TRUNCATE TABLE new_parser_olx_links_list")->execute();//new_parser_olx_pages_list
+        $this->redirect(['/olxparser/default/']);
+    }
+
+
+    public function actionGetPages()
+    {
+        //echo ' hello actiongetpages!!!!!!';
+        //die;
+        extract(ParserOlxParams::params());
+        //var_dump($list_proxy);  ****************************************************
+        $this->logDB($list_proxy);
+        $count_list_proxy = sizeof($list_proxy);
+        // Проверяем, есть ли страницы для парсинга
+        //$sql = 'SELECT page_url FROM `new_parser_olx_pages_list` WHERE `status` = "wait" ORDER BY page_url';
+        $sql = 'SELECT page_url FROM new_parser_olx_pages_list WHERE `status` = "wait" ORDER BY cast( SUBSTRING(page_url FROM LOCATE ("=", page_url) + 1) as unsigned)';
+        $parsing_data = Yii::$app->db->createCommand($sql)->queryColumn();
+
+        if (!empty($parsing_data)) {
+            $proxy_iterator = 0;
+            try {
+                $counter = 0;
+                while (sizeof($parsing_data) ) {
+
+                    $url = reset($parsing_data);
+                    //foreach ($parsing_data as $url) {
+
+                    // сброс к первому прокси
+                    $this->logDB("Proxy reset");
+                    $proxy_iterator = -1;
+                    $list_proxy[-1] = false; // пойти через свой прокси.
+                    //$this->logDB("Next proxy(" . date("H:i:s") . "): " . $list_proxy[$proxy_iterator]);
+
+                    //sleep(10);
+                    while (!$this->getPage($url, $list_proxy[$proxy_iterator])) {
+                        //OK
+                        $proxy_iterator++;
+                        $this->logDB( "Next proxy(" . date("H:i:s") . "): " . $list_proxy[$proxy_iterator] );
+
+                        if ($proxy_iterator >= $count_list_proxy) {
+                            throw new Exception("Список прокси пуст. Разбор данных не завершен.");
+                        }
+                    }
+                    // Разбор данного URL прошел успешно.
+                    // Найдены ссылки на объекты, надо отметить это в таблице
+                    Yii::$app->db->createCommand()// where        prepare
+                    ->update("new_parser_olx_pages_list", ['status' => 'ready'], 'page_url=:url', [":url" => $url])
+                        ->execute();
+                    // строим и выполняем следующий SQL:
+                    //}
+
+                    $counter++;
+
+                    if($counter > 5)
+                        break;
+
+                    // Проверяем, есть ли страницы для парсинга
+                    $sql = 'SELECT page_url FROM new_parser_olx_pages_list WHERE `status` = "wait" ORDER BY cast( SUBSTRING(page_url FROM LOCATE ("=", page_url) + 1) as unsigned)';
+                    $parsing_data = Yii::$app->db->createCommand($sql)->queryColumn();
+
+
+
+                }
+                $this->logDB("COMPLETED ========================================");
+             } catch (Exception $e) {
+                $this->logDB($e->getMessage());
+            }
+        } else {
+
+            // добавляем в список первую страницу
+            Yii::$app->db->createCommand()
+                ->insert('new_parser_olx_pages_list', [
+                    'page_url' => $root_url,
+                    'proxy' => "",
+
+                ])->execute();
+
+            $this->getPage($root_url/*, $list_proxy[0]*/);
+           // $this->redirect(['get-pages']);
+        }
+
+    }
+
+
+    /*
+     *
+     *  //
+        /*Yii::$app->db->createCommand("CREATE TABLE IF NOT EXISTS `new_parser_olx_pages_list` (
+					`page_url` TEXT NOT NULL,
+					`status` ENUM('wait','ready') NULL DEFAULT 'wait'
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8")->execute();
+*/
+    // Инициализируем переменные
+    /*  $all_links = $all_links_flip = $unique_all_links = array();
+      $total_page = $location_url = '';
+      $countParsingPage = $countFailParsingPage = 0;
+
+      */
+
+    // Инициализируем cURL-сессию
+    // $cookie = tempnam ("/tmp", "CURLCOOKIE");
+    /*ini_set('max_execution_time', 0);
+    ini_set('memory_limit', '1024M');
+    ini_set('max_input_time', -1);
+    $ch = curl_init();*/
+
+    /*
+            $sql = 'SELECT `page_url` FROM `new_parser_olx_pages_list` WHERE `status` IS NULL';
+            $continue_parsing = Yii::$app->db->createCommand($sql)->queryColumn();
+
+            if (isset($_POST['continue']) && !empty($_POST['continue'])) {
+
+                // Проверяем, есть ли ещё страницы для парсинга
+                $sql = 'SELECT page_number FROM `new_parser_olx_pages_list` WHERE `status` IS NULL';
+                $continue_parsing = Yii::$app->db->createCommand($sql)->queryColumn();
+
+                if (!empty($continue_parsing)) {
+                    $count_list_proxy = count($list_proxy) - 1;
+                    $count_list_users_agents = count($list_users_agents) - 1;
+
+                    $all_links_tmp = [];
+                    foreach ($continue_parsing as $i) {
+                        /* Настраиваем опции */
+    /*   curl_setopt($ch, CURLOPT_URL, "$root_url?page=$i");
+       curl_setopt($ch, CURLOPT_PROXY, $list_proxy[rand(0, $count_list_proxy)]);
+       curl_setopt($ch, CURLOPT_USERAGENT, $list_users_agents[rand(0, $count_list_users_agents)]);
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($ch, CURLOPT_HEADER, 1);
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+       curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+       curl_setopt($ch, CURLOPT_ENCODING, "");
+       curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //required for https urls
+
+       //Поехали!
+       $output = curl_exec($ch);
+       $status = curl_getinfo($ch);
+
+       ++$countParsingPage;
+
+       if ($status['http_code'] != 200 || $output === FALSE) {
+           ++$countFailParsingPage;
+           // $test[$i] = $status['redirect_url'];
+           continue;
+       }
+*                  if (preg_match($_pattern_search_container_offers_table, $output, $matches)) {
+           $container_offers_table = $matches['0'];
+           if (preg_match_all($_pattern_search_all_links, $container_offers_table, $links)) {
+               $items = [];
+               foreach ($links['1'] as $key => $link) {
+                   $all_links_tmp[] = strstr($link, '#', true);
+                   $items[] = [$key, true];
+               }
+
+               // Подготавливаем запрос для апдейта страничек
+               Yii::$app->db->createCommand()
+                   ->update('new_parser_olx_pages_list', [
+                       'status' => true,
+                   ], "page_number = {$i}")->execute();
+
+//                            Yii::$app->db->createCommand()
+//                                ->batchInsert('new_parser_olx_pages_list', ['page_number', 'status'], $items)
+//                                ->execute();
+
+           }
+       }
+   //}
+
+   // Получаем только уникальные ссылки
+/*   $all_links = array_unique(array_diff($all_links_tmp, array('')));
+
+   // Получаем все ранее записанные уникальные ссылки
+   $all = Yii::$app->db->createCommand('SELECT `link` AS link, `status` AS status FROM `new_parser_olx_links_list`')->queryAll();
+   $db_all_links = ArrayHelper::map($all, 'link', 'status');
+
+   if (!empty($all_links)) {
+       $all_links_flip = array_flip($all_links);
+       $all_links = array();
+       foreach ($all_links_flip as $key => $value)
+           $all_links[$key] = NULL;
+
+       // Соединяем 2 массива в 1-н и получаем только уникальные ссылки
+       $unique_all_links = array_merge($all_links, $db_all_links);
+   } else {
+       // Получаем только уникальные ссылки
+       $unique_all_links = $db_all_links;
+   }
+
+   // Очищаем таблицу для хранения уникальных ссылок
+   Yii::$app->db->createCommand("TRUNCATE TABLE `new_parser_olx_links_list`")->execute();
+
+   // Наполняем таблицу уникальными ссылками
+   $items = [];
+   foreach ($unique_all_links as $link => $status) {
+       $items[] = [$link, $status];
+   }
+   Yii::$app->db->createCommand()
+       ->batchInsert('new_parser_olx_links_list', ['link', 'status'], $items)
+       ->execute();
+
+}
+
+$total_page = Yii::$app->db->createCommand('SELECT `total_page` FROM `new_parser_olx_options` WHERE `id`=1')->queryScalar();
+
+// $location_url = ['/olxparser/default/index'];
+// $location_url = "https://oleg-test-project-lumospark.c9users.io/kr/index.php?page=parserolx&action=continue&do=";
+
+}
+
+//$list_proxy[];//rand(0, $count_list_proxy)*/
+
+    /**
+     * Обрабатывает страницу и находит на ней все ссылки на другие страницы.
+     * Находит все ссылки на оюъекты и добавляет их в базу
+     *
+     * @param $pageUrl - ссылка на страницу
+     * @param bool $proxy - прокси сервер, через который идет обработка
+     * @return bool - true, если страница обработана успешно (страницы и ссылки на объекты найдены)
+     *
+     */
+    private function getPage($pageUrl, $proxy = false)
+    {
+
+
+        extract(ParserOlxParams::params());
+
+        ini_set('max_execution_time', 0);
+        //ini_set('memory_limit', '1024M');
+        ini_set('max_input_time', -1);
+        $ch = curl_init();
+
+        $this->logDB("Processed: $pageUrl   Proxy: $proxy"); // **********************************************
+        /* Настраиваем опции */
+        curl_setopt($ch, CURLOPT_URL, "$pageUrl");
+
+        if ($proxy)
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        $useragent = $list_users_agents[rand(0, $count_list_users_agents)];
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //required for https urls
+
+        //Поехали!
+        $output = curl_exec($ch);
+        $status = curl_getinfo($ch);
+
+        curl_close($ch);
+
+        if ($status['http_code'] != 200 || $output === FALSE) {
+            $this->logDB("=========Status: {$status['http_code']}   Proxy: $proxy");
+
+            return false;
+        }
+
+        //
+
+
+        if (preg_match_all('/<a class="block br3 brc8[^"]*".*?href="([^"]*?)"/', $output, $matches_key)) {
+
+            /*foreach ( $matches_key['0'] as $value_str ) {
+                preg_match( $_pattern_search_container_additional_info_value, $value_str, $matches_tmp );
+                $array_values[] = $matches_tmp['0'];
+            }*/
+
+//***************************************************            echo "Получен список страниц (" . count($matches_key['1']) . ")<br>";
+//***************************************************
+            foreach ($matches_key['1'] as $key => $value) {
+                $link = trim($value);
+                /* Массив $array_flat_properties содержит всю необходимую доп. информацию */
+                try {
+
+
+                    // Проверяем, нет ли записи в таблице
+
+                    $result = Yii::$app->db->createCommand("SELECT * FROM new_parser_olx_pages_list WHERE page_url=:url")
+                        ->bindParam(":url", $value)
+                        ->queryOne();
+
+                    // если такой страницы нет, то ее надо добавить
+                    // если сейчас она обрабатывается
+                    if (!$result) {
+                        // добавляем страницу в список обрабатываемых
+                        Yii::$app->db->createCommand()
+                            ->insert('new_parser_olx_pages_list', [
+                                'page_url' => $link,
+                                'proxy' => $proxy,
+
+                            ])->execute();
+// *************************************                        echo "OK ($proxy) <br>";
+                    }
+
+
+                } catch (Exception $e) {
+                    var_dump($e);
+                }
+            }
+
+            // список страниц обработан. теперь берем все ссылки с данной страница
+            // пытаемся найти ссылки на объекты
+            $objectsQuantity = $this->getObjectsLinks($output);
+            //******************************************************           var_dump($objectsQuantity);
+            // если ссылки на объекты найдены, то сообщаем, что страница обработана
+            if ($objectsQuantity) {
+
+                //*******************************************************               echo "Ссылки на объекты найдены.($objectsQuantity)<br>";
+                return true;
+            }
+        } else {
+            // на странице не надены ссылки на другие страницы. это ошибка. ее обрабатывать не надо
+
+            $this->logDB("на странице не надены ссылки на другие страницы. это ошибка. ее обрабатывать не надо($url)");
+            Yii::$app->db->createCommand()// where        prepare
+            ->update("new_parser_olx_pages_list", ['status' => 'ready', 'proxy' => $proxy], 'page_url=:url', [":url" => $url])
+                ->execute();
+            return true;
+        }
+        return false;
+    }
+
+
+    private function getObjectsLinks($txt)
+    {
+
+        extract(ParserOlxParams::params());
+        if (preg_match($_pattern_search_container_offers_table, $txt, $matches)) {
+            $container_offers_table = $matches['0'];
+            if (preg_match_all(
+                $_object_link
+                /*$_pattern_search_all_links*/, $container_offers_table, $links)) {
+                $items = [];
+                foreach ($links['1'] as $key => $link) {
+                    $link = strstr($link, '#', true);
+                    // TODO проверяем, что такой записи нет
+                    $result = Yii::$app->db->createCommand("SELECT * FROM new_parser_olx_links_list WHERE link=:url")
+                        ->bindValue(":url", $link)
+                        ->queryOne();
+                    if (!$result)
+                        $all_links_tmp[] = [$link];
+
+                }
+
+            }
+        }
+
+        Yii::$app->db->createCommand()
+            ->batchInsert('new_parser_olx_links_list', ['link'], /*$items*/
+                $all_links_tmp)
+            ->execute();
+
+        return sizeof($all_links_tmp);
+    }
+
+
+    public function actionHandleApartmentsLinks()
+    {
+        extract(ParserOlxParams::params());
+
+        // Создаём таблицу для хранения информации с распаршенных страниц
+        Yii::$app->db->createCommand("CREATE TABLE IF NOT EXISTS `new_parser_olx_parser` (
+		`id` int(11) NOT NULL AUTO_INCREMENT,
+		`advert_id` int(11) NOT NULL UNIQUE,
+		`link` text NOT NULL,
+		`path` text NOT NULL,
+		`date` varchar(255) NOT NULL,
+		`type_object_id` int(11) NOT NULL,
+		`advert_from` varchar(255) NOT NULL,
+		`type` varchar(255) NOT NULL,
+		`type_flat` varchar(255) NOT NULL,
+		`count_room` int(11) NOT NULL,
+		`floor` int(11) NOT NULL,
+		`floor_all` int(11) NOT NULL,
+		`total_area` int(11) NOT NULL,
+		`floor_area` int(11) NOT NULL,
+		`kitchen_area` int(11) NOT NULL,
+		`price` varchar(255) NOT NULL,
+		`phone` text NOT NULL,
+		`status` ENUM('wait','ready') NOT NULL DEFAULT 'wait',
+		`note` text NOT NULL,
+		`kolfoto` int(11) NOT NULL,
+		`image` text NOT NULL,
+		`view` enum('neprov','no','yes','tel') NOT NULL,
+		`count_similar_advs` INT(11) NOT NULL DEFAULT 0,
+		PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1")->execute();
+
+
+        Yii::$app->db->createCommand("TRUNCATE TABLE new_parser_olx_parser")->execute();
+        // Инициализируем переменные
+        $unique_all_links = $array_flat_properties = array();
+        $link = $path = $date = $price = $note = $phone = $image = $advert_from = $type = $type_flat = '';
+        $count_apartment_parsing = $count_fail_apartment_parsing = $advert_id =
+        $kolfoto = $count_room = $floor = $floor_all = $total_area = $floor_area =
+        $kitchen_area = 0;
+
+        // Получаем все собранные на данный момент уникальные ссылки
+        $unique_all_links = Yii::$app->db->createCommand('SELECT link FROM `new_parser_olx_links_list` WHERE `status` = "wait"')->queryColumn();
+
+        try {
+            /* Цикл для прохождения по всем уникальным ссылкам */
+            foreach ($unique_all_links as $apartment_link) {
+
+                // проверяем, есть ли такая ссылка в объектах
+                /** TODO Если есть, то восстановить данные об объекте
+                 *  TODO Если нет, то обрабатываем ссылку
+                 */
+                $result = Yii::$app->db->createCommand("SELECT * FROM new_parser_olx_parser WHERE link=:url")
+                    ->bindParam(":url", $value)
+                    ->queryOne();
+
+                // если такой страницы нет, то ее надо добавить
+                // если сейчас она обрабатывается
+                if (!$result) {
+                    // сброс к первому прокси
+                    $this->logDB("Proxy reset");
+                    $proxy_iterator = -1;
+                    $list_proxy[-1] = false; // пойти через свой прокси.
+                    //$this->logDB("Next proxy(" . date("H:i:s") . "): " . $list_proxy[$proxy_iterator]);
+
+                    while (!$this->getObjectInfo($apartment_link, $list_proxy[$proxy_iterator])) {
+                        //OK
+                        $proxy_iterator++;
+                        //$this->logDB("Next proxy(" . date("H:i:s") . "): " . $list_proxy[$proxy_iterator]);
+                        if ($proxy_iterator >= $count_list_proxy) {
+                            throw new Exception("Список прокси пуст. Разбор данных не завершен.");
+                        }
+                    }
+
+                    // Разбор данного URL прошел успешно.
+                    // Найдена информация об объекте. Отмечаем, что объект обработан.
+                    Yii::$app->db->createCommand()// where        prepare
+                    ->update("new_parser_olx_links_list", ['status' => 'ready'], 'link=:url', [":url" => $apartment_link])
+                        ->execute();
+                }
+
+
+            }
+
+            $this->logDB("COMPLETED ========================================");
+
+
+        } catch (Exception $e) {
+            $this->logDB($e->getMessage());
+        }
+
+
+        // Обновляем опции парсера
+        /*Yii::$app->db->createCommand()
+            ->update('new_parser_olx_options', [
+                'count_apartment_parsing' => (int)$count_apartment_parsing,
+                'count_fail_apartment_parsing' => (int)$count_fail_apartment_parsing,
+            ], 'id = 1')->execute();
+*/
+        // Закрываем cURL-сессию
+        ini_set('max_execution_time', 30);
+        ini_set('memory_limit', '128M');
+        ini_set('max_input_time', 60);
+        //curl_close($ch);
+
+        return $this->redirect(['/olxparser']);
+    }
+
+
+    /**
+     * @param $apartment_link
+     * @param $proxy
+     * @return bool
+     *
+     *
+     * Получаем информацию об объекте. Обязательно получаем телефон. Только тогда информация считается собранной.
+     */
+    private function getObjectInfo($apartment_link, $proxy)
+    {
+        // извлекаем параметры парсера
+        extract(ParserOlxParams::params());
+
+        // Инициализируем переменные
+        $array_flat_properties = array();
+        $link = $path = $date = $price = $note = $phone = $image = $advert_from = $type = $type_flat = '';
+        $count_apartment_parsing = $count_fail_apartment_parsing = $advert_id =
+        $kolfoto = $count_room = $floor = $floor_all = $total_area = $floor_area =
+        $kitchen_area = 0;
+
+        // Инициализируем cURL-сессию
+        $ch = curl_init();
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1024M');
+        ini_set('max_input_time', -1);
+
+        $useragent = $list_users_agents[rand(0, $count_list_users_agents)];
+
+        curl_setopt($ch, CURLOPT_URL, $apartment_link);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //required for https urls
+
+        //Поехали!
+        $output = curl_exec($ch);
+        $status = curl_getinfo($ch);
+
+        curl_close($ch);
+
+        if ($status['http_code'] != 200 || $output === FALSE) {
+            return false;
+        }
+
+        // Ссылка на объявление
+        $link = $apartment_link;
+
+        // Находим контейнер с необходимой информацией о заголовке объяления
+        if (preg_match($_pattern_search_title_publication, $output, $matches)) {
+            $title_publication = trim(strip_tags($matches['1']));
+            $path = "<a href='$link' target='_blank'>$title_publication</a>";
+        }
+
+        // Находим контейнер с необходимой информацией о дате публикации и об ID объяления
+        if (preg_match($_pattern_search_container_date_publication, $output, $matches)) {
+            $container_date_publication = $matches['0'];
+            if (preg_match($_pattern_search_date_publication, $container_date_publication, $matches)) {
+                $date_publication = $matches['1'];
+                $date = $date_publication;
+            }
+            if (preg_match($_pattern_search_ID_publication, $container_date_publication, $matches)) {
+                $id_publication = $matches['0'];
+                $advert_id = $id_publication;
+            }
+        }
+
+        // Находим контейнер с необходимой дополнительной информацией
+        if (preg_match_all($_pattern_search_container_additional_info_key, $output, $matches_key)) {
+            foreach ($matches_key['0'] as $value_str) {
+                preg_match($_pattern_search_container_additional_info_value, $value_str, $matches_tmp);
+                $array_values[] = $matches_tmp['0'];
+            }
+            foreach ($matches_key['1'] as $key => $value) {
+                $array_flat_properties[$value] = trim(strip_tags($array_values[$key]));
+                /* Массив $array_flat_properties содержит всю необходимую доп. информацию */
+            }
+
+            // @se: была ошибка `Undefined index` из-за предыдущего кода
+            $prop = function ($key, $default) use ($array_flat_properties) {
+                if (isset($array_flat_properties[$key])) {
+                    return $array_flat_properties[$key];
+                } else {
+                    return $default;
+                }
+            };
+
+            $advert_from = $prop('Объявление от', '-');
+            $type = $prop('Тип', '-');
+            $type_flat = $prop('Тип квартиры', '-');
+            $count_room = $prop('Количество комнат', 0);
+            $floor = $prop('Этаж', 0);
+            $floor_all = $prop('Этажность дома', 0);
+            $total_area = $prop('Общая площадь', 0);
+            $floor_area = $prop('Жилая площадь', 0);
+            $kitchen_area = $prop('Площадь кухни', 0);
+        }
+        unset($array_values);
+
+        // Находим контейнер с ценой
+        if (preg_match($_pattern_search_container_price, $output, $matches)) {
+            $price = trim(strip_tags($matches['0']));
+        }
+
+        // Находим контейнер с описанием
+        if (preg_match($_pattern_search_container_description, $output, $matches)) {
+            $note = trim(strip_tags($matches['0']));
+        }
+
+        /* ТЕЛЕФОННЫЙ НОМЕР */
+        // Находим id номера телефона
+        if (preg_match($_pattern_search_id_phone, $output, $matches)) {
+            $idphone = $matches['1'];
+        }
+
+        // Задаём необходимый url для работы Curl
+        $url_address_phone = "{$url_phone}{$idphone}/";
+
+        $phones = $this->getPhones($url_address_phone, $proxy, $useragent);
+
+        if (!$phones)
+            return false;
+
+        // Находим все фотографии, относящиеся к данному объявлению
+        if (preg_match_all($_pattern_all_photos, $output, $matches)) {
+            $kolfoto = count($matches['1']);
+            $image = serialize($matches['1']);
+        }
+
+
+        // Наполняем таблицу распаршенными данными
+        Yii::$app->db->createCommand()
+            ->insert('new_parser_olx_parser', [
+                'advert_id' => $advert_id,
+                'link' => $link,
+                'path' => $path,
+                'date' => $date,
+                'type_object_id' => 12,
+                'advert_from' => $advert_from,
+                'type' => $type,
+                'type_flat' => $type_flat,
+                'count_room' => $count_room,
+                'floor' => $floor,
+                'floor_all' => $floor_all,
+                'total_area' => $total_area,
+                'floor_area' => $floor_area,
+                'kitchen_area' => $kitchen_area,
+                'price' => $price,
+                'phone' => $phones,
+                'status' => 1,
+                'note' => $note,
+                'kolfoto' => $kolfoto,
+                'image' => $image,
+                'view' => 'no',
+            ])->execute();
+
+
+        /*Yii::$app->db->createCommand()
+            ->update('new_parser_olx_links_list', ['status' => 1], ['link' => $link])
+            ->execute();
+         */
+
+        return true;
+    }
+
+
+    private function getPhones($url, $proxy, $useragent)
+    {
+
+        extract(ParserOlxParams::params());
+        $ch = curl_init();
+        // Задаём опции для корректной работы Curl
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //required for https urls
+
+        // Запускаем Curl
+        $response = curl_exec($ch);
+
+        // Разделяем строку полученного ответа по маркерам окончания строки
+        $result_answer = explode("\r\n", $response);
+
+
+        curl_close($ch);
+
+        // Если ответ положительный ( код 200 ) - продолжаем получать номера телефонов
+        if ($result_answer['0'] == "HTTP/1.1 200 OK") {
+            if (preg_match($_pattern_search_phone_value, $response, $matches)) {
+                if (preg_match_all($_pattern_only_phones, $matches['1'], $phones)) {
+                    $phone = implode(", ", $phones['0']);
+                }
+            }
+        } else {
+            return false;
+        }
+        return $phone;
+    }
+
+    private function logDB($value){
+        $model = new ParserOlxLog();
+        switch(gettype($value)){
+            case "array":{
+                $model->text = join(",",$value);
+            }break;
+            default:
+                $model->text = $value;
+        }
+
+        $model->save();
+    }
+
+
 }

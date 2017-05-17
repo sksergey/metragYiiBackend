@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\Apartment;
-use app\models\ApartmentSearch;
+use common\models\Apartment;
+use backend\models\ApartmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,20 +12,20 @@ use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
-use app\models\ApartmentFind;
-use app\models\RegionKharkivAdmin;
-use app\models\TypeObject;
-use app\models\Locality;
-use app\models\RegionKharkiv;
-use app\models\Region;
-use app\models\Street;
-use app\models\Course;
-use app\models\WallMaterial;
-use app\models\Condit;
-use app\models\Wc;
-use app\models\Users;
-use app\models\UserType;
-use app\models\Layout;
+use backend\models\ApartmentFind;
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
+use backend\models\Locality;
+use backend\models\RegionKharkiv;
+use backend\models\Region;
+use backend\models\Street;
+use backend\models\Course;
+use backend\models\WallMaterial;
+use backend\models\Condit;
+use backend\models\Wc;
+use backend\models\Users;
+use backend\models\UserType;
+use backend\models\Layout;
 /**
  * ApartmentController implements the CRUD actions for Apartment model.
  */
@@ -146,137 +146,84 @@ class ApartmentController extends Controller
 
     public function actionSearch()
     {
-        $model = [];
-
-        $model['ApartmentFind'] = new ApartmentFind();
-        $model['RegionKharkivAdmin'] = new RegionKharkivAdmin();
-        $model['TypeObject'] = new TypeObject();
-        $model['Locality'] = new Locality();
-        $model['Layout'] = new Layout();
-        $model['RegionKharkiv'] = new RegionKharkiv();
-        $model['Region'] = new Region();
-        $model['Street'] = new Street();
-        $model['Course'] = new Course();
-        $model['WallMaterial'] = new WallMaterial();
-        $model['Condit'] = new Condit();
-        $model['Wc'] = new Wc();
-        $model['Users'] = new Users();
-        $model['UserType'] = new UserType();
-
-        if (Yii::$app->request->post()) {
-
-            //$url = Url::toRoute('/agency/testview');
-            //return $this->redirect($url);
-
-            //$post = Yii::$app->request->post();
-            
-            //print_r($post);
-            /*
-            $dataProvider = $this->getSearchResult($post);
-
-
-
-            return $this->render('search-result',
-            ['post' => $post, 'dataProvider' => $dataProvider]);
-            */
+        $model = new ApartmentFind();
+        return $this->render('find', ['model' => $model]);
+        /*if (Yii::$app->request->post()) {
+            //$dataProvider = $this->getSearchResult($post);
+            //return $this->render('search-result',
+            //['post' => $post, 'dataProvider' => $dataProvider]);
             //return $this->render('apartments', ['post' => $post]);
         } else {
             // страница отображается первый раз
             return $this->render('find', ['model' => $model]);
         }
-        
+        */
     }
+
+
+    /*public function actionSearchresult()
+    {
+        $findModel = new ApartmentFind();
+        //$dataProvider = $findModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $findModel->search(Yii::$app->request->get());
+        //$findModel = new ApartmentSearch();
+        //$dataProvider = $findModel->search(Yii::$app->request->get());
+        //var_dump(Yii::$app->request->get());
+        //die;
+        //var_dump(Yii::$app->request->queryParams);
+        //die;
+        return $this->render('index', [
+            //'searchModel' => $findModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }*/
 
     public function actionSearchresult()
     {
         $get = Yii::$app->request->get();
-
-        $query = Apartment::find();
-        //echo $get['ApartmentFind']['date_addedTo'];
-        //echo Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss');
+        var_dump($get);
         //die;
-
-        //$query = (new \yii\db\Query())->from('apartment');
-
-        
-        if(!empty($get['ApartmentFind']['idFrom']))
+        $query = Apartment::find();
+        //begin filters
         $query->andFilterWhere(['>=', 'id', $get['ApartmentFind']['idFrom']]);
-        if(!empty($get['ApartmentFind']['idTo']))
         $query->andFilterWhere(['<=', 'id', $get['ApartmentFind']['idTo']]);
-        if(!empty($get['ApartmentFind']['count_roomFrom']))
         $query->andFilterWhere(['>=', 'count_room', $get['ApartmentFind']['count_roomFrom']]);
-        if(!empty($get['ApartmentFind']['count_roomTo']))
         $query->andFilterWhere(['<=', 'count_room', $get['ApartmentFind']['count_roomTo']]);
-        if(!empty($get['ApartmentFind']['priceFrom']))
         $query->andFilterWhere(['>=', 'price', $get['ApartmentFind']['priceFrom']]);
-        if(!empty($get['ApartmentFind']['priceTo']))
         $query->andFilterWhere(['<=', 'price', $get['ApartmentFind']['priceTo']]);
-        if(!empty($get['ApartmentFind']['floorFrom']))
         $query->andFilterWhere(['>=', 'floor', $get['ApartmentFind']['floorFrom']]);
-        if(!empty($get['ApartmentFind']['floorTo']))
         $query->andFilterWhere(['<=', 'floor', $get['ApartmentFind']['floorTo']]);
-        if(!empty($get['ApartmentFind']['floorFrom']))
-        $query->andFilterWhere(['>=', 'floor', $get['ApartmentFind']['floorFrom']]);
-        if(!empty($get['ApartmentFind']['floorTo']))
-        $query->andFilterWhere(['<=', 'floor', $get['ApartmentFind']['floorTo']]);
-        if(!empty($get['ApartmentFind']['total_areaFrom']))
+        $query->andFilterWhere(['>=', 'floor', $get['ApartmentFind']['floor_allFrom']]);
+        $query->andFilterWhere(['<=', 'floor', $get['ApartmentFind']['floor_allTo']]);
         $query->andFilterWhere(['>=', 'total_area', $get['ApartmentFind']['total_areaFrom']]);
-        if(!empty($get['ApartmentFind']['total_areaTo']))
         $query->andFilterWhere(['<=', 'total_area', $get['ApartmentFind']['total_areaTo']]);
-        if(!empty($get['ApartmentFind']['floor_areaFrom']))
         $query->andFilterWhere(['>=', 'floor_area', $get['ApartmentFind']['floor_areaFrom']]);
-        if(!empty($get['ApartmentFind']['floor_areaTo']))
         $query->andFilterWhere(['<=', 'floor_area', $get['ApartmentFind']['floor_areaTo']]);
-        if(!empty($get['ApartmentFind']['kitchen_areaFrom']))
         $query->andFilterWhere(['>=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaFrom']]);
-        if(!empty($get['ApartmentFind']['kitchen_areaTo']))
         $query->andFilterWhere(['<=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaTo']]);
-        //if(!empty($get['ApartmentFind']['date_addedFrom']))
-        //        $query->andFilterWhere(['>=', 'date_added', $get['ApartmentFind']['kitchen_areaFrom']]);
-        //if(!empty($get['ApartmentFind']['date_addedTo']))
-        //        $query->andFilterWhere(['<=', 'date_added', $get['ApartmentFind']['date_addedTo']]);
-        
-        if(!empty($get['ApartmentFind']['date_addedFrom']))
-                $query->andFilterWhere(['>=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss')]);
-        if(!empty($get['ApartmentFind']['date_addedTo']))
-                $query->andFilterWhere(['<=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedTo'], 'yyyy-MM-dd HH:mm:ss')]);
+        //some problem((
+        //$query->andFilterWhere(['>=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss')]);
+        //$query->andFilterWhere(['<=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedTo'], 'yyyy-MM-dd HH:mm:ss')]);
 
-        if(!empty($get['TypeObject']['type_object_id']))
-        $query->andwhere(['type_object_id' => $get['TypeObject']['type_object_id']]);
-        if(!empty($get['RegionKharkivAdmin']['region_kharkiv_admin_id']))
-        $query->andwhere(['region_kharkiv_admin_id' => $get['RegionKharkivAdmin']['region_kharkiv_admin_id']]);
-        if(!empty($get['RegionKharkiv']['region_kharkiv_id']))
-        $query->andwhere(['region_kharkiv_id' => $get['RegionKharkiv']['region_kharkiv_id']]);
-        if(!empty($get['Region']['region_id']))
-        $query->andwhere(['region_id' => $get['Region']['region_id']]);
-        if(!empty($get['Locality']['locality_id']))
-        $query->andwhere(['locality_id' => $get['Locality']['locality_id']]);
-        if(!empty($get['Course']['course_id']))
-        $query->andwhere(['course_id' => $get['Course']['course_id']]);
-        if(!empty($get['Street']['street_id']))
-        $query->andwhere(['street_id' => $get['Street']['street_id']]);
-        if(!empty($get['WallMaterial']['wall_material_id']))
-        $query->andwhere(['wall_material_id' => $get['WallMaterial']['wall_material_id']]);
-        if(!empty($get['Condit']['condit_id']))
-        $query->andwhere(['condit_id' => $get['Condit']['condit_id']]);
-        if(!empty($get['Wc']['wc_id']))
-        $query->andwhere(['wc_id' => $get['Wc']['wc_id']]);
-        if(!empty($get['Users']['update_author_id']))
-        $query->andwhere(['update_author_id' => $get['Users']['update_author_id']]);
-        if(!empty($get['Users']['author_id']))
-        $query->andwhere(['author_id' => $get['Users']['author_id']]);
-        if(!empty($get['Users']['update_photo_user_id']))
-        $query->andwhere(['update_photo_user_id' => $get['Users']['update_photo_user_id']]);
-        if(!empty($get['Users']['exclusive_user_id']))
-        $query->andwhere(['exclusive_user_id' => $get['Users']['exclusive_user_id']]);
-        
+        $query->andFilterWhere(['type_object_id' => $get['ApartmentFind']['type_object_id']]);
+        $query->andFilterWhere(['region_kharkiv_admin_id' => $get['ApartmentFind']['region_kharkiv_admin_id']]);
+        $query->andFilterWhere(['region_kharkiv_id' => $get['ApartmentFind']['region_kharkiv_id']]);
+        $query->andFilterWhere(['region_id' => $get['ApartmentFind']['region_id']]);
+        $query->andFilterWhere(['locality_id' => $get['ApartmentFind']['locality_id']]);
+        $query->andFilterWhere(['course_id' => $get['ApartmentFind']['course_id']]);
+        $query->andFilterWhere(['street_id' => $get['ApartmentFind']['street_id']]);
+        $query->andFilterWhere(['wall_material_id' => $get['ApartmentFind']['wall_material_id']]);
+        $query->andFilterWhere(['condit_id' => $get['ApartmentFind']['condit_id']]);
+        $query->andFilterWhere(['wc_id' => $get['ApartmentFind']['wc_id']]);
+        $query->andFilterWhere(['update_author_id' => $get['ApartmentFind']['update_author_id']]);
+        $query->andFilterWhere(['author_id' => $get['ApartmentFind']['author_id']]);
+        $query->andFilterWhere(['update_photo_user_id' => $get['ApartmentFind']['update_photo_user_id']]);
+        $query->andFilterWhere(['exclusive_user_id' => $get['ApartmentFind']['exclusive_user_id']]);
+
         if($get['ApartmentFind']['middle_floor'] == '0'){
-            $query->andWhere(['floor' => '1']);    
-            //$query->orWhere(['like', 'floor', apartment.floor_all]);    
+            $query->andFilterWhere(['floor' => '1']);
+            //$query->orWhere(['like', 'floor', apartment.floor_all]);
         }
-        
-        
-        
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -284,20 +231,16 @@ class ApartmentController extends Controller
                 'pageSize' => 20,
             ],
         ]);
-        
-        $searchModel = new ApartmentSearch();
-        
+        return $this->render('find-result', ['dataProvider' => $dataProvider]);
 
+        //$searchModel = new ApartmentSearch();
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            //'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-
-
-        return $this->render('find-result', ['dataProvider' => $dataProvider]);
     }
 
-    public function actionAdd()
+    public function andFilterWhereactionAdd()
     {
         $values = Yii::$app->request->post('Apartment');
         if($values['id'] !='')

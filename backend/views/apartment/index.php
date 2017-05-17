@@ -7,10 +7,10 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\ApartmentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-use app\models\RegionKharkivAdmin;
-use app\models\Layout;
-use app\models\TypeObject;
-use app\models\Users;
+use backend\models\RegionKharkivAdmin;
+use backend\models\Layout;
+use backend\models\TypeObject;
+use backend\models\Users;
 
 
 
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="apartment-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('yii', 'Create Apartment'), ['create'], ['class' => 'btn btn-success']) ?>
@@ -54,13 +54,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'count_room',
-            [
-                'attribute' => 'layout_id',
-                'value' =>  function ($dataProvider) {
-                    return Layout::findOne($dataProvider->layout_id)->name;
-                    //return $dataProvider->layout_id;
-                }
-            ],
+            //[
+            //    'attribute' => 'layout_id',
+            //    'value' =>  function ($dataProvider) {
+            //        return Layout::findOne($dataProvider->layout_id)->name;
+            //        //return $dataProvider->layout_id;
+            //    }
+            //],
             'floor',
             'corps',
             'number_apartment',

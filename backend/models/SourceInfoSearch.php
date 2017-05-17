@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\SourceInfo;
+use backend\models\SourceInfo;
 
 /**
- * SourceInfoSearch represents the model behind the search form about `app\models\SourceInfo`.
+ * SourceInfoSearch represents the model behind the search form about `backend\models\SourceInfo`.
  */
 class SourceInfoSearch extends SourceInfo
 {

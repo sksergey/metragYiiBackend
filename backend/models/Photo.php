@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 
@@ -40,7 +40,7 @@ class Photo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'photo_id' => Yii::t('app', 'Photo ID'),
+            'photo_id' => Yii::t('app', 'ID'),
             'type_realty_id' => Yii::t('app', 'Type Realty ID'),
             'object_id' => Yii::t('app', 'Object ID'),
             'path' => Yii::t('app', 'Path'),

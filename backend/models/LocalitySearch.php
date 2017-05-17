@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Locality;
+use backend\models\Locality;
 
 /**
- * LocalitySearch represents the model behind the search form about `app\models\Locality`.
+ * LocalitySearch represents the model behind the search form about `backend\models\Locality`.
  */
 class LocalitySearch extends Locality
 {

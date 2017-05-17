@@ -1,23 +1,27 @@
+<?
+    use yii\helpers\Url;
+?>
+<? $this->title = Yii::t('app', 'Metrag'); ?>
     <div id="wrapper">
      <div class="flex-container">
         <div class="flexslider">
             <ul class="slides">
                 <li>
-                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                    <div class="block-slide"><img src="<?= Url::base(true);?>/images/slide1.png"  class="imgslide" /></div>
                     <div class="content">
 
-                        <img class="hot" src="images/slide1-content.png" alt="">
+                        <img class="hot" src="<?= Url::base(true);?>/images/slide1-content.png" alt="">
                         <span class="hot-h1">Горячее предложение</span>
                         <p class="hot-desc">Однокомнатная квартира в центре города. Мебелированная,<br /> есть технка для дома.</p>
                         <span class="hot-price"><span>5 000</span> в месяц</span>
                     </div>
                 </li>
                 <li>
-                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                    <div class="block-slide"><img src="<?= Url::base(true);?>/images/slide1.png"  class="imgslide" /></div>
                    <div class="content"></div>
                 </li>
                 <li>
-                    <div class="block-slide"><img src="images/slide1.png"  class="imgslide" /></div>
+                    <div class="block-slide"><img src="<?= Url::base(true);?>/images/slide1.png"  class="imgslide" /></div>
                     <div class="content"></div>
 
                 </li>
@@ -30,17 +34,17 @@
 
                     <span>
                         <h1>категории</h1>
-                        <img src="images/category-home.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/category-home.png" alt="">
                     </span>
 
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                    <img src="images/1.png" alt="">
+                    <img src="<?= Url::base(true);?>/images/1.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="index.php?r=rent&vs=1">    <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>
@@ -51,11 +55,11 @@
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                        <img src="images/2.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/2.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="site/apartment">   <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>
@@ -66,11 +70,11 @@
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                        <img src="images/3.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/3.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="index.php?r=building&vs=1">    <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>
@@ -81,11 +85,11 @@
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                        <img src="images/4.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/4.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="index.php?r=house&vs=1">   <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>
@@ -96,11 +100,11 @@
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                        <img src="images/5.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/5.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="index.php?r=area&vs=1">    <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>
@@ -111,11 +115,11 @@
                 </div>
                 <div class="item-cat">
                     <div class="item-cat-img">
-                        <img src="images/6.png" alt="">
+                        <img src="<?= Url::base(true);?>/images/6.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
                             <a href="index.php?r=commercial&vs=1">  <div class="caption-text">
-                                <img src="images/house.png"  alt="">
+                                <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
                     </div>

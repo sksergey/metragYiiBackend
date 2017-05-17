@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\RegionKharkivAdmin;
-use app\models\RegionKharkivAdminSearch;
+use backend\models\RegionKharkivAdmin;
+use backend\models\RegionKharkivAdminSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

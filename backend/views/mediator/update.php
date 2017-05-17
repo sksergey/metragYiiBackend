@@ -5,9 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Mediator */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Mediator',
-]) . $model->name;
+$this->title = Yii::t('app', 'Update:') . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mediators'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->mediator_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

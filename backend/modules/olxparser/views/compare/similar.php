@@ -1,8 +1,9 @@
 <?php
 
-/** @var app\modules\olxparser\models\Parsercd $item */
+/** @var app\modules\olxparser\models\Parser $item */
 /** @var array $items */
 
+use yii\helpers\Url;
 ?>
 
 <table class="table table-bordered table-striped">
@@ -84,11 +85,13 @@
             <tr>
 
                 
-                <td><?= str_replace('href=', 'target="_blank" href=', $item['name']) ?></td>
+                <td><?= '<a href="'.Url::base(true).'/apartment/view?id=' . $item['id'] . '" target="_blank">'. $item['id']. '</a>'
+                    ?></td>
+                    <?// str_replace('href=', 'target="_blank" href=', Url::base(true).'/apartment/view?id=' . $item['id']) ?>
                 <td><?= $item['phone'] ?></td>
-                <td><?= $item['komnat'] ?></td>
-                <td><?= $item['etaj'] ?></td>
-                <td><?= $item['etajnost'] ?></td>
+                <td><?= $item['count_room'] ?></td>
+                <td><?= $item['floor'] ?></td>
+                <td><?= $item['floor_all'] ?></td>
 
             </tr>
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Course;
+use backend\models\Course;
 
 /**
- * CourseSearch represents the model behind the search form about `app\models\Course`.
+ * CourseSearch represents the model behind the search form about `backend\models\Course`.
  */
 class CourseSearch extends Course
 {

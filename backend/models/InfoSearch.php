@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Info;
+use backend\models\Info;
 
 /**
- * InfoSearch represents the model behind the search form about `app\models\Info`.
+ * InfoSearch represents the model behind the search form about `backend\models\Info`.
  */
 class InfoSearch extends Info
 {

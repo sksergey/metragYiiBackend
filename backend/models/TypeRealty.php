@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 
@@ -38,7 +38,7 @@ class TypeRealty extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'type_realty_id' => Yii::t('app', 'Type Realty ID'),
+            'type_realty_id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
             'name_table' => Yii::t('app', 'Name Table'),
         ];

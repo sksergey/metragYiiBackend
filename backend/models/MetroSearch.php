@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Metro;
+use backend\models\Metro;
 
 /**
- * MetroSearch represents the model behind the search form about `app\models\Metro`.
+ * MetroSearch represents the model behind the search form about `backend\models\Metro`.
  */
 class MetroSearch extends Metro
 {

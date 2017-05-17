@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\RegionKharkivAdmin;
+use backend\models\RegionKharkivAdmin;
 
 /**
- * RegionKharkivAdminSearch represents the model behind the search form about `app\models\RegionKharkivAdmin`.
+ * RegionKharkivAdminSearch represents the model behind the search form about `backend\models\RegionKharkivAdmin`.
  */
 class RegionKharkivAdminSearch extends RegionKharkivAdmin
 {

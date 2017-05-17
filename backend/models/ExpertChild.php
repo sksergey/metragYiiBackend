@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 
@@ -39,7 +39,7 @@ class ExpertChild extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'expert_id' => Yii::t('app', 'Expert ID'),
+            'expert_id' => Yii::t('app', 'ID'),
             'child_id' => Yii::t('app', 'Child ID'),
         ];
     }

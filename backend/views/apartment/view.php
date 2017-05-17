@@ -53,46 +53,109 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'floor',
         'floor_all',
-        'city_or_region',
-        'locality_id',
-        'course_id',
-        'region_id',
-        'region_kharkiv_id',
-        'region_kharkiv_admin_id',
-        'street_id',
+        [
+            'label' => \Yii::t('yii','City Or Region'),
+            'value' => $model->cityOrRegion,
+        ],
+        [
+            'label' => \Yii::t('yii','Locality'),
+            'value' => $model->locality->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Course'),
+            'value' => $model->course->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Region'),
+            'value' => $model->region->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Region Kharkiv'),
+            'value' => $model->regionKharkiv->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Region Kharkiv Admin'),
+            'value' => $model->regionKharkivAdmin->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Street'),
+            'value' => $model->street->name,
+        ],
         'number_building',
         'corps',
         'number_apartment',
-        'exchange',
+        [
+            'label' => \Yii::t('yii','Exchange'),
+            'value' => $model->exchangeValue,
+        ],
         'exchange_formula',
         'landmark',
-        'condit_id',
-        'source_info_id',
+        [
+            'label' => \Yii::t('yii','Condit'),
+            'value' => $model->condit->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Source Info'),
+            'value' => $model->sourceInfo->name,
+        ],
         'price',
-        'mediator_id',
-        'metro_id',
+        [
+            'label' => \Yii::t('yii','Mediator'),
+            'value' => $model->mediator->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Metro'),
+            'value' => $model->metro->name,
+        ],
         'phone',
         'total_area',
         'floor_area',
         'kitchen_area',
-        'wc_id',
-        'wall_material_id',
+        [
+            'label' => \Yii::t('yii','Wc'),
+            'value' => $model->wc->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Wall Material'),
+            'value' => $model->wallMaterial->name,
+        ],
         'count_balcony',
         'count_balcony_glazed',
-        'exclusive_user_id',
-        'phone_line',
-        'bath',
+        [
+            'label' => \Yii::t('yii','Exclusive User'),
+            'value' => $model->exclusiveUser->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Phone Line'),
+            'value' => $model->phoneLineValue,
+        ],
+        [
+            'label' => \Yii::t('yii','Bath'),
+            'value' => $model->bathValue,
+        ],
         'comment',
         'note',
         'notesite',
         'date_added',
         'date_modified',
         'date_modified_photo',
-        'author_id',
-        'update_author_id',
-        'update_photo_user_id',
-        'enabled',
-     
+        [
+            'label' => \Yii::t('yii','Author'),
+            'value' => $model->author->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Update Author'),
+            'value' => $model->updateAuthor->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Update Photo User'),
+            'value' => $model->updatePhotoUser->name,
+        ],
+        [
+            'label' => \Yii::t('yii','Enabled'),
+            'value' => $model->enabledValue,
+        ],
+            
     ],
 ]);
 ?>

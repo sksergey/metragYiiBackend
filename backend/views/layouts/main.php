@@ -39,33 +39,53 @@ AppAsset::register($this);
         $menuItems[] = ['label' => Yii::t('yii', 'Login'), 'url' => ['/site/login']];
     } else {
         $menuItems = [
-        ['label' => Yii::t('yii', 'Home'), 'url' => ['/site/index']],
+        //['label' => Yii::t('yii', 'Home'), 'url' => ['/site/index']],
         [
-            'label' => 'Квартиры',
+            'label' => Yii::t('yii', 'Rents'),
             'items' => [
-                ['label' => Yii::t('yii', 'Apartment Search'), 'url' => ['/apartment/search']],
-                ['label' => Yii::t('yii', 'Create Apartment'), 'url' => ['/apartment/create']],
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/rent/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/rent/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/rent']],
             ]
         ],
-        
         [
-            'label' => Yii::t('yii', 'Edit'),
+            'label' => Yii::t('yii', 'Apartments'),
             'items' => [
-                ['label' => Yii::t('yii', 'Condit'), 'url' => ['/condit']],
-                ['label' => Yii::t('yii', 'Cource'), 'url' => ['/course']],
-                ['label' => Yii::t('yii', 'Layout'), 'url' => ['/layout']],
-                ['label' => Yii::t('yii', 'Locality'), 'url' => ['/locality']],
-                ['label' => Yii::t('yii', 'Mediator'), 'url' => ['/mediator']],
-                ['label' => Yii::t('yii', 'Metro'), 'url' => ['/metro']],
-                ['label' => Yii::t('yii', 'Region'), 'url' => ['/region']],
-                ['label' => Yii::t('yii', 'Region Kharkiv'), 'url' => ['/region-kharkiv']],
-                ['label' => Yii::t('yii', 'Region Kharkiv Admin'), 'url' => ['/region-kharkiv-admin']],
-                ['label' => Yii::t('yii', 'Source Info'), 'url' => ['/source-info']],
-                ['label' => Yii::t('yii', 'Street'), 'url' => ['/street']],
-                ['label' => Yii::t('yii', 'Type Object'), 'url' => ['/type-object']],
-                ['label' => Yii::t('yii', 'Wall Material'), 'url' => ['/wall-material']],
-                ['label' => Yii::t('yii', 'Wc'), 'url' => ['/wc']],
-                
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/apartment/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/apartment/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/apartment']],
+            ]
+        ],
+        [
+            'label' => Yii::t('yii', 'Buildings'),
+            'items' => [
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/building/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/building/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/building']],
+            ]
+        ],
+        [
+            'label' => Yii::t('yii', 'Houses'),
+            'items' => [
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/house/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/house/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/house']],
+            ]
+        ],
+        [
+            'label' => Yii::t('yii', 'Areas'),
+            'items' => [
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/area/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/area/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/area']],
+            ]
+        ],
+        [
+            'label' => Yii::t('yii', 'Commercials'),
+            'items' => [
+                ['label' => Yii::t('yii', 'Search'), 'url' => ['/commercial/search']],
+                ['label' => Yii::t('yii', 'Add'), 'url' => ['/commercial/create']],
+                ['label' => Yii::t('yii', 'List'), 'url' => ['/commercial']],
             ]
         ],
         [
@@ -82,9 +102,48 @@ AppAsset::register($this);
         ],
         ],
         [
+            'label' => Yii::t('yii', 'Edit'),
+            'items' => [
+                ['label' => Yii::t('yii', 'Condit'), 'url' => ['/condit']],
+                ['label' => Yii::t('yii', 'Course'), 'url' => ['/course']],
+                ['label' => Yii::t('yii', 'Comfort'), 'url' => ['/comfort']],
+                ['label' => Yii::t('yii', 'Communication'), 'url' => ['/communication']],
+                ['label' => Yii::t('yii', 'Developer'), 'url' => ['/developer']],
+                ['label' => Yii::t('yii', 'Gas'), 'url' => ['/gas']],
+                ['label' => Yii::t('yii', 'Layout'), 'url' => ['/layout']],
+                ['label' => Yii::t('yii', 'Locality'), 'url' => ['/locality']],
+                ['label' => Yii::t('yii', 'Mediator'), 'url' => ['/mediator']],
+                ['label' => Yii::t('yii', 'Metro'), 'url' => ['/metro']],
+                ['label' => Yii::t('yii', 'Ownership'), 'url' => ['/ownership']],
+                ['label' => Yii::t('yii', 'Parthouse'), 'url' => ['/parthouse']],
+                ['label' => Yii::t('yii', 'Partsite'), 'url' => ['/partsite']],
+                ['label' => Yii::t('yii', 'Purpose'), 'url' => ['/purpose']],
+                ['label' => Yii::t('yii', 'Region'), 'url' => ['/region']],
+                ['label' => Yii::t('yii', 'Region Kharkiv'), 'url' => ['/region-kharkiv']],
+                ['label' => Yii::t('yii', 'Region Kharkiv Admin'), 'url' => ['/region-kharkiv-admin']],
+                ['label' => Yii::t('yii', 'Sewage'), 'url' => ['/sewage']],
+                ['label' => Yii::t('yii', 'Source Info'), 'url' => ['/source-info']],
+                ['label' => Yii::t('yii', 'Street'), 'url' => ['/street']],
+                ['label' => Yii::t('yii', 'Type Object'), 'url' => ['/type-object']],
+                ['label' => Yii::t('yii', 'Wall Material'), 'url' => ['/wall-material']],
+                ['label' => Yii::t('yii', 'Water'), 'url' => ['/water']],
+                ['label' => Yii::t('yii', 'Wc'), 'url' => ['/wc']],
+                
+            ]
+        ],
+        
+        [
             'label' => Yii::t('yii', 'Parser'),
             'items' => [
                  ['label' => Yii::t('yii', 'OLX apartments'), 'url' => ['/olxparser']],
+                 
+            ],
+        ],
+        [
+            'label' => Yii::t('yii', 'XML'),
+            'items' => [
+                 ['label' => Yii::t('yii', 'Create XML'), 'url' => ['/xml/create']],
+                 ['label' => Yii::t('yii', 'XML list'), 'url' => ['/xml']],
                  
             ],
         ],
@@ -108,7 +167,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container-fluid" style="margin-top: 60px; ">
+    <div class="container-fluid" style="margin-top: 160px; ">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>

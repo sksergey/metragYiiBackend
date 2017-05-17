@@ -3,7 +3,7 @@
  use yii\widgets\LinkPager;
  use yii\helpers\Url;
 ?>
-
+<? $this->title = Yii::t('app', 'Apartment'); ?>
 <div class="filter-2">
 	<div class="content">
 		<div class="type-list">
@@ -37,7 +37,7 @@
 	
 		<div class="item-catalog">
         	<div class="item-catalog-text">
-        		  <?=  $apartment::getLocality($apartment); ?>
+        		  <?=  $apartment::getLocalitystring($apartment); ?>
         	</div>
             <div class="item-catalog-img">
                 <img src="<? $image = $apartment->getImage();

@@ -308,7 +308,10 @@ class SiteController extends Controller
         return $this->render('article', ['article' => $article, 'pages' => $pages]);
     }
 
-
+    public function actionBuy()
+    {
+        return $this->render('buy');   
+    }
 
 
 

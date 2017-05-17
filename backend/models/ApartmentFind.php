@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
-use app\models\Apartment;
+use common\models\Apartment;
 
 class ApartmentFind extends Apartment
 {
@@ -41,6 +41,14 @@ class ApartmentFind extends Apartment
     public $note = '2';
     public $phone;
 
+    public function rules()
+    {
+        return [
+            [['id', 'type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region',  'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
+            [['price', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
+        ];
+    }
     
 }
 

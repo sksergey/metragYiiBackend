@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use app\modules\olxparser\olxParserHelper;
 
 
-/** @var app\modules\olxparser\models\ParsercdSearch $searchModel  */
+/** @var app\modules\olxparser\models\ParserSearch $searchModel  */
 /** @var yii\data\ActiveDataProvider $dataProvider  */
 
 /** @var array $data */
@@ -73,6 +73,10 @@ if( !empty($count_pages_list) ){ ?>
 
             <?php
         } ?>
+
+        <form action="<?=Url::to(['get-pages'])?>">
+            <input type="submit" value="Начать поиск страниц">
+        </form>
     </div>
 
     <div class="colRg">
@@ -146,7 +150,7 @@ if( !empty($count_pages_list) ){ ?>
 
     <?php
 
-    if( olxParserHelper::tableExists('new_parser_olx_parsercd') ){
+    if( olxParserHelper::tableExists('new_parser_olx_parser') ){
         echo $this->render('result', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -27,13 +27,14 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-
+<?= Yii::$app->user->identity->username; ?>
 <?php 
             $info = CompanyInfo::find()
                 ->indexBy('name')
                 ->all();
             //var_dump($info);
             //die;
+                
             echo $this->render('_header', ['phones' => $info['phones']->data, 'email' => $info['email']->data]); ?>
 <div class="wrap">
     
@@ -91,7 +92,7 @@ AppAsset::register($this);
     <?= $this->render('_contactLine', ['phones' => $info['phones']->data, 'email' => $info['email']->data]); ?>
     <div class="container">
         <p class="pull-left">&copy; Агентство недвижимости «Метраж», 1999—<?= date('Y') ?></p>
-
+        
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>

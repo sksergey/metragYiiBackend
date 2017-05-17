@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TypeRealty;
-use app\models\TypeRealtySearch;
+use backend\models\TypeRealty;
+use backend\models\TypeRealtySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -42,5 +42,7 @@ define("OLX_RU_ETAJNOST_DOMA", "Этажность дома");
 '_pattern_only_phones' => '/([0-9 +-]{6,20})/',
 /* 15) Поиск всех фотографий объявления */
 '_pattern_all_photos' => '/<div class="photo-glow">.*?src="([^"]+)".*?<\/div>/s',
-'url_phone' => 'https://www.olx.ua/ajax/misc/contact/phone/'
+'url_phone' => 'https://www.olx.ua/ajax/misc/contact/phone/',
+
+     '_object_link' => '/<a href="([^"]+?)" class="[^"]+?linkWithHash detailsLink"/',
 ];

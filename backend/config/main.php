@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+	'homeUrl' => '/admin',
     'language' => 'ru-RU',
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
@@ -32,6 +33,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'baseUrl' => '/admin',
         ],
         'user' => [
             'identityClass' => 'common\models\User',

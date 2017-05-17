@@ -5,9 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Locality */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Locality',
-]) . $model->name;
+$this->title = Yii::t('app', 'Update:') . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localities'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->locality_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

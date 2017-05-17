@@ -11,7 +11,7 @@
     use yii\bootstrap\Carousel;
 
 ?>
-
+<? $this->title = Yii::t('app', 'Apartment'); ?>
 	 	<?
     	$img = [];
     	$images = $apartment->getImages();

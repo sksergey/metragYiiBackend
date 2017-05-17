@@ -2,13 +2,13 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\helpers\Url;
 /**
  *
  * Column    Type    Comment
  * id    int(11) Auto Increment
  * advert_id    int(11)
- * silka    text
+ * link    text
  * path    text
  * date    varchar(255)
  * type_object_id    int(11)
@@ -53,6 +53,21 @@ use yii\grid\GridView;
         },
 
         'columns' => [
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' =>
+                    [
+                        'update' => function ($url, $model, $key) {
+                           return '<a href="'.Url::base(true).'/apartment/add-from-parser?id='.$key.'" title="Добавить" class="btn btn-success" style="color: #000" aria-label="Добавить" data-pjax="0" ><span class="glyphicon glyphicon-pencil"></span></a>';
+                    },
+                        'delete' => function ($url, $model, $key) {
+                        return '<a href="'.Url::base(true).'/olxparser/parser/delete?id='.$key.'" title="Удалить" class="btn btn-danger" style="color: #000" aria-label="Удалить" data-pjax="0" data-confirm="Вы уверены, что хотите удалить этот элемент?" data-method="post"><span class="glyphicon glyphicon-trash"></span></a>';
+                    },
+                        'view' => function ($url, $model, $key) {
+                            return '';
+                            },
+                    ]
+            ],
             'advert_id',
             [
                 'label' => 'Ссылка',
@@ -144,7 +159,7 @@ use yii\grid\GridView;
 
                         return Html::tag('a', $text, [
                             'target' => '_blank',
-                            'href' => '/olxparser/compare/similar/?id=' . $data->id
+                            'href' => Url::base(true).'/olxparser/compare/similar/?id=' . $data->id
                         ]);
                     } else {
                         return '-';

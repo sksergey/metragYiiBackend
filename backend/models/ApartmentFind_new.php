@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
-use app\models\Apartment;
+use common\models\Apartment;
 use yii\data\ActiveDataProvider;
 
 class ApartmentFind extends Apartment
@@ -87,14 +87,14 @@ class ApartmentFind extends Apartment
             // $query->where('0=1');
             return $dataProvider;
         }
-        $query->andFilterWhere([
-            'id' => $this->id,
+        //$query->andFilterWhere([
+            /*'id' => $this->id,
             'type_object_id' => $this->type_object_id,
             'count_room' => $this->count_room,
             'layout_id' => $this->layout_id,
             'floor' => $this->floor,
             'floor_all' => $this->floor_all,
-            'city_or_region' => $this->city_or_region,
+            'city_or_region' => $this->city_or_region,*/
             /*'region_kharkiv_admin_id' => $this->region_kharkiv_admin_id,
             'locality_id' => $this->locality_id,
             'course_id' => $this->course_id,
@@ -124,7 +124,7 @@ class ApartmentFind extends Apartment
             'update_author_id' => $this->update_author_id,
             'update_photo_user_id' => $this->update_photo_user_id,
             'enabled' => $this->enabled,*/
-            ]);
+            //]);
         
         $query->andFilterWhere(['>=', 'id', $params['ApartmentFind']['idFrom']]);
         if(!empty($get['ApartmentFind']['idTo']))

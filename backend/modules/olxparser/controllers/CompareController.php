@@ -5,9 +5,10 @@ namespace app\modules\olxparser\controllers;
 use Yii;
 use yii\web\Controller;
 
-use app\modules\olxparser\models\Parsercd;
-use app\modules\olxparser\models\ParsercdSearch;
+use app\modules\olxparser\models\Parser;
+use app\modules\olxparser\models\ParserSearch;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 class CompareController extends Controller
 {
@@ -33,8 +34,8 @@ class CompareController extends Controller
 
     public function actionIndex()
     {
-        /** @var Parsercd[] $items */
-        $items = Parsercd::find()->all();
+        /** @var Parser[] $items */
+        $items = Parser::find()->all();
 
         foreach ($items as $item) {
             $numbers = self::normalizePhoneNumbersField($item->phone);
@@ -51,19 +52,19 @@ class CompareController extends Controller
 
             // Syntax sugar
             $update_status = function ($value) use ($item) {
-                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parsercd` SET 
+                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parser` SET 
                     `status` = {$value} WHERE id = {$item->id}")->execute();
             };
 
             $update_counter = function ($value) use ($item) {
-                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parsercd` SET 
+                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parser` SET 
                     `count_similar_advs` = {$value} WHERE id = {$item->id}")->execute();
             };
 
             // $similarPhonesCount показывает сколько квартир с номера текущего
             // объявления было найдено
             $similarPhonesCount = Yii::$app->db->createCommand(
-                "SELECT COUNT(*) FROM `parserolx` WHERE ({$sql})")->queryScalar();
+                "SELECT COUNT(*) FROM `apartment` WHERE ({$sql})")->queryScalar();
 
             // `Если совпадает телефон - мы помечаем нашу квартиру статусом "2"`
             if ($similarPhonesCount > 0) {
@@ -74,7 +75,7 @@ class CompareController extends Controller
             // $similarPhonesAndRoomsCount показывает сколько квартир с номера текущего + к-во комнат
             // объявления было найдено
             $similarPhonesAndRoomsCount = Yii::$app->db->createCommand(
-                "SELECT COUNT(*) FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}")->queryScalar();
+                "SELECT COUNT(*) FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}")->queryScalar();
 
             // `если совпадает телефон и кол-во комнат - помечаем статусом "3"`
             if ($similarPhonesAndRoomsCount > 0) {
@@ -85,8 +86,8 @@ class CompareController extends Controller
             // $similarPhonesAndRoomsAndFloorsCount показывает сколько квартир с номера текущего + к-во комнат + этажность
             // объявления было найдено
             $similarPhonesAndRoomsAndFloorsCount = Yii::$app->db->createCommand(
-                "SELECT COUNT(*) FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}
-                  AND etajnost = {$item->floor_all}")->queryScalar();
+                "SELECT COUNT(*) FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}
+                  AND floor_all = {$item->floor_all}")->queryScalar();
 
             // `если совпадает телефон, кол-во комнат и кол-во этажей - помечаем статусом "4" `
             if ($similarPhonesAndRoomsAndFloorsCount > 0) {
@@ -97,8 +98,8 @@ class CompareController extends Controller
             // $similarPhonesAndRoomsAndFloorsCount показывает сколько квартир с номера текущего + к-во комнат + этажность
             // объявления было найдено
             $similarPhonesAndRoomsAndFloorsAndFloorCount = Yii::$app->db->createCommand(
-                "SELECT COUNT(*) FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}
-                  AND etajnost = {$item->floor_all} AND etaj = {$item->floor}")->queryScalar();
+                "SELECT COUNT(*) FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}
+                  AND floor_all = {$item->floor_all} AND floor = {$item->floor}")->queryScalar();
 
             // `и наконец если совпадает совпадает телефон, кол-во комнат и кол-во этажей и этажность дома - помечаем статусом "5".`
             if ($similarPhonesAndRoomsAndFloorsAndFloorCount > 0) {
@@ -108,13 +109,13 @@ class CompareController extends Controller
 
         }
 
-        return $this->redirect('/olxparser/default/index');
+        return $this->redirect(Url::base(true).'/olxparser/default/index');
     }
 
     public function actionSimilar($id)
     {
-        /** @var Parsercd $item */
-        $item = Parsercd::find()->where(['id' => $id])->one();
+        /** @var Parser $item */
+        $item = Parser::find()->where(['id' => $id])->one();
         if ($item === null) {
             throw new NotFoundHttpException();
         }
@@ -135,18 +136,18 @@ class CompareController extends Controller
 
         switch ($status) {
             case 2:
-                $sql_query = "SELECT * FROM `parserolx` WHERE ({$sql})";
+                $sql_query = "SELECT * FROM `apartment` WHERE ({$sql})";
                 break;
             case 3:
-                $sql_query = "SELECT * FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}";
+                $sql_query = "SELECT * FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}";
                 break;
             case 4:
-                $sql_query = "SELECT * FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}
+                $sql_query = "SELECT * FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}
                   AND etajnost = {$item->floor_all}";
                 break;
             case 5:
-                $sql_query = "SELECT * FROM `parserolx` WHERE ({$sql}) AND komnat = {$item->count_room}
-                  AND etajnost = {$item->floor_all} AND etaj = {$item->floor}";
+                $sql_query = "SELECT * FROM `apartment` WHERE ({$sql}) AND count_room = {$item->count_room}
+                  AND floor_all = {$item->floor_all} AND floor = {$item->floor}";
                 break;
         }
 

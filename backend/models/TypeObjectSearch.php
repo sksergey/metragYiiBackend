@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\TypeObject;
+use backend\models\TypeObject;
 
 /**
- * TypeObjectSearch represents the model behind the search form about `app\models\TypeObject`.
+ * TypeObjectSearch represents the model behind the search form about `backend\models\TypeObject`.
  */
 class TypeObjectSearch extends TypeObject
 {

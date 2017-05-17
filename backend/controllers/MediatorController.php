@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\Mediator;
-use app\models\MediatorSearch;
+use backend\models\Mediator;
+use backend\models\MediatorSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

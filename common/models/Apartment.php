@@ -3,8 +3,23 @@
 namespace common\models;
 
 use Yii;
-use app\models\Image;
-
+use backend\models\Image;
+use backend\models\ApartmentFind;
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
+use backend\models\Locality;
+use backend\models\RegionKharkiv;
+use backend\models\Region;
+use backend\models\Street;
+use backend\models\Course;
+use backend\models\WallMaterial;
+use backend\models\Condit;
+use backend\models\Wc;
+use backend\models\Users;
+use backend\models\UserType;
+use backend\models\Layout;
+use backend\models\SourceInfo;
+use backend\models\Mediator;
 
 /**
  * This is the model class for table "apartment".
@@ -57,7 +72,6 @@ use app\models\Image;
  */
 class Apartment extends \yii\db\ActiveRecord
 {
-    public $imageFiles;
 
     /**
      * @inheritdoc
@@ -74,7 +88,7 @@ class Apartment extends \yii\db\ActiveRecord
     {
         return [
             /*[['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'number_building', 'corps', 'number_apartment', 'exchange', 'exchange_formula', 'landmark', 'condit_id', 'source_info_id', 'price', 'mediator_id', 'metro_id', 'phone', 'total_area', 'floor_area', 'kitchen_area', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'comment', 'note', 'notesite', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'required'],*/
-            [['type_object_id', 'count_room', 'floor', 'floor_all', 'region_kharkiv_admin_id', 'region_kharkiv_id', 'street_id', 'number_building', 'corps', 'number_apartment', 'price', 'condit_id', 'source_info_id', 'wc_id', 'wall_material_id', 'total_area'], 'required'],
+            [['type_object_id', 'count_room', 'floor', 'floor_all', 'street_id', 'price', 'condit_id', 'source_info_id', 'wc_id', 'wall_material_id', 'total_area', 'floor_area', 'kitchen_area'], 'required'],
             [['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
@@ -86,57 +100,7 @@ class Apartment extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    /*public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'type_object_id' => \Yii::t('app', 'Type Object'),
-            'count_room' => \Yii::t('app', 'Count Room'),
-            'layout_id' => \Yii::t('app', 'Layout'),
-            'floor' => \Yii::t('app', 'Floor'),
-            'floor_all' => Yii::t('app', 'Floor All'),
-            'city_or_region' => Yii::t('app', 'City Or Region'),
-            'region_kharkiv_admin_id' => Yii::t('app', 'Region Kharkiv Admin'),
-            'locality_id' => Yii::t('app', 'Locality'),
-            'course_id' => Yii::t('app', 'Course'),
-            'region_id' => Yii::t('app', 'Region'),
-            'region_kharkiv_id' => Yii::t('app', 'Region Kharkiv'),
-            'street_id' => Yii::t('app', 'Street'),
-            'number_building' => Yii::t('app', 'Number Building'),
-            'corps' => Yii::t('app', 'Corps'),
-            'number_apartment' => Yii::t('app', 'Number Apartment'),
-            'exchange' => Yii::t('app', 'Exchange'),
-            'exchange_formula' => Yii::t('app', 'Exchange Formula'),
-            'landmark' => Yii::t('app', 'Landmark'),
-            'condit_id' => Yii::t('app', 'Condit'),
-            'source_info_id' => Yii::t('app', 'Source Info'),
-            'price' => Yii::t('app', 'Price'),
-            'mediator_id' => Yii::t('app', 'Mediator'),
-            'metro_id' => Yii::t('app', 'Metro'),
-            'phone' => Yii::t('app', 'Phone'),
-            'total_area' => Yii::t('app', 'Total Area'),
-            'floor_area' => Yii::t('app', 'Floor Area'),
-            'kitchen_area' => Yii::t('app', 'Kitchen Area'),
-            'wc_id' => Yii::t('app', 'Wc'),
-            'wall_material_id' => Yii::t('app', 'Wall Material'),
-            'count_balcony' => Yii::t('app', 'Count Balcony'),
-            'count_balcony_glazed' => Yii::t('app', 'Count Balcony Glazed'),
-            'exclusive_user_id' => Yii::t('app', 'Exclusive User'),
-            'phone_line' => Yii::t('app', 'Phone Line'),
-            'bath' => Yii::t('app', 'Bath'),
-            'comment' => Yii::t('app', 'Comment'),
-            'note' => Yii::t('app', 'Note'),
-            'notesite' => Yii::t('app', 'Notesite'),
-            'date_added' => Yii::t('app', 'Date Added'),
-            'date_modified' => Yii::t('app', 'Date Modified'),
-            'date_modified_photo' => Yii::t('app', 'Date Modified Photo'),
-            'author_id' => Yii::t('app', 'Author'),
-            'update_author_id' => Yii::t('app', 'Update Author'),
-            'update_photo_user_id' => Yii::t('app', 'Update Photo User'),
-            'enabled' => Yii::t('app', 'Enabled'),
-        ];
-    }*/
-
+    
     public function attributeLabels()
     {
         return [
@@ -188,14 +152,47 @@ class Apartment extends \yii\db\ActiveRecord
         ];
     }
 
-
     public function behaviors()
     {
         return [
             'image' => [
                 'class' => 'rico\yii2images\behaviors\ImageBehave',
+            ],
+            'realty' => [
+                'class' => 'common\behaviors\RealtyBehave',
             ]
         ];
+    }
+    
+    public static function deleteImage($id)
+    {
+        $image = Image::findOne($id);
+        $model = Apartment::findOne($image->itemId);
+        $images = $model->getImages();
+        foreach ($images as $img)
+        {
+            if ($img->id == $id)
+                $model->removeImage($img);
+        }
+    }
+
+    
+    public function getLocalitystring($model)
+    {
+        $locality = '';
+        if($model['city_or_region'] == '0')
+            $locality .= Yii::t('app', 'Kharkiv');
+        else
+            $locality .= Yii::t('app', 'not finalize!!');
+        if($model['region_kharkiv_id'] != '0'){
+            $locality .= ', ';
+            $locality .= RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
+        }
+        if($model['street_id'] != '0'){
+            $locality .= ', ';
+            $locality .= Street::findOne($model['street_id'])->name;
+        }
+        return $locality;
     }
 
     public function getTypeObject($apartment = null)
@@ -215,63 +212,4 @@ class Apartment extends \yii\db\ActiveRecord
             return RegionKharkiv::findOne($apartment['region_kharkiv_id'])->name;
             
     }
-
-    public function getLayout()
-    {
-        return Layout::findOne($this->layout_id);
-    }
-
-    public function getPhonesArr($phone)
-    {
-        return $phones = explode(",", $phone);
-    }
-
-    public function upload()
-    {
-        if($this->validate()) { 
-            foreach ($this->imageFiles as $file) {
-                $path = Yii::getAlias('@webroot/upload/files/') . $file->name;
-                //echo "path-".$path;
-                //die;
-                $file->saveAs($path);
-                $this->attachImage($path);
-                //die;
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function deleteImage($id)
-    {
-        $image = Image::findOne($id);
-        $model = Apartment::findOne($image->itemId);
-        $images = $model->getImages();
-        foreach ($images as $img)
-        {
-            if ($img->id == $id)
-                $model->removeImage($img);
-        }
-    }
-
-    public function getLocality($model)
-    {
-        $locality = '';
-        if($model['city_or_region'] == '0')
-            $locality .= Yii::t('app', 'Kharkiv');
-        else
-            $locality .= Yii::t('app', 'not finalize!!');
-        if($model['region_kharkiv_id'] != '0'){
-            $locality .= ', ';
-            $locality .= RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
-        }
-        if($model['street_id'] != '0'){
-            $locality .= ', ';
-            $locality .= Street::findOne($model['street_id'])->name;
-        }
-        return $locality;
-    }
-
-
 }

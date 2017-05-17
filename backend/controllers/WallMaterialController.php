@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\WallMaterial;
-use app\models\WallMaterialSearch;
+use backend\models\WallMaterial;
+use backend\models\WallMaterialSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

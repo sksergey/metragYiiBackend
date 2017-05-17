@@ -4,13 +4,14 @@
 ?>
 
 <header>
+
 		<?= $this->render('_contactLine', ['phones' => $phones, 'email' => $email]); ?>
 		
 		<div class="header-menu">
 			<div class="content">
 				<div class="logo">
 					
-					<a href="<?= Url::base(true);?>" title="">
+					<a href="/index.php" title="">
 						
 						<img src="<?= Url::base(true);?>/images/logo.png" alt="" width=250>
 					</a>
@@ -21,8 +22,8 @@
           
 	          <ul class="srt-menu" id="menu-main-navigation">
               <?php
-              if (!isset ($_GET['art'])) echo "<li class=\"current\"><a href=\"".Url::base(true)."\">".Yii::t('app', 'HOME')."</a></li>";
-              else echo "<li><a href=\"".Url::base(true)."\">".Yii::t('app', 'HOME')."</a></li>";
+              if (!isset ($_GET['art'])) echo "<li class=\"current\"><a href=\"/index.php\">".Yii::t('app', 'HOME')."</a></li>";
+              else echo "<li><a href=\"\">".Yii::t('app', 'HOME')."</a></li>";
 
               if (isset ($_GET['art']))
               {
@@ -31,26 +32,26 @@
 	          }
 	          else echo "<li><a href=\"#\">".Yii::t('app', 'ABOUT')."</a>";
                echo "<ul>";
-	               echo "<li><a href=\"".Url::base(true)."/site/company-history\">".Yii::t('app', 'Company history')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/site/review\">".Yii::t('app', 'Client review')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/site/best-rieltors\">".Yii::t('app', 'Best rieltors')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/site/carier\">".Yii::t('app', 'Carier')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/site/vacancy\">".Yii::t('app', 'Vacancy')."</a></li>";
+	               echo "<li><a href=\"/site/company-history\">".Yii::t('app', 'Company history')."</a></li>";
+	               echo "<li><a href=\"/site/review\">".Yii::t('app', 'Client review')."</a></li>";
+	               echo "<li><a href=\"/site/best-rieltors\">".Yii::t('app', 'Best rieltors')."</a></li>";
+	               echo "<li><a href=\"/site/carier\">".Yii::t('app', 'Carier')."</a></li>";
+	               echo "<li><a href=\"/site/vacancy\">".Yii::t('app', 'Vacancy')."</a></li>";
                echo "</ul>";
               echo "</li>";
 
               if (isset ($_GET['art']))
               {
 	              if (($_GET['art']==10) OR ($_GET['art']==11) OR ($_GET['art']==12) OR ($_GET['art']==13) OR ($_GET['art']==14))
-	              echo "<li class=\"current\"><a href=\"#\">УСЛУГИ</a>";
-	              else echo "<li><a href=\"#\">УСЛУГИ</a>";
+	              echo "<li class=\"current\"><a href=\"#\">".Yii::t('app', 'SERVICES')."</a>";
+	              else echo "<li><a href=\"#\">".Yii::t('app', 'SERVICES')."</a>";
 	          }
-	          else echo "<li><a href=\"#\">УСЛУГИ</a>";
+	          else echo "<li><a href=\"#\">".Yii::t('app', 'SERVICES')."</a>";
                echo "<ul>";
-	               echo "<li><a href=\"\">Купить</a></li>";
-	               echo "<li><a href=\"\">Владельцам</a></li>";
-	               echo "<li><a href=\"\">Арендовать</a></li>";
-	               echo "<li><a href=\"\">Оценка недвижимости</a></li>";
+	               echo "<li><a href=\"/site/buy\">".Yii::t('app', 'Buy')."</a></li>";
+	               echo "<li><a href=\"\">".Yii::t('app', 'Ownership')."</a></li>";
+	               echo "<li><a href=\"\">".Yii::t('app', 'Rent')."</a></li>";
+	               echo "<li><a href=\"\">".Yii::t('app', 'Property valuation')."</a></li>";
                echo "</ul>";
               echo "</li>";
 
@@ -61,18 +62,18 @@
 	          }
 	          else echo "<li><a href=\"#\">".Yii::t('app', 'NEWS')."</a>";
 	          echo "<ul>";
-	               echo "<li><a href=\"".Url::base(true)."/site/news\">".Yii::t('app', 'News')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/site/article\">".Yii::t('app', 'Article')."</a></li>";
-	               echo "<li><a href=\"".Url::base(true)."/#\">Аналитика</a></li>";
+	               echo "<li><a href=\"/site/news\">".Yii::t('app', 'News')."</a></li>";
+	               echo "<li><a href=\"/site/article\">".Yii::t('app', 'Article')."</a></li>";
+	               echo "<li><a href=\"/#\">Аналитика</a></li>";
                echo "</ul>";
               echo "</li>";
 
               if (isset ($_GET['art']))
               {
-	              if ($_GET['art']==9) echo "<li class=\"current\"><a href=\"".Url::base(true)."/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
-	              else echo "<li><a href=\"".Url::base(true)."/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
+	              if ($_GET['art']==9) echo "<li class=\"current\"><a href=\"/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
+	              else echo "<li><a href=\"/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
 	          }
-	          else echo "<li><a href=\"".Url::base(true)."/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
+	          else echo "<li><a href=\"/site/contacts\">".Yii::t('app', 'CONTACTS')."</a></li>";
               ?>
 			  <li>
                   <a href="#">ОБРАТНЫЙ ЗВОНОК</a>
