@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use backend\models\RegionKharkivAdmin;
+use backend\models\Layout;
+use backend\models\TypeObject;
+use backend\models\Users;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CommercialSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -23,11 +27,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
+            [
+                'class' => 'yii\grid\ActionColumn',
+                //'controller' => 'apartment'
+                /*'attribute' => 'Action',
+                'value' => function($dataProvider){
+                    //return Url::to(['agency/apartmentedit', 'id' => $dataProvider->id]);
+                    return Html::a('Редактировать', ['agency/apartmentedit', 'id' => $dataProvider->id], ['class' => 'profile-link']);
+                }*/
+            ],
             'id',
-            'type_object_id',
-            'count_room',
-            'ownership_id',
+            [
+                'attribute' => 'type_object_id',
+                'value' =>  function ($dataProvider) {
+                    return TypeObject::findOne($dataProvider->type_object_id)->name;
+                }
+            ],
+            [
+                'attribute' => 'region_kharkiv_admin_id',
+                'value' =>  function ($dataProvider) {
+                    return RegionKharkivAdmin::findOne($dataProvider->region_kharkiv_admin_id)->name;
+                }
+            ],
+            //'ownership_id',
             'floor',
             // 'floor_all',
             // 'city_or_region',
@@ -74,8 +96,23 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'update_author_id',
             // 'update_photo_user_id',
             // 'enabled',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            'price',
+            [
+                'attribute' => 'update_author_id',
+                'value' =>  function ($dataProvider) {
+                    return Users::findOne($dataProvider->update_author_id)->name;
+                }
+            ],
+            [
+                'attribute' => 'enabled',
+                'value' => function($model) {
+                    return $model->enabled == 0 ? Yii::t('app', 'Archive') : Yii::t('app', 'Active');
+                },
+                'filter' => [
+                    0 => Yii::t('app', 'Archive'),
+                    1 => Yii::t('app', 'Active')
+                ]
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

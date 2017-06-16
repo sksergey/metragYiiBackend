@@ -2,24 +2,17 @@
 
 namespace common\models;
 
+use backend\models\Xml;
 use Yii;
 use backend\models\Image;
 use backend\models\ApartmentFind;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
-use backend\models\Locality;
 use backend\models\RegionKharkiv;
-use backend\models\Region;
 use backend\models\Street;
 use backend\models\Course;
-use backend\models\WallMaterial;
-use backend\models\Condit;
-use backend\models\Wc;
-use backend\models\Users;
-use backend\models\UserType;
-use backend\models\Layout;
-use backend\models\SourceInfo;
-use backend\models\Mediator;
+use backend\models\Locality;
+use backend\models\Region;
 
 /**
  * This is the model class for table "apartment".
@@ -72,7 +65,6 @@ use backend\models\Mediator;
  */
 class Apartment extends \yii\db\ActiveRecord
 {
-
     /**
      * @inheritdoc
      */
@@ -87,8 +79,7 @@ class Apartment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            /*[['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'number_building', 'corps', 'number_apartment', 'exchange', 'exchange_formula', 'landmark', 'condit_id', 'source_info_id', 'price', 'mediator_id', 'metro_id', 'phone', 'total_area', 'floor_area', 'kitchen_area', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'comment', 'note', 'notesite', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'required'],*/
-            [['type_object_id', 'count_room', 'floor', 'floor_all', 'street_id', 'price', 'condit_id', 'source_info_id', 'wc_id', 'wall_material_id', 'total_area', 'floor_area', 'kitchen_area'], 'required'],
+            [['type_object_id', 'count_room', 'floor', 'floor_all', 'price', 'source_info_id', 'total_area', 'floor_area', 'kitchen_area'], 'required'],
             [['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
@@ -180,10 +171,13 @@ class Apartment extends \yii\db\ActiveRecord
     public function getLocalitystring($model)
     {
         $locality = '';
-        if($model['city_or_region'] == '0')
+        if($model['city_or_region'] == '0') {
             $locality .= Yii::t('app', 'Kharkiv');
-        else
-            $locality .= Yii::t('app', 'not finalize!!');
+        }else {
+            if ($model['locality_id']) $locality .= Locality::findOne($model['locality_id'])->name . ', ';
+            if ($model['course_id']) $locality .= Course::findOne($model['course_id'])->name . ', ';
+            if ($model['region_id']) $locality .= Region::findOne($model['region_id'])->name;
+        }
         if($model['region_kharkiv_id'] != '0'){
             $locality .= ', ';
             $locality .= RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
@@ -195,21 +189,22 @@ class Apartment extends \yii\db\ActiveRecord
         return $locality;
     }
 
-    public function getTypeObject($apartment = null)
+    public function getTypeObject($model = null)
     {
-        if($apartment == null)
+        if($model == null)
             return TypeObject::findOne($this->type_object_id);
         else
-            return TypeObject::findOne($apartment['type_object_id'])->name;
+            return TypeObject::findOne($model['type_object_id'])->name;
             
     }
 
-    public function getRegionKharkiv($apartment = null)
+    public function getRegionKharkiv($model = null)
     {
-        if($apartment == null)
+        if($model == null)
             return RegionKharkiv::findOne($this->region_kharkiv_id);
         else
-            return RegionKharkiv::findOne($apartment['region_kharkiv_id'])->name;
+            return RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
             
     }
+
 }

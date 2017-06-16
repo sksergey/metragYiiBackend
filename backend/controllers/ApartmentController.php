@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Apartment;
-use backend\models\ApartmentSearch;
+use common\models\ApartmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,19 +13,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
 use backend\models\ApartmentFind;
-use backend\models\RegionKharkivAdmin;
-use backend\models\TypeObject;
-use backend\models\Locality;
-use backend\models\RegionKharkiv;
-use backend\models\Region;
-use backend\models\Street;
-use backend\models\Course;
-use backend\models\WallMaterial;
-use backend\models\Condit;
-use backend\models\Wc;
-use backend\models\Users;
-use backend\models\UserType;
-use backend\models\Layout;
+use app\modules\olxparser\models\Parser;
 /**
  * ApartmentController implements the CRUD actions for Apartment model.
  */
@@ -68,8 +56,10 @@ class ApartmentController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->getResouseBoards('apartment');
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -103,9 +93,11 @@ class ApartmentController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->getResouseBoards('apartment');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //$model->setResourseBoards();
+            //return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -121,8 +113,9 @@ class ApartmentController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->enabled = 0;
+        $model->update(false);
         return $this->redirect(['index']);
     }
 
@@ -181,7 +174,7 @@ class ApartmentController extends Controller
     public function actionSearchresult()
     {
         $get = Yii::$app->request->get();
-        var_dump($get);
+        //var_dump($get);
         //die;
         $query = Apartment::find();
         //begin filters
@@ -201,7 +194,7 @@ class ApartmentController extends Controller
         $query->andFilterWhere(['<=', 'floor_area', $get['ApartmentFind']['floor_areaTo']]);
         $query->andFilterWhere(['>=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaFrom']]);
         $query->andFilterWhere(['<=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaTo']]);
-        //some problem((
+        //TODO date filter some problem((
         //$query->andFilterWhere(['>=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss')]);
         //$query->andFilterWhere(['<=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedTo'], 'yyyy-MM-dd HH:mm:ss')]);
 
@@ -219,11 +212,42 @@ class ApartmentController extends Controller
         $query->andFilterWhere(['author_id' => $get['ApartmentFind']['author_id']]);
         $query->andFilterWhere(['update_photo_user_id' => $get['ApartmentFind']['update_photo_user_id']]);
         $query->andFilterWhere(['exclusive_user_id' => $get['ApartmentFind']['exclusive_user_id']]);
-
+        $query->andFilterWhere(['like', 'phone', $get['ApartmentFind']['phone']]);
+        //TODO this filter
         if($get['ApartmentFind']['middle_floor'] == '0'){
             $query->andFilterWhere(['floor' => '1']);
             //$query->orWhere(['like', 'floor', apartment.floor_all]);
         }
+
+        if($get['ApartmentFind']['no_mediators'] == '1' ){
+            $query->andWhere(['is', 'mediator_id', NULL]);
+        }
+        if($get['ApartmentFind']['no_mediators'] == '0' ){
+            $query->andWhere(['not',['mediator_id' => NULL]]);
+        }
+
+        if($get['ApartmentFind']['exchange'] == '1' ){
+            $query->andWhere(['=', 'exchange', '1']);
+        }
+        if($get['ApartmentFind']['exchange'] == '0' ){
+            $query->andWhere(['=', 'exchange', '0']);
+        }
+
+        if($get['ApartmentFind']['enabled'] == '0' ){
+            $query->andFilterWhere(['=', 'enabled', '0']);
+        }
+        if($get['ApartmentFind']['enabled'] == '1' ){
+            $query->andFilterWhere(['=', 'enabled', '1']);
+        }
+
+        if($get['ApartmentFind']['note'] == 1 ){
+            $query->andFilterWhere(['>', 'length(note)', '0']);
+        }
+        if($get['ApartmentFind']['note'] == 0 ){
+            $query->andFilterWhere(['=', 'length(note)', '0']);
+        }
+
+        //TODO phone filter
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -289,18 +313,11 @@ class ApartmentController extends Controller
                             {
                                 $model = Apartment::findOne($post['id']);
                                 $ph_path = explode('/upload/images', $photo['path']);
-                                $path = Yii::getAlias('@webroot')."/../../upload".$ph_path['1'];
-                                //$path = Yii::getAlias('@webroot')."/../..".$photo['path'];
+                                $path = Yii::getAlias('@webroot')."/../../upload/images".$ph_path['1'];
                                 if(file_exists($path)){
                                 $model->attachImage($path);
-                                //echo "ok ".$post['id']."--".$path."<br>";
                                 }
-                                /*else
-                                    echo "no photo in folder by id". $post['id'] . "!!".$path."<br>";*/
                             }}
-                /*else
-                    echo "no photo by id". $post['id'] . "!!<br>";*/
-
             }
             $start += 50;
         echo $start;
@@ -310,16 +327,70 @@ class ApartmentController extends Controller
     {
         echo $id = Yii::$app->request->post('key');
         echo Apartment::deleteImage($id);
-        /*
-        var_dump($key) ;
-        $post = Yii::$app->request->post();
-        var_dump($post);
-        $get = Yii::$app->request->get();
-        var_dump($get);*/
     }
 
-    public function test()
+    public function actionAddFromParser($id)
     {
-        echo "test";
+        $parser_model = Parser::findOne($id);
+        $apartment_model = new Apartment();
+        $apartment_model->note = $parser_model->link;
+        $apartment_model->type_object_id = $parser_model->type_object_id;
+        $apartment_model->count_room = $parser_model->count_room;
+        $apartment_model->floor = $parser_model->floor;
+        $apartment_model->floor_all = $parser_model->floor_all;
+        $apartment_model->total_area = $parser_model->total_area;
+        $apartment_model->floor_area = $parser_model->floor_area;
+        $apartment_model->kitchen_area = $parser_model->kitchen_area;
+        $price = explode(' ',$parser_model->price);
+        $apartment_model->price = intval(trim($price['0']).trim($price['1']));
+        $apartment_model->source_info_id = 4;
+        $apartment_model->phone = $parser_model->phone;
+        $apartment_model->notesite = $parser_model->note;
+        $images = unserialize($parser_model->image);
+
+
+        if ($apartment_model->load(Yii::$app->request->post()) && $apartment_model->save()) {
+            return $this->redirect(['view', 'id' => $apartment_model->id]);
+        } else {
+            return $this->render('update_from_parser', [
+                'model' => $apartment_model, 'images' => $images
+            ]);
+        }
+    }
+
+    public function actionAdd()
+    {
+        $values = Yii::$app->request->post('Apartment');
+
+        if($values['id'] !='')
+        {
+            $model = Apartment::findOne($values['id']);
+        }
+        else
+        {
+            $model = new Apartment();
+        }
+
+        $model->attributes = $values;
+        if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
+        else $model['update_author_id'] = Yii::$app->user->id;
+
+        //if(!empty(UploadedFile::getInstances($model, 'imageFiles'))){ err WTF?
+        if(UploadedFile::getInstances($model, 'imageFiles')){
+            $model['update_photo_user_id'] = Yii::$app->user->id;
+        }
+        if($model->save()){
+            $model->besplatka = $values['besplatka'];
+            $model->est = $values['est'];
+            $model->mesto = $values['mesto'];
+            $model->setResourseBoards('apartment');
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            $model->upload();
+        }
+
+        $data['id'] = $model->id;
+        $apart = Apartment::findOne($data['id']);
+        $apart->getResouseBoards('apartment');
+        return $this->render('view', ['data' => $data, 'model' => $apart]);
     }
 }

@@ -10,7 +10,7 @@ use backend\models\Region;
 use backend\models\Street;
 use backend\models\Course;
 use backend\models\Users;
-use backend\models\Mediator;
+use backend\models\Partsite;
 use backend\models\SourceInfo;
 use backend\models\Addsite;
 use backend\models\Purpose;
@@ -36,10 +36,11 @@ use yii\helpers\Url;
 		<?= $form->field($model,'id')->textInput(['readonly' => 'true'])->label('ID'); ?>
 		<?= $form->field($model, 'type_object_id')->dropdownList(
     		TypeObject::find()->select(['name', 'type_object_id'])->where(['type_realty_id'=>'5'])->indexBy('type_object_id')->column())->label('Тип объекта'); ?>
+        <?= $form->field($model, 'partsite_id')->dropdownList(
+            Partsite::find()->select(['name', 'partsite_id'])->orderby('name')->indexBy('partsite_id')->column(),['prompt'=>'Выберите часть...'])->label('Часть участка'); ?>
         <? if($model->id == null) $model->city_or_region = 0; ?>
-		<?= $form->field($model,'city_or_region',['inline' => true, 'template' => '{input}'])->radiolist(['0' => Yii::t('app', 'Kharkiv'), '1' => Yii::t('app', 'Region')])->label(false); ?>
-
-		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков'); ?>
+        <?= $form->field($model,'city_or_region',['inline' => true, 'template' => '{input}'])->radiolist(['0' => Yii::t('app', 'Kharkiv'), '1' => Yii::t('app', 'Region')])->label(false); ?>
+        <?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков'); ?>
 		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
     		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков'); ?>
 		<?= $form->field($model, 'locality_id')->dropdownList(
@@ -82,14 +83,15 @@ use yii\helpers\Url;
         		
 		<?= $form->field($model, 'author_id')->dropdownList(
     		Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
-        <?//= $form->field($model, 'author_id')->textInput(['readonly' => 'true'])->label('Автор'); ?>
-		<?= $form->field($model, 'update_author_id')->dropdownList(
+        <?= $form->field($model, 'update_author_id')->dropdownList(
     		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
-    	<?//= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true'])->label('Изменил дпи'); ?>
     	<?= $form->field($model, 'update_photo_user_id')->dropdownList(
     		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
-		<?//= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true'])->label('Кто обновил фото'); ?>
-	</div>
+        <?= Html::label("Доски объявлений") ?>
+        <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
+        <?= $form->field($model,'est')->checkbox()->label('EST') ?>
+        <?= $form->field($model,'mesto')->checkbox()->label('Mesto.ua') ?>
+    </div>
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model, 'note')->textarea(['rows'=>6])->label('Заметки'); ?>
 		<?= $form->field($model, 'notesite')->textarea(['rows'=>6])->label('Информация для показа на сайте'); ?>
@@ -115,8 +117,8 @@ use yii\helpers\Url;
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-        <?= $form->field($model,'phone')->hiddenInput(); ?>                              
-        <? $model->enabled = 1; ?>
+        <?= $form->field($model,'phone')->hiddenInput(); ?>
+        <? if($model->id == null) $model->enabled = 1; ?>
 		<?= $form->field($model,'enabled')->checkbox()->label('Активное') ?>
 
 	</div>
@@ -126,45 +128,34 @@ use yii\helpers\Url;
 	<? $images = $model->getImages();
 	        	$img = [];
 	        	$keys = [];
-	        	
-					foreach ($images as $image){
-						if($image){
-						//$img[] = Yii::getAlias('@webroot').'/'.$image->getPathToOrigin();
-							$img[] = 'http://metrag.dev.itgo-solutions.com/frontend/web/'.$image->getPathToOrigin();
-							$keys[] = ['key' => $image->id];
-						 }
-					}	
-	?>
-	
-	<?= $form->field($model, 'imageFiles[]')->widget(FileInput::classname(), [
-    'options' => ['multiple' => true, 'accept' => 'image/*'],
-    'pluginOptions' => [
-    
-    'initialPreview' => $img,
-    'initialPreviewAsData'=>true,
-        
-    'initialPreviewConfig'=> $keys,
-   
-    'deleteUrl' => "file-delete",
-    'overwriteInitial' => false,
-    
-    //'browseOnZoneClick' => true,
-    'initialPreviewShowDelete' => true,
-    'initialPreviewShowUpload' => false,
-    //'showCaption' => true,
-    'showRemove' => false,
-    'showUpload' => false,
 
-    //'previewFileType' => 'image',
-    
-    //'uploadUrl' => Url::to(['apartment/add']),
-    'uploadUrl' => 'app',
-        
-    //'maxFileCount' => 10,
-    //'initialPreview'=> $img ,
-     
-    ]
-		]); ?>
+                foreach ($images as $image){
+                    if($image){
+                        $img[] = Url::base(true).'/'.$image->getPathToOrigin();
+                        $keys[] = ['key' => $image->id];
+                    }
+                }
+    ?>
+
+    <?= $form->field($model, 'imageFiles[]')->widget(FileInput::classname(), [
+        'options' => ['multiple' => true, 'accept' => 'image/*'],
+        'pluginOptions' => [
+
+            'initialPreview' => $img,
+            'initialPreviewAsData'=>true,
+            'initialPreviewConfig'=> $keys,
+            'deleteUrl' => "file-delete",
+            'overwriteInitial' => false,
+            'browseOnZoneClick' => true,
+            'initialPreviewShowDelete' => true,
+            'initialPreviewShowUpload' => false,
+            'showRemove' => false,
+            'showUpload' => false,
+            'uploadUrl' => 'app',
+
+            //'maxFileCount' => 10,
+        ]
+    ]); ?>
 	
 	</div>
 
@@ -302,7 +293,7 @@ use yii\helpers\Url;
             };
 
             function addSite(){
-                if(confirm("Add site?"))
+                if(confirm("<?php echo Yii::t('app', 'Add site?'); ?>"))
                 {
                     var id = document.getElementById("area-id");
                     var xrequest = new XMLHttpRequest();    
@@ -321,7 +312,7 @@ use yii\helpers\Url;
             };
 
             function delSite(){
-                if(confirm("Delete from site?"))
+                if(confirm("<?php echo Yii::t('app', 'Delete from site?'); ?>"))
                 {
                     var id = document.getElementById("area-id");
                     var xrequest = new XMLHttpRequest();    

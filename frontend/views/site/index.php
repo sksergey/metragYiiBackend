@@ -43,7 +43,7 @@
                     <img src="<?= Url::base(true);?>/images/1.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="index.php?r=rent&vs=1">    <div class="caption-text">
+                            <a href="site/rent?view=grid">    <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -58,7 +58,7 @@
                         <img src="<?= Url::base(true);?>/images/2.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="site/apartment">   <div class="caption-text">
+                            <a href="site/apartment?view=grid">   <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -73,7 +73,7 @@
                         <img src="<?= Url::base(true);?>/images/3.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="index.php?r=building&vs=1">    <div class="caption-text">
+                            <a href="site/building?view=grid">    <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -88,7 +88,7 @@
                         <img src="<?= Url::base(true);?>/images/4.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="index.php?r=house&vs=1">   <div class="caption-text">
+                            <a href="site/house?view=grid">   <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -103,7 +103,7 @@
                         <img src="<?= Url::base(true);?>/images/5.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="index.php?r=area&vs=1">    <div class="caption-text">
+                            <a href="site/area?view=grid">    <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -118,7 +118,7 @@
                         <img src="<?= Url::base(true);?>/images/6.png" alt="">
                         <div class="caption">
                             <div class="blur"></div>
-                            <a href="index.php?r=commercial&vs=1">  <div class="caption-text">
+                            <a href="site/commercial?view=grid">  <div class="caption-text">
                                 <img src="<?= Url::base(true);?>/images/house.png"  alt="">
                             </div></a>
                         </div>
@@ -130,18 +130,9 @@
                 </div>
             </div>
         </div>
-        <?php
-        /*
-                 </ul>
-                 </div>
-    </div>
-    */
-    ?>
-<?php
-//include ("footer.php");
-?>
 
-    
+
+
      <?
     $this->registerJs('
     $(document).ready(function() {

@@ -25,14 +25,17 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
+
     <?php
     NavBar::begin([
         'brandLabel' => Yii::t('yii', 'Metrag'),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            //'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar-inverse',
+
         ],
+
     ]);
 
     if (Yii::$app->user->isGuest) {
@@ -143,12 +146,23 @@ AppAsset::register($this);
             'label' => Yii::t('yii', 'XML'),
             'items' => [
                  ['label' => Yii::t('yii', 'Create XML'), 'url' => ['/xml/create']],
-                 ['label' => Yii::t('yii', 'XML list'), 'url' => ['/xml']],
+                 //['label' => Yii::t('yii', 'XML list'), 'url' => ['/xml']],
                  
             ],
         ],
-        ];
+        [
+            //'icon' => '<i class=\"fa fa-user-o\"></i>',
+            'label' => '<i class="fa fa-user-o" style="color: #fff"></i>'.Yii::$app->user->identity->username,
+            'items' => [
 
+            ['label' => Yii::t('yii', 'Logout'), 'url' => ['/site/logout'],'class' => 'btn btn-link logout','linkOptions' => ['data-method' => 'post']],
+            '<li class="divider"></li>',
+            ['label' => Yii::t('yii', 'Change Password'), 'url' => ['/admin/user/change-password']],
+
+            ],
+        ],
+        ];
+        /*
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
@@ -157,17 +171,20 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>';
-        
+      */
 
     }
-    echo Nav::widget([
+    ?>
+
+    <?php echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
+        'encodeLabels' => false,
     ]);
     NavBar::end();
     ?>
-
-    <div class="container-fluid" style="margin-top: 160px; ">
+<div class="wrap">
+    <div class="container-fluid" >
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>

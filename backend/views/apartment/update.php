@@ -104,7 +104,7 @@ use yii\helpers\Url;
         <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
         <?= $form->field($model,'est')->checkbox()->label('EST') ?>
 		<?= $form->field($model,'mesto')->checkbox()->label('Mesto.ua') ?>
-	</div>
+    </div>
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model, 'note')->textarea(['rows'=>6])->label('Заметки'); ?>
 		<?= $form->field($model, 'notesite')->textarea(['rows'=>6])->label('Информация для показа на сайте'); ?>
@@ -130,8 +130,8 @@ use yii\helpers\Url;
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-        <?= $form->field($model,'phone')->hiddenInput(); ?>                              
-        <? $model->enabled = 1; ?>
+        <?= $form->field($model,'phone')->hiddenInput(); ?>
+        <? if($model->id == null) $model->enabled = 1; ?>
 		<?= $form->field($model,'enabled')->checkbox()->label('Активное') ?>
 
 	</div>
@@ -144,8 +144,7 @@ use yii\helpers\Url;
 	        	
 					foreach ($images as $image){
 						if($image){
-						//$img[] = Yii::getAlias('@webroot').'/'.$image->getPathToOrigin();
-							$img[] = 'http://metrag.dev.itgo-solutions.com/frontend/web/'.$image->getPathToOrigin();
+							$img[] = Url::base(true).'/'.$image->getPathToOrigin();
 							$keys[] = ['key' => $image->id];
 						 }
 					}	
@@ -157,29 +156,19 @@ use yii\helpers\Url;
     
     'initialPreview' => $img,
     'initialPreviewAsData'=>true,
-        
     'initialPreviewConfig'=> $keys,
-   
     'deleteUrl' => "file-delete",
     'overwriteInitial' => false,
-    
-    //'browseOnZoneClick' => true,
+    'browseOnZoneClick' => true,
     'initialPreviewShowDelete' => true,
     'initialPreviewShowUpload' => false,
-    //'showCaption' => true,
     'showRemove' => false,
     'showUpload' => false,
-
-    //'previewFileType' => 'image',
-    
-    //'uploadUrl' => Url::to(['apartment/add']),
     'uploadUrl' => 'app',
         
     //'maxFileCount' => 10,
-    //'initialPreview'=> $img ,
-     
     ]
-		]); ?>
+		])->label(Yii::t('app', 'Photos')); ?>
 	
 	</div>
 
@@ -317,7 +306,7 @@ use yii\helpers\Url;
             };
 
             function addSite(){
-                if(confirm("Add site?"))
+                if(confirm("<?php echo Yii::t('app', 'Add site?'); ?>"))
                 {
                     var id = document.getElementById("apartment-id");
                     var xrequest = new XMLHttpRequest();    
@@ -336,7 +325,7 @@ use yii\helpers\Url;
             };
 
             function delSite(){
-                if(confirm("Delete from site?"))
+                if(confirm("<?php echo Yii::t('app', 'Delete from site?'); ?>"))
                 {
                     var id = document.getElementById("apartment-id");
                     var xrequest = new XMLHttpRequest();    

@@ -1,6 +1,11 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Area;
+use common\models\Building;
+use common\models\Commercial;
+use common\models\House;
+use common\models\Rent;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -220,6 +225,7 @@ class SiteController extends Controller
         ]);
     }
 
+    //---------------- realty menu items ----------------------
     public function actionApartment()
     {
         $query = Addsite::find()->where(['base' => 'apartment']);
@@ -245,6 +251,132 @@ class SiteController extends Controller
         return $this->render('apartmentDetail',['apartment' => $apartment]);
     }
 
+    public function actionRent()
+    {
+        $query = Addsite::find()->where(['base' => 'rent']);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+        $models = $query->offset($pages->offset)
+        ->limit($pages->limit)
+        ->all();
+
+        $rents = [];
+        foreach ($models as $item) {
+                        $rents[$item['idbase']] = Rent::find()
+                                                    ->where(['id' => $item['idbase']])
+                                                    ->one();
+                        }
+
+        return $this->render('rent', ['rents' => $rents, 'pages' => $pages]);
+    }
+
+    public function actionRentDetail($id)
+    {
+        $rent = Rent::findOne($id);
+        return $this->render('rentDetail',['rent' => $rent]);
+    }
+
+    public function actionBuilding()
+    {
+        $query = Addsite::find()->where(['base' => 'building']);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+        $models = $query->offset($pages->offset)
+        ->limit($pages->limit)
+        ->all();
+
+        $buildings = [];
+        foreach ($models as $item) {
+                        $buildings[$item['idbase']] = Building::find()
+                                                    ->where(['id' => $item['idbase']])
+                                                    ->one();
+                        }
+
+        return $this->render('building', ['buildings' => $buildings, 'pages' => $pages]);
+    }
+
+    public function actionBuildingDetail($id)
+    {
+        $building = Building::findOne($id);
+        return $this->render('buildingDetail',['building' => $building]);
+    }
+
+    public function actionHouse()
+        {
+            $query = Addsite::find()->where(['base' => 'house']);
+            $countQuery = clone $query;
+            $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+            $models = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+            $houses = [];
+            foreach ($models as $item) {
+                            $houses[$item['idbase']] = House::find()
+                                                        ->where(['id' => $item['idbase']])
+                                                        ->one();
+                            }
+
+            return $this->render('house', ['houses' => $houses, 'pages' => $pages]);
+        }
+
+    public function actionHouseDetail($id)
+        {
+            $house = House::findOne($id);
+            return $this->render('houseDetail',['house' => $house]);
+        }
+
+    public function actionArea()
+        {
+            $query = Addsite::find()->where(['base' => 'area']);
+            $countQuery = clone $query;
+            $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+            $models = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+            $areas = [];
+            foreach ($models as $item) {
+                            $areas[$item['idbase']] = Area::find()
+                                                        ->where(['id' => $item['idbase']])
+                                                        ->one();
+                            }
+
+            return $this->render('area', ['areas' => $areas, 'pages' => $pages]);
+        }
+
+    public function actionAreaDetail($id)
+        {
+            $area = Area::findOne($id);
+            return $this->render('areaDetail',['area' => $area]);
+        }
+
+    public function actionCommercial()
+        {
+            $query = Addsite::find()->where(['base' => 'commercial']);
+            $countQuery = clone $query;
+            $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
+            $models = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+            $commercials = [];
+            foreach ($models as $item) {
+                            $commercials[$item['idbase']] = Commercial::find()
+                                                        ->where(['id' => $item['idbase']])
+                                                        ->one();
+                            }
+
+            return $this->render('commercial', ['commercials' => $commercials, 'pages' => $pages]);
+        }
+
+    public function actionCommercialDetail($id)
+        {
+            $commercial = Commercial::findOne($id);
+            return $this->render('commercialDetail',['commercial' => $commercial]);
+        }
+
+    //---------------- other menu items--------------------
     public function actionCompanyHistory()
     {
         $history = CompanyInfo::findOne(['name' => 'history'])->data;
@@ -312,7 +444,5 @@ class SiteController extends Controller
     {
         return $this->render('buy');   
     }
-
-
 
 }

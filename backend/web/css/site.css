@@ -3,12 +3,22 @@ body {
     height: 100%;
     color: #333333;
     background: url(../images/bg.png) top center no-repeat fixed;
+    font-size: 14px;
+}
+
+.navbar-brand {
+    padding: 15px 0px;
+}
+
+.navbar-inverse {
+    font-size: 13px;
 }
 
 .wrap {
     min-height: 100%;
     height: auto;
-    margin: 0 auto -60px;
+    margin: 0px auto -60px;
+    #margin: auto;
     padding: 0 0 60px;
 }
 
@@ -80,7 +90,7 @@ a.desc:after {
 
 .grid-view .filters input,
 .grid-view .filters select {
-    min-width: 50px;
+    min-width: 25px;
 }
 
 .hint-block {
@@ -121,6 +131,10 @@ a.desc:after {
     outline: none;
 }
 
+.navbar-nav > li > a {
+    padding: 15px 10px;
+}
+
 .scroolbox-container{
     height: 250px;
 
@@ -149,7 +163,7 @@ a.desc:after {
 .main-content{
     background-color: #eeeeee;
     border: 1px solid #919191;
-    width: 100%;
+    overflow: auto;
 }
 
 .main-content-header{
@@ -214,3 +228,17 @@ div.required label.control-label:after {
     {
         float:left;width:100px;position:relative;padding:5px;
     }
+
+.header-search
+{
+    font-size: 16px;
+}
+
+.field-apartmentfind-phone
+{
+    width: 400px;
+}
+#apartmentfind-phone
+{
+
+}

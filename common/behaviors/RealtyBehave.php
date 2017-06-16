@@ -2,6 +2,7 @@
 
 namespace common\behaviors;
 
+use backend\models\Xml;
 use yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
@@ -43,68 +44,68 @@ class RealtyBehave extends Behavior
     public $est;
     public $mesto;
 
-	public function getTypeObject()
+    public function getTypeObject()
     {
         return TypeObject::findOne($this->owner->type_object_id);
     }
 
-	public function getbathValue()
+    public function getbathValue()
     {
-        if($this->owner->bath == 0) return Yii::t('app', 'No');
+        if ($this->owner->bath == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
-	public function gettvValue()
+    public function gettvValue()
     {
-        if($this->owner->tv == 0) return Yii::t('app', 'No');
+        if ($this->owner->tv == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getrefrigeratorValue()
     {
-        if($this->owner->refrigerator == 0) return Yii::t('app', 'No');
+        if ($this->owner->refrigerator == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getentryValue()
     {
-        if($this->owner->entry == 0) return Yii::t('app', 'No');
+        if ($this->owner->entry == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getHouseDemolitionValue()
     {
-        if($this->owner->house_demolition == 0) return Yii::t('app', 'No');
+        if ($this->owner->house_demolition == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getElectricValue()
     {
-        if($this->owner->electric == 0) return Yii::t('app', 'No');
+        if ($this->owner->electric == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getwasherValue()
     {
-        if($this->owner->washer == 0) return Yii::t('app', 'No');
+        if ($this->owner->washer == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getfurnitureValue()
     {
-        if($this->owner->furniture == 0) return Yii::t('app', 'No');
+        if ($this->owner->furniture == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getconditionerValue()
     {
-        if($this->owner->conditioner == 0) return Yii::t('app', 'No');
+        if ($this->owner->conditioner == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getgarageValue()
     {
-        if($this->owner->garage == 0) return Yii::t('app', 'No');
+        if ($this->owner->garage == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
@@ -130,10 +131,10 @@ class RealtyBehave extends Behavior
 
     public function getCityOrRegion()
     {
-        if($this->owner->city_or_region == 0) return Yii::t('app', 'Kharkiv');
+        if ($this->owner->city_or_region == 0) return Yii::t('app', 'Kharkiv');
         else return Yii::t('app', 'Region');
     }
-    
+
     public function getLocality()
     {
         return Locality::findOne($this->owner->locality_id);
@@ -191,76 +192,76 @@ class RealtyBehave extends Behavior
 
     public function getExchangeValue()
     {
-        if($this->owner->exchange == 0) return Yii::t('app', 'No');
+        if ($this->owner->exchange == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getHousingValue()
     {
-        if($this->owner->housing == 0) return Yii::t('app', 'No');
+        if ($this->owner->housing == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getStateActValue()
     {
-        if($this->owner->state_act == 0) return Yii::t('app', 'No');
+        if ($this->owner->state_act == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getDocumentsValue()
     {
-        if($this->owner->documents == 0) return Yii::t('app', 'No');
+        if ($this->owner->documents == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getRentValue()
     {
-        if($this->owner->rent == 0) return Yii::t('app', 'No');
+        if ($this->owner->rent == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getTopicalityValue()
     {
-        if($this->owner->topicality == 0) return Yii::t('app', 'No');
+        if ($this->owner->topicality == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getAvtorampaValue()
     {
-        if($this->owner->avtorampa == 0) return Yii::t('app', 'No');
+        if ($this->owner->avtorampa == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getRedLineValue()
     {
-        if($this->owner->red_line == 0) return Yii::t('app', 'No');
+        if ($this->owner->red_line == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getInfinitePeriodValue()
     {
-        if($this->owner->infinite_period == 0) return Yii::t('app', 'No');
+        if ($this->owner->infinite_period == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getDetachedBuildingValue()
     {
-        if($this->owner->detached_building == 0) return Yii::t('app', 'No');
+        if ($this->owner->detached_building == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getSeparateEntranceValue()
     {
-        if($this->owner->separate_entrance == 0) return Yii::t('app', 'No');
+        if ($this->owner->separate_entrance == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getDeliveredValue()
     {
-        if($this->owner->delivered == 0) return Yii::t('app', 'No');
+        if ($this->owner->delivered == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
-    
+
     public function getCondit()
     {
         return Condit::findOne($this->owner->condit_id);
@@ -315,21 +316,21 @@ class RealtyBehave extends Behavior
     {
         return Users::findOne($this->owner->update_photo_user_id);
     }
-	
-	public function getdeveloper()
+
+    public function getdeveloper()
     {
         return Developer::findOne($this->owner->developer_id);
     }
 
     public function getenabledValue()
     {
-        if($this->owner->enabled == 0) return Yii::t('app', 'No');
+        if ($this->owner->enabled == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
     public function getphoneLineValue()
     {
-        if($this->owner->phone_line == 0) return Yii::t('app', 'No');
+        if ($this->owner->phone_line == 0) return Yii::t('app', 'No');
         else return Yii::t('app', 'Yes');
     }
 
@@ -340,14 +341,11 @@ class RealtyBehave extends Behavior
 
     public function upload()
     {
-        if($this->owner->validate()) { 
+        if ($this->owner->validate()) {
             foreach ($this->owner->imageFiles as $file) {
                 $path = Yii::getAlias('@webroot/upload/files/') . $file->name;
-                //echo "path-".$path;
-                //die;
                 $file->saveAs($path);
                 $this->owner->attachImage($path);
-                //die;
             }
             return true;
         } else {
@@ -355,7 +353,41 @@ class RealtyBehave extends Behavior
         }
     }
 
+    public function getResouseBoards($type){
+        $boards = Xml::findOne(['type_id' => $this->owner->id, 'type' => $type]);
+        if($boards){
+            $this->owner->besplatka = $boards->besplatka;
+            $this->owner->est = $boards->est;
+            $this->owner->mesto = $boards->mesto;
+        }
+    }
 
+    public function setResourseBoards($type){
+        $boards = Xml::findOne(['type_id' => $this->owner->id, 'type' => $type]);
+        if($boards){
+            $boards->besplatka = $this->owner->besplatka;
+            $boards->est = $this->owner->est;
+            $boards->mesto = $this->owner->mesto;
+            $boards->save();
+        }else{
+            if($this->owner->besplatka || $this->owner->est || $this->owner->mesto) {
+                $boards = new Xml();
+                $boards->type = $type;
+                $boards->type_id = $this->owner->id;
+                $boards->besplatka = $this->owner->besplatka;
+                $boards->est = $this->owner->est;
+                $boards->mesto = $this->owner->mesto;
+                $boards->save();
+            }
+        }
+    }
+
+    public function is_active(){
+        if($this->owner->enabled == 1) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
-
 ?>

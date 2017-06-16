@@ -36,7 +36,7 @@
               var start = proc.innerHTML;
               //var limit = 100;
               var xrequest = new XMLHttpRequest();    
-              xrequest.open("GET", "/advanced/backend/web/apartment/linkimages?start=" +  start, true);
+              xrequest.open("GET", "/admin/apartment/linkimages?start=" +  start, true);
               xrequest.send();
               
               xrequest.onload = function() {

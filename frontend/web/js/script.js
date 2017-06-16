@@ -24,29 +24,24 @@ $(document).ready(function() { // вся мaгия пoсле зaгрузки с�
 $(document).ready(function() {
 	$('#list').click( function(){
 		var str=location.search;
-		//$.ajax({
-		//	url: 'view/default/js/view_style.php',
-		//	type: 'POST',
-		//	data: {str:str, vs:2},
-		//	success:function(data) { location.search = data; }
-		//	});
-
-		$('.list').css('display', 'block');
-		$('.grid').css('display', 'none');
+		$.ajax({
+			url: '../frontend/web/js/link.php',
+			type: 'POST',
+			data: {str:str, view:'list'},
+			success:function(data) { location.search = data; }
+			});
 		return false;
 
 
 	});
 	$('#grid').click( function(){
 		var str=location.search;
-		//$.ajax({
-		//	url: 'view/default/js/view_style.php',
-		//	type: 'POST',
-		//	data: {str:str, vs:1},
-		//	success:function(data) { location.search = data; }
-		//	});
-		$('.list').css('display', 'none');
-		$('.grid').css('display', 'block');
+		$.ajax({
+			url: '../frontend/web/js/link.php',
+			type: 'POST',
+			data: {str:str, view:'grid'},
+			success:function(data) { location.search = data; }
+			});
 		return false;
 
 

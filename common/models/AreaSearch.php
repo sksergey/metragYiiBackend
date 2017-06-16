@@ -6,6 +6,10 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Area;
+use backend\models\RegionKharkivAdmin;
+use backend\models\Partsite;
+use backend\models\TypeObject;
+
 
 /**
  * AreaSearch represents the model behind the search form about `common\models\Area`.
@@ -18,8 +22,8 @@ class AreaSearch extends Area
     public function rules()
     {
         return [
-            [['id', 'type_object_id', 'partsite_id', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'source_info_id', 'mediator_id', 'water_id', 'sewage_id', 'purpose_id', 'gas_id', 'house_demolition', 'exclusive_user_id', 'phone_line', 'state_act', 'electric', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
-            [['number_building', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
+            [['id', 'city_or_region', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'source_info_id', 'mediator_id', 'water_id', 'sewage_id', 'purpose_id', 'gas_id', 'house_demolition', 'exclusive_user_id', 'phone_line', 'state_act', 'electric', 'author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['update_author_id', 'region_kharkiv_admin_id', 'type_object_id', 'partsite_id', 'number_building', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['price', 'total_area'], 'number'],
         ];
     }
@@ -59,12 +63,24 @@ class AreaSearch extends Area
         }
 
         // grid filtering conditions
+        if(!empty($this->type_object_id)){
+            $type_object_id = TypeObject::find()->where(['like', 'name', $this->type_object_id])->one()->type_object_id;
+        }
+        if(!empty($this->region_kharkiv_admin_id)){
+            $region_kharkiv_admin_id = RegionKharkivAdmin::find()->where(['like', 'name', $this->region_kharkiv_admin_id])->one()->region_kharkiv_admin_id;
+        }
+        if(!empty($this->update_author_id)){
+            $update_author_id = User::find()->where(['like', 'username', $this->update_author_id])->one()->id;
+        }
+        if(!empty($this->partsite_id)){
+            $partsite_id = Partsite::find()->where(['like', 'name', $this->partsite_id])->one()->partsite_id;
+        }
         $query->andFilterWhere([
             'id' => $this->id,
-            'type_object_id' => $this->type_object_id,
-            'partsite_id' => $this->partsite_id,
+            'type_object_id' => $type_object_id,
+            'partsite_id' => $partsite_id,
             'city_or_region' => $this->city_or_region,
-            'region_kharkiv_admin_id' => $this->region_kharkiv_admin_id,
+            'region_kharkiv_admin_id' => $region_kharkiv_admin_id,
             'locality_id' => $this->locality_id,
             'course_id' => $this->course_id,
             'region_id' => $this->region_id,
@@ -88,7 +104,7 @@ class AreaSearch extends Area
             'date_modified' => $this->date_modified,
             'date_modified_photo' => $this->date_modified_photo,
             'author_id' => $this->author_id,
-            'update_author_id' => $this->update_author_id,
+            'update_author_id' => $update_author_id,
             'update_photo_user_id' => $this->update_photo_user_id,
             'enabled' => $this->enabled,
         ]);

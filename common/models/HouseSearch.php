@@ -2,11 +2,14 @@
 
 namespace common\models;
 
+use backend\models\Parthouse;
+use backend\models\Partsite;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\House;
-
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
 /**
  * HouseSearch represents the model behind the search form about `common\models\House`.
  */
@@ -18,8 +21,8 @@ class HouseSearch extends House
     public function rules()
     {
         return [
-            [['id', 'type_object_id', 'count_room', 'partsite_id', 'parthouse_id', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'building_year', 'sewage_id', 'wall_material_id', 'gas_id', 'water_id', 'comfort_id', 'exclusive_user_id', 'phone_line', 'state_act', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
-            [['number_building', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
+            [['id', 'count_room', 'floor_all', 'city_or_region', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'building_year', 'sewage_id', 'wall_material_id', 'gas_id', 'water_id', 'comfort_id', 'exclusive_user_id', 'phone_line', 'state_act', 'author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['region_kharkiv_admin_id', 'update_author_id', 'partsite_id', 'parthouse_id', 'type_object_id', 'number_building', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['price', 'total_area_house', 'total_area'], 'number'],
         ];
     }
@@ -59,15 +62,30 @@ class HouseSearch extends House
         }
 
         // grid filtering conditions
+        if(!empty($this->type_object_id)){
+            $type_object_id = TypeObject::find()->where(['like', 'name', $this->type_object_id])->one()->type_object_id;
+        }
+        if(!empty($this->region_kharkiv_admin_id)){
+            $region_kharkiv_admin_id = RegionKharkivAdmin::find()->where(['like', 'name', $this->region_kharkiv_admin_id])->one()->region_kharkiv_admin_id;
+        }
+        if(!empty($this->update_author_id)){
+            $update_author_id = User::find()->where(['like', 'username', $this->update_author_id])->one()->id;
+        }
+        if(!empty($this->partsite_id)){
+            $partsite_id = Partsite::find()->where(['like', 'name', $this->partsite_id])->one()->partsite_id;
+        }
+        if(!empty($this->parthouse_id)){
+            $parthouse_id = Parthouse::find()->where(['like', 'name', $this->parthouse_id])->one()->parthouse_id;
+        }
         $query->andFilterWhere([
             'id' => $this->id,
-            'type_object_id' => $this->type_object_id,
+            'type_object_id' => $type_object_id,
             'count_room' => $this->count_room,
-            'partsite_id' => $this->partsite_id,
-            'parthouse_id' => $this->parthouse_id,
+            'partsite_id' => $partsite_id,
+            'parthouse_id' => $parthouse_id,
             'floor_all' => $this->floor_all,
             'city_or_region' => $this->city_or_region,
-            'region_kharkiv_admin_id' => $this->region_kharkiv_admin_id,
+            'region_kharkiv_admin_id' => $region_kharkiv_admin_id,
             'locality_id' => $this->locality_id,
             'course_id' => $this->course_id,
             'region_id' => $this->region_id,
@@ -94,7 +112,7 @@ class HouseSearch extends House
             'date_modified' => $this->date_modified,
             'date_modified_photo' => $this->date_modified_photo,
             'author_id' => $this->author_id,
-            'update_author_id' => $this->update_author_id,
+            'update_author_id' => $update_author_id,
             'update_photo_user_id' => $this->update_photo_user_id,
             'enabled' => $this->enabled,
         ]);

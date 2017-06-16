@@ -17,64 +17,24 @@ use yii\helpers\Url;
     <h3>Начать процесс парсинга?</h3>
 
     <form action="<?=Url::to(['default/clear-tables'])?>">
-        <input type="submit" value="Очистить таблицы">
+        <input type="submit" value="Очистить таблицы" class="btn btn-danger">
     </form>
     <br>
     <br>
     <br>
     <br>
-
-<!--    <form action="--><?//=Url::to(['default/get-pages'])?><!--">-->
-<!--        <input type="submit" value="Начать поиск страниц">-->
-<!--    </form>-->
-
-    <button id="pageSearchStart">Начать поиск страниц</button>
-
-    <button id="request">Запросить данные с сервера</button>
-
-    <form action="<?=Url::to(['default/get-pages'])?>">
-        <input type="hidden" name="continue">
-        <input type="submit" value="Продолжить поиск">
-    </form>
-
+    <button id="pageSearchStart" class="btn btn-success">Начать поиск страниц</button>
+    <button id="linksParseStart" class="btn btn-success">Начать разбор ссылок</button>
     <br>
-
-    <form action="<?=Url::to(['default/get-pages'])?>">
-        <input type="hidden" name="continue">
-        <input type="submit" value="Начать обработку объектов">
-    </form>
-
-    <form method="POST" action="<?= Url::to(['default/handler']) ?>">
-        <table>
-            <tr>
-                <td>
-                    <div class="margin-top-button">
-                        <input type="hidden" name="<?=Yii::$app->request->csrfParam?>" value="<?=Yii::$app->request->csrfToken?>"/>
-                        <input type="submit" name="startparsing" value="Запустить работу парсера">
-                    </div>
-                    <br>
-                    <div style="color: red;">Процес может занять некоторое время</div>
-                    <div class="messages">
-                                ****
-                    </div>
-
-                    <div class="errors">
-                        ****
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </form>
-
+    <br>
+    <div style="color: red;">Процес может занять некоторое время</div>
+    <div class="messages" ></div>
+    <div class="errors"></div>
     <br>
     <br>
     <br>
     <br>
     <br>
-
-    <form action="<?=Url::to(['default/handle-apartments-links'])?>">
-        <input type="submit" value="Начать обработку объектов недвижимости">
-    </form>
 
 </div>
 
@@ -82,13 +42,36 @@ use yii\helpers\Url;
 
 <div class="colRg">
 
-</div>
+    </div>
+
+        <span class="showTable">Показать таблицу</span>
+        <a href="<?= Url::to(['/olxparser/compare/index']) ?>">
+            <span class="showTable">Отсеять объявления</span>
+        </a>
+
+    </div>
 
 <?php
 
-if(olxParserHelper::tableExists('new_parser_olx_parser')){
-    echo $this->render('result', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-    ]);
+if( olxParserHelper::tableExists('new_parser_olx_parser') ){
+echo $this->render('result', [
+'searchModel' => $searchModel,
+'dataProvider' => $dataProvider,
+]);
+
+} else {
+?>
+
+
+    <p>
+        Ссыли не были получены
+    </p>
+
+    <?php
 }
+?>
+
+
+
+
+

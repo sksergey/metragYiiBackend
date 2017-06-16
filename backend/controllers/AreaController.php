@@ -8,7 +8,7 @@ use common\models\AreaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\UploadedFile;
 /**
  * AreaController implements the CRUD actions for Area model.
  */
@@ -51,8 +51,10 @@ class AreaController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->getResouseBoards('apartment');
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -86,9 +88,11 @@ class AreaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->getResouseBoards('area');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //$model->setResourseBoards();
+            //return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,8 +108,9 @@ class AreaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->enabled = 0;
+        $model->update(false);
         return $this->redirect(['index']);
     }
 
@@ -123,5 +128,78 @@ class AreaController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionLinkConvertor()
+    {
+        $count = Area::find()->count();
+
+        return $this->render('linkconvertor', ['count' => $count]);
+    }
+
+    public function actionLinkimages($start = 0)
+    {
+        $posts = Yii::$app->db->createCommand("SELECT * FROM area ORDER BY id desc LIMIT $start, 50")
+            ->queryAll();
+        foreach ($posts as $post)
+        {
+            $photos = Yii::$app->db->createCommand("SELECT * FROM photo WHERE  `type_realty_id`= 5 AND `object_id`= {$post['id']}")
+                ->queryAll();
+            if(!empty($photos))
+            {
+                foreach ($photos as $photo)
+                {
+                    $model = Area::findOne($post['id']);
+                    $ph_path = explode('/upload/images', $photo['path']);
+                    $path = Yii::getAlias('@webroot')."/../../upload/images".$ph_path['1'];
+                    if(file_exists($path)){
+                        $model->attachImage($path);
+                    }
+                }}
+        }
+        $start += 50;
+        echo $start;
+    }
+
+    public function actionFileDelete()
+    {
+        echo $id = Yii::$app->request->post('key');
+        echo Area::deleteImage($id);
+    }
+
+    public function actionAdd()
+    {
+        $values = Yii::$app->request->post('Area');
+
+        if($values['id'] !='')
+        {
+            $model = Area::findOne($values['id']);
+        }
+        else
+        {
+            $model = new Area();
+        }
+
+        $model->attributes = $values;
+        if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
+        else $model['update_author_id'] = Yii::$app->user->id;
+
+        //if(!empty(UploadedFile::getInstances($model, 'imageFiles'))){ err WTF?
+        if(UploadedFile::getInstances($model, 'imageFiles')){
+            $model['update_photo_user_id'] = Yii::$app->user->id;
+        }
+        if($model->save()){
+            $model->besplatka = $values['besplatka'];
+            $model->est = $values['est'];
+            $model->mesto = $values['mesto'];
+            $model->setResourseBoards('area');
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            $model->upload();
+        }
+
+        $data['id'] = $model->id;
+        $apart = Area::findOne($data['id']);
+        $apart->getResouseBoards('area');
+        return $this->render('view', ['data' => $data, 'model' => $apart]);
     }
 }

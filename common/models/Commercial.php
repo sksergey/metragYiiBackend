@@ -3,7 +3,13 @@
 namespace common\models;
 
 use Yii;
-
+use backend\models\Image;
+use backend\models\TypeObject;
+use backend\models\RegionKharkiv;
+use backend\models\Street;
+use backend\models\Course;
+use backend\models\Locality;
+use backend\models\Region;
 /**
  * This is the model class for table "commercial".
  *
@@ -91,34 +97,34 @@ class Commercial extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'type_object_id' => Yii::t('app', 'Type Object ID'),
+            'type_object_id' => Yii::t('app', 'Type Object'),
             'count_room' => Yii::t('app', 'Count Room'),
-            'ownership_id' => Yii::t('app', 'Ownership ID'),
+            'ownership_id' => Yii::t('app', 'Ownership'),
             'floor' => Yii::t('app', 'Floor'),
             'floor_all' => Yii::t('app', 'Floor All'),
             'city_or_region' => Yii::t('app', 'City Or Region'),
-            'region_kharkiv_admin_id' => Yii::t('app', 'Region Kharkiv Admin ID'),
-            'locality_id' => Yii::t('app', 'Locality ID'),
-            'course_id' => Yii::t('app', 'Course ID'),
-            'region_id' => Yii::t('app', 'Region ID'),
-            'region_kharkiv_id' => Yii::t('app', 'Region Kharkiv ID'),
-            'street_id' => Yii::t('app', 'Street ID'),
+            'region_kharkiv_admin_id' => Yii::t('app', 'Region Kharkiv Admin'),
+            'locality_id' => Yii::t('app', 'Locality'),
+            'course_id' => Yii::t('app', 'Course'),
+            'region_id' => Yii::t('app', 'Region'),
+            'region_kharkiv_id' => Yii::t('app', 'Region Kharkiv'),
+            'street_id' => Yii::t('app', 'Street'),
             'number_office' => Yii::t('app', 'Number Office'),
             'corps' => Yii::t('app', 'Corps'),
             'exchange' => Yii::t('app', 'Exchange'),
             'exchange_formula' => Yii::t('app', 'Exchange Formula'),
             'landmark' => Yii::t('app', 'Landmark'),
-            'condit_id' => Yii::t('app', 'Condit ID'),
-            'source_info_id' => Yii::t('app', 'Source Info ID'),
+            'condit_id' => Yii::t('app', 'Condit'),
+            'source_info_id' => Yii::t('app', 'Source Info'),
             'price' => Yii::t('app', 'Price'),
             'price_square_meter' => Yii::t('app', 'Price Square Meter'),
-            'mediator_id' => Yii::t('app', 'Mediator ID'),
-            'metro_id' => Yii::t('app', 'Metro ID'),
+            'mediator_id' => Yii::t('app', 'Mediator'),
+            'metro_id' => Yii::t('app', 'Metro'),
             'phone' => Yii::t('app', 'Phone'),
             'total_area_house' => Yii::t('app', 'Total Area House'),
             'total_area' => Yii::t('app', 'Total Area'),
-            'communication_id' => Yii::t('app', 'Communication ID'),
-            'exclusive_user_id' => Yii::t('app', 'Exclusive User ID'),
+            'communication_id' => Yii::t('app', 'Communication'),
+            'exclusive_user_id' => Yii::t('app', 'Exclusive User'),
             'housing' => Yii::t('app', 'Housing'),
             'detached_building' => Yii::t('app', 'Detached Building'),
             'documents' => Yii::t('app', 'Documents'),
@@ -136,9 +142,9 @@ class Commercial extends \yii\db\ActiveRecord
             'date_added' => Yii::t('app', 'Date Added'),
             'date_modified' => Yii::t('app', 'Date Modified'),
             'date_modified_photo' => Yii::t('app', 'Date Modified Photo'),
-            'author_id' => Yii::t('app', 'Author ID'),
-            'update_author_id' => Yii::t('app', 'Update Author ID'),
-            'update_photo_user_id' => Yii::t('app', 'Update Photo User ID'),
+            'author_id' => Yii::t('app', 'Author'),
+            'update_author_id' => Yii::t('app', 'Update Author'),
+            'update_photo_user_id' => Yii::t('app', 'Update Photo User'),
             'enabled' => Yii::t('app', 'Enabled'),
         ];
     }
@@ -153,5 +159,56 @@ class Commercial extends \yii\db\ActiveRecord
                 'class' => 'common\behaviors\RealtyBehave',
             ]
         ];
+    }
+
+    public static function deleteImage($id)
+    {
+        $image = Image::findOne($id);
+        $model = Commercial::findOne($image->itemId);
+        $images = $model->getImages();
+        foreach ($images as $img)
+        {
+            if ($img->id == $id)
+                $model->removeImage($img);
+        }
+    }
+
+    public function getLocalitystring($model)
+    {
+        $locality = '';
+        if($model['city_or_region'] == '0') {
+            $locality .= Yii::t('app', 'Kharkiv');
+        }else {
+            if ($model['locality_id']) $locality .= Locality::findOne($model['locality_id'])->name . ', ';
+            if ($model['course_id']) $locality .= Course::findOne($model['course_id'])->name . ', ';
+            if ($model['region_id']) $locality .= Region::findOne($model['region_id'])->name;
+        }
+        if($model['region_kharkiv_id'] != '0'){
+            $locality .= ', ';
+            $locality .= RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
+        }
+        if($model['street_id'] != '0'){
+            $locality .= ', ';
+            $locality .= Street::findOne($model['street_id'])->name;
+        }
+        return $locality;
+    }
+
+    public function getTypeObject($model = null)
+    {
+        if($model == null)
+            return TypeObject::findOne($this->type_object_id);
+        else
+            return TypeObject::findOne($model['type_object_id'])->name;
+
+    }
+
+    public function getRegionKharkiv($model = null)
+    {
+        if($model == null)
+            return RegionKharkiv::findOne($this->region_kharkiv_id);
+        else
+            return RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
+
     }
 }

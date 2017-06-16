@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use backend\models\Course;
+use backend\models\Locality;
+use backend\models\Region;
 use Yii;
 use backend\models\Image;
 
@@ -58,7 +61,7 @@ use backend\models\Image;
  */
 class Building extends \yii\db\ActiveRecord
 {
-    public $imageFiles;
+
     /**
      * @inheritdoc
      */
@@ -148,5 +151,56 @@ class Building extends \yii\db\ActiveRecord
             'update_photo_user_id' => Yii::t('app', 'Update Photo User'),
             'enabled' => Yii::t('app', 'Enabled'),
         ];
+    }
+
+    public static function deleteImage($id)
+    {
+        $image = Image::findOne($id);
+        $model = Building::findOne($image->itemId);
+        $images = $model->getImages();
+        foreach ($images as $img)
+        {
+            if ($img->id == $id)
+                $model->removeImage($img);
+        }
+    }
+
+    public function getLocalitystring($model)
+    {
+        $locality = '';
+        if($model['city_or_region'] == '0') {
+            $locality .= Yii::t('app', 'Kharkiv');
+        }else {
+            if ($model['locality_id']) $locality .= Locality::findOne($model['locality_id'])->name . ', ';
+            if ($model['course_id']) $locality .= Course::findOne($model['course_id'])->name . ', ';
+            if ($model['region_id']) $locality .= Region::findOne($model['region_id'])->name;
+        }
+        if($model['region_kharkiv_id'] != '0'){
+            $locality .= ', ';
+            $locality .= RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
+        }
+        if($model['street_id'] != '0'){
+            $locality .= ', ';
+            $locality .= Street::findOne($model['street_id'])->name;
+        }
+        return $locality;
+    }
+
+    public function getTypeObject($model = null)
+    {
+        if($model == null)
+            return TypeObject::findOne($this->type_object_id);
+        else
+            return TypeObject::findOne($model['type_object_id'])->name;
+
+    }
+
+    public function getRegionKharkiv($model = null)
+    {
+        if($model == null)
+            return RegionKharkiv::findOne($this->region_kharkiv_id);
+        else
+            return RegionKharkiv::findOne($model['region_kharkiv_id'])->name;
+
     }
 }

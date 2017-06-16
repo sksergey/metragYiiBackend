@@ -50,4 +50,7 @@ class Xml extends \yii\db\ActiveRecord
             'mesto' => Yii::t('app', 'Mesto'),
         ];
     }
+
+
+
 }

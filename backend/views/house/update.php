@@ -3,23 +3,22 @@
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
-use app\models\Apartment;
-use app\models\RegionKharkivAdmin;
-use app\models\TypeObject;
-use app\models\Locality;
-use app\models\Layout;
-use app\models\RegionKharkiv;
-use app\models\Region;
-use app\models\Street;
-use app\models\Course;
-use app\models\WallMaterial;
-use app\models\Condit;
-use app\models\Wc;
-use app\models\Users;
-use app\models\Mediator;
-use app\models\Metro;
-use app\models\SourceInfo;
-use app\models\Addsite;
+use backend\models\Apartment;
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
+use backend\models\Locality;
+use backend\models\Layout;
+use backend\models\RegionKharkiv;
+use backend\models\Region;
+use backend\models\Street;
+use backend\models\Course;
+use backend\models\WallMaterial;
+use backend\models\Condit;
+use backend\models\Users;
+use backend\models\Mediator;
+use backend\models\Metro;
+use backend\models\SourceInfo;
+use backend\models\Addsite;
 use backend\models\Partsite;
 use backend\models\Parthouse;
 use backend\models\Sewage;
@@ -110,15 +109,16 @@ use yii\helpers\Url;
             Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
         <?= $form->field($model, 'update_author_id')->dropdownList(
             Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
-        <?//= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true'])->label('Изменил дпи'); ?>
         <?= $form->field($model, 'update_photo_user_id')->dropdownList(
             Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
-        <?//= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true'])->label('Кто обновил фото'); ?>
+        <?= Html::label("Доски объявлений") ?>
+        <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
+        <?= $form->field($model,'est')->checkbox()->label('EST') ?>
+        <?= $form->field($model,'mesto')->checkbox()->label('Mesto.ua') ?>
     </div>
     <div class="col-xs-12 col-sm-3 col-md-3 ">
         <?= $form->field($model, 'note')->textarea(['rows'=>6])->label('Заметки'); ?>
         <?= $form->field($model, 'notesite')->textarea(['rows'=>6])->label('Информация для показа на сайте'); ?>
-        <?//= $form->field($model, 'phone')->listBox(Apartment::getPhonesArr($model->phone))->label('Телефоны'); ?>
         <?= Html::button(Yii::t('app', 'Add'), ['id' => 'add_phone']) ?>
         <?= Html::button(Yii::t('app', 'Edit'), ['id' => 'edit_phone']) ?>
         <?= Html::button(Yii::t('app', 'Delete'), ['id' => 'delete_phone']) ?>
@@ -140,8 +140,8 @@ use yii\helpers\Url;
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-        <?= $form->field($model,'phone')->hiddenInput(); ?>                              
-        <? $model->enabled = 1; ?>
+        <?= $form->field($model,'phone')->hiddenInput(); ?>
+        <? if($model->id == null) $model->enabled = 1; ?>
         <?= $form->field($model,'enabled')->checkbox()->label('Активное') ?>
 
     </div>
@@ -154,40 +154,29 @@ use yii\helpers\Url;
                 
                     foreach ($images as $image){
                         if($image){
-                        //$img[] = Yii::getAlias('@webroot').'/'.$image->getPathToOrigin();
-                            $img[] = 'http://metrag.dev.itgo-solutions.com/frontend/web/'.$image->getPathToOrigin();
+                            $img[] = Url::base(true).'/'.$image->getPathToOrigin();
                             $keys[] = ['key' => $image->id];
                          }
                     }   
     ?>
     
     <?= $form->field($model, 'imageFiles[]')->widget(FileInput::classname(), [
-    'options' => ['multiple' => true, 'accept' => 'image/*'],
-    'pluginOptions' => [
-    
-    'initialPreview' => $img,
-    'initialPreviewAsData'=>true,
-        
-    'initialPreviewConfig'=> $keys,
-   
-    'deleteUrl' => "file-delete",
-    'overwriteInitial' => false,
-    
-    //'browseOnZoneClick' => true,
-    'initialPreviewShowDelete' => true,
-    'initialPreviewShowUpload' => false,
-    //'showCaption' => true,
-    'showRemove' => false,
-    'showUpload' => false,
+        'options' => ['multiple' => true, 'accept' => 'image/*'],
+        'pluginOptions' => [
 
-    //'previewFileType' => 'image',
-    
-    //'uploadUrl' => Url::to(['apartment/add']),
-    'uploadUrl' => 'app',
-        
-    //'maxFileCount' => 10,
-    //'initialPreview'=> $img ,
-     
+            'initialPreview' => $img,
+            'initialPreviewAsData'=>true,
+            'initialPreviewConfig'=> $keys,
+            'deleteUrl' => "file-delete",
+            'overwriteInitial' => false,
+            'browseOnZoneClick' => true,
+            'initialPreviewShowDelete' => true,
+            'initialPreviewShowUpload' => false,
+            'showRemove' => false,
+            'showUpload' => false,
+            'uploadUrl' => 'app',
+
+            //'maxFileCount' => 10,
     ]
         ]); ?>
     
@@ -307,7 +296,7 @@ use yii\helpers\Url;
         $(\'#select_phone option\').each(function(){
             phone.push($(this).text());
         });
-        $("input[name=\'house[phone]\']").val(phone.join(","));
+        $("input[name=\'House[phone]\']").val(phone.join(","));
     }
     ')
 ?>
@@ -327,7 +316,7 @@ use yii\helpers\Url;
             };
 
             function addSite(){
-                if(confirm("Add site?"))
+                if(confirm("<?php echo Yii::t('app', 'Add site?'); ?>"))
                 {
                     var id = document.getElementById("house-id");
                     var xrequest = new XMLHttpRequest();    
@@ -346,7 +335,7 @@ use yii\helpers\Url;
             };
 
             function delSite(){
-                if(confirm("Delete from site?"))
+                if(confirm("<?php echo Yii::t('app', 'Delete from site?'); ?>"))
                 {
                     var id = document.getElementById("house-id");
                     var xrequest = new XMLHttpRequest();    

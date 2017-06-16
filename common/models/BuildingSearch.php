@@ -6,7 +6,8 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Building;
-
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
 /**
  * BuildingSearch represents the model behind the search form about `common\models\Building`.
  */
@@ -18,8 +19,8 @@ class BuildingSearch extends Building
     public function rules()
     {
         return [
-            [['id', 'type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'developer_id', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
-            [['number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
+            [['id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'developer_id', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['update_author_id', 'region_kharkiv_admin_id', 'type_object_id', 'number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['price', 'price_square_meter', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
         ];
     }
@@ -59,15 +60,24 @@ class BuildingSearch extends Building
         }
 
         // grid filtering conditions
+        if(!empty($this->type_object_id)){
+            $type_object_id = TypeObject::find()->where(['like', 'name', $this->type_object_id])->one()->type_object_id;
+        }
+        if(!empty($this->region_kharkiv_admin_id)){
+            $region_kharkiv_admin_id = RegionKharkivAdmin::find()->where(['like', 'name', $this->region_kharkiv_admin_id])->one()->region_kharkiv_admin_id;
+        }
+        if(!empty($this->update_author_id)){
+            $update_author_id = User::find()->where(['like', 'username', $this->update_author_id])->one()->id;
+        }
         $query->andFilterWhere([
             'id' => $this->id,
-            'type_object_id' => $this->type_object_id,
+            'type_object_id' => $type_object_id,
             'count_room' => $this->count_room,
             'layout_id' => $this->layout_id,
             'floor' => $this->floor,
             'floor_all' => $this->floor_all,
             'city_or_region' => $this->city_or_region,
-            'region_kharkiv_admin_id' => $this->region_kharkiv_admin_id,
+            'region_kharkiv_admin_id' => $region_kharkiv_admin_id,
             'locality_id' => $this->locality_id,
             'course_id' => $this->course_id,
             'region_id' => $this->region_id,
@@ -95,7 +105,7 @@ class BuildingSearch extends Building
             'date_modified' => $this->date_modified,
             'date_modified_photo' => $this->date_modified_photo,
             'author_id' => $this->author_id,
-            'update_author_id' => $this->update_author_id,
+            'update_author_id' => $update_author_id,
             'update_photo_user_id' => $this->update_photo_user_id,
             'enabled' => $this->enabled,
         ]);

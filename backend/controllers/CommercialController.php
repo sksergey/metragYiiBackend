@@ -8,7 +8,9 @@ use common\models\CommercialSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
+use app\modules\olxparser\models\Parser;
 /**
  * CommercialController implements the CRUD actions for Commercial model.
  */
@@ -51,8 +53,10 @@ class CommercialController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->getResouseBoards('apartment');
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -86,9 +90,11 @@ class CommercialController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->getResouseBoards('commercial');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //$model->setResourseBoards();
+            //return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,8 +110,9 @@ class CommercialController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->enabled = 0;
+        $model->update(false);
         return $this->redirect(['index']);
     }
 
@@ -123,5 +130,78 @@ class CommercialController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionLinkConvertor()
+    {
+        $count = Commercial::find()->count();
+
+        return $this->render('linkconvertor', ['count' => $count]);
+    }
+
+    public function actionLinkimages($start = 0)
+    {
+        $posts = Yii::$app->db->createCommand("SELECT * FROM commercial ORDER BY id desc LIMIT $start, 50")
+            ->queryAll();
+        foreach ($posts as $post)
+        {
+            $photos = Yii::$app->db->createCommand("SELECT * FROM photo WHERE  `type_realty_id`= 6 AND `object_id`= {$post['id']}")
+                ->queryAll();
+            if(!empty($photos))
+            {
+                foreach ($photos as $photo)
+                {
+                    $model = Commercial::findOne($post['id']);
+                    $ph_path = explode('/upload/images', $photo['path']);
+                    $path = Yii::getAlias('@webroot')."/../../upload/images".$ph_path['1'];
+                    if(file_exists($path)){
+                        $model->attachImage($path);
+                    }
+                }}
+            }
+        $start += 50;
+        echo $start;
+    }
+
+    public function actionFileDelete()
+    {
+        echo $id = Yii::$app->request->post('key');
+        echo Commercial::deleteImage($id);
+    }
+
+    public function actionAdd()
+    {
+        $values = Yii::$app->request->post('Commercial');
+
+        if($values['id'] !='')
+        {
+            $model = Commercial::findOne($values['id']);
+        }
+        else
+        {
+            $model = new Commercial();
+        }
+
+        $model->attributes = $values;
+        if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
+        else $model['update_author_id'] = Yii::$app->user->id;
+
+        //if(!empty(UploadedFile::getInstances($model, 'imageFiles'))){ err WTF?
+        if(UploadedFile::getInstances($model, 'imageFiles')){
+            $model['update_photo_user_id'] = Yii::$app->user->id;
+        }
+        if($model->save()){
+            $model->besplatka = $values['besplatka'];
+            $model->est = $values['est'];
+            $model->mesto = $values['mesto'];
+            $model->setResourseBoards('commercial');
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            $model->upload();
+        }
+
+        $data['id'] = $model->id;
+        $apart = Commercial::findOne($data['id']);
+        $apart->getResouseBoards('commercial');
+        return $this->render('view', ['data' => $data, 'model' => $apart]);
     }
 }

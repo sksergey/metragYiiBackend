@@ -39,9 +39,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Yii::t('app', 'Apartments') ?>
         </div>
         <div class="pull-right">
-                <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
-                <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+            <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
         </div>
+        <div class="pull-right">
+            <?= $form->field($model,'phone', [ 'labelOptions' => ['class' => 'header-search']])->textInput()->label(\Yii::t('yii','Phone')); ?>
+        </div>
+
+
     </div>
 
     <div class="container-fluid">
@@ -277,9 +282,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo $form->field($model, 'note', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '0' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','Note'));
     ?>
         </div>
-        <div class="col-xs-3 col-sm-3 col-md-2">
-    <?= $form->field($model,'phone', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','Phone')); ?>
-        </div>	
+
         
     </div>
     </div>
@@ -287,9 +290,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?
     $this->registerJs('
-	$("#street_search, #region_search, #region_kharkiv_search, #locality_search, course_search").keyup(function(){
+	$("#street_search, #region_search, #region_kharkiv_search, #locality_search, #course_search").keyup(function(){
         var search_string = $(this).val().toLowerCase();
-        var arr = $(this).parent().find("div.scrollbox > div > div > label");
+        var arr = $(this).parent().find("div.scrollbox > div > div");
 	    if(search_string === "") {
             arr.css("display", "block");
         } else {

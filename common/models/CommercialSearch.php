@@ -6,7 +6,8 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Commercial;
-
+use backend\models\RegionKharkivAdmin;
+use backend\models\TypeObject;
 /**
  * CommercialSearch represents the model behind the search form about `common\models\Commercial`.
  */
@@ -18,8 +19,8 @@ class CommercialSearch extends Commercial
     public function rules()
     {
         return [
-            [['id', 'type_object_id', 'count_room', 'ownership_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'communication_id', 'exclusive_user_id', 'housing', 'detached_building', 'documents', 'rent', 'topicality', 'avtorampa', 'red_line', 'infinite_period', 'separate_entrance', 'delivered', 'phone_line', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
-            [['number_office', 'corps', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
+            [['id', 'count_room', 'ownership_id', 'floor', 'floor_all', 'city_or_region', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'communication_id', 'exclusive_user_id', 'housing', 'detached_building', 'documents', 'rent', 'topicality', 'avtorampa', 'red_line', 'infinite_period', 'separate_entrance', 'delivered', 'phone_line', 'author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['update_author_id', 'region_kharkiv_admin_id', 'type_object_id', 'number_office', 'corps', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite', 'date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['price', 'price_square_meter', 'total_area_house', 'total_area'], 'number'],
         ];
     }
@@ -59,15 +60,25 @@ class CommercialSearch extends Commercial
         }
 
         // grid filtering conditions
+        if(!empty($this->type_object_id)){
+            $type_object_id = TypeObject::find()->where(['like', 'name', $this->type_object_id])->one()->type_object_id;
+        }
+        if(!empty($this->region_kharkiv_admin_id)){
+            $region_kharkiv_admin_id = RegionKharkivAdmin::find()->where(['like', 'name', $this->region_kharkiv_admin_id])->one()->region_kharkiv_admin_id;
+        }
+        if(!empty($this->update_author_id)){
+            $update_author_id = User::find()->where(['like', 'username', $this->update_author_id])->one()->id;
+        }
+
         $query->andFilterWhere([
             'id' => $this->id,
-            'type_object_id' => $this->type_object_id,
+            'type_object_id' => $type_object_id,
             'count_room' => $this->count_room,
             'ownership_id' => $this->ownership_id,
             'floor' => $this->floor,
             'floor_all' => $this->floor_all,
             'city_or_region' => $this->city_or_region,
-            'region_kharkiv_admin_id' => $this->region_kharkiv_admin_id,
+            'region_kharkiv_admin_id' => $region_kharkiv_admin_id,
             'locality_id' => $this->locality_id,
             'course_id' => $this->course_id,
             'region_id' => $this->region_id,
@@ -99,7 +110,7 @@ class CommercialSearch extends Commercial
             'date_modified' => $this->date_modified,
             'date_modified_photo' => $this->date_modified_photo,
             'author_id' => $this->author_id,
-            'update_author_id' => $this->update_author_id,
+            'update_author_id' => $update_author_id,
             'update_photo_user_id' => $this->update_photo_user_id,
             'enabled' => $this->enabled,
         ]);
