@@ -1,0 +1,10 @@
+.colLeft {
+    width: 50%;
+    float: left;
+    margin-bottom: 40px;
+}
+.colRight {
+    width: 50%;
+    float: right;
+    margin-bottom: 40px;
+}

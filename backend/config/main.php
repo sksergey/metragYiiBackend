@@ -27,7 +27,10 @@ return [
         'admin' => [
             'class' => 'mdm\admin\Module',
            
-        ]
+        ],
+        'parsercd' => [
+            'class' => 'app\modules\parsercd\Module',
+        ],
         
     ],
     'components' => [

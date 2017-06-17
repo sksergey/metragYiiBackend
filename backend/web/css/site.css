@@ -164,6 +164,7 @@ a.desc:after {
     background-color: #eeeeee;
     border: 1px solid #919191;
     overflow: auto;
+    width: 100%;
 }
 
 .main-content-header{
@@ -242,3 +243,4 @@ div.required label.control-label:after {
 {
 
 }
+

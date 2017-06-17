@@ -1,14 +1,13 @@
 <?php
 
-namespace backend\modules\parsercd\controllers;
+namespace app\modules\parsercd\controllers;
 
 use yii\web\Controller;
-use backend\modules\parsercd\models\ExcelFileModel;
-use backend\modules\parsercd\models\ParsercdSearch;
+use app\modules\parsercd\models\ExcelFileModel;
+use app\modules\parsercd\models\ParsercdSearch;
 use Yii;
 use yii\web\UploadedFile;
-use arogachev\excel\import\basic\Importer;
-use backend\modules\parsercd\models\Parsercd;
+use app\modules\parsercd\models\Parsercd;
 
 /**
  * Default controller for the `parsercd` module
@@ -21,6 +20,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        \app\modules\parsercd\ParsercdAssetsBundle::register($this->view);
         $model = new ExcelFileModel();
 
         if (Yii::$app->request->isPost) {

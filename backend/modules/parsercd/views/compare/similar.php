@@ -24,7 +24,14 @@ use yii\helpers\Url;
 
     <tr>
 
-        <td><?= $item->path ?></td>
+        <td>
+            <?php if($item->link1 != ''){?>
+            <a href="<?= $item->link1 ?>" target="_blank"><?= Yii::t('app', 'Link'); ?></a> <br>
+            <?php } ?>
+            <?php if($item->link2 != ''){?>
+            <a href="<?= $item->link2 ?>" target="_blank"><?= Yii::t('app', 'Link'); ?></a>
+            <?php } ?>
+        </td>
         <td><?= $item->phone ?></td>
         <td><?= $item->count_room ?></td>
         <td><?= $item->floor ?></td>

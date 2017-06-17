@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\modules\parsercd\models\Parsercd;
 use Yii;
 use common\models\Apartment;
 use common\models\ApartmentSearch;
@@ -354,6 +355,38 @@ class ApartmentController extends Controller
         } else {
             return $this->render('update_from_parser', [
                 'model' => $apartment_model, 'images' => $images
+            ]);
+        }
+    }
+
+    public function actionAddFromParsercd($id)
+    {
+        $parser_model = Parsercd::findOne($id);
+        $apartment_model = new Apartment();
+        $apartment_model->note = $parser_model->link1 . ', ' . $parser_model->link2;
+        $apartment_model->type_object_id = $parser_model->type_object_id;
+        $apartment_model->count_room = $parser_model->count_room;
+        $apartment_model->floor = $parser_model->floor;
+        $apartment_model->floor_all = $parser_model->floor_all;
+        $apartment_model->total_area = $parser_model->total_area;
+        $apartment_model->floor_area = $parser_model->floor_area;
+        $apartment_model->kitchen_area = $parser_model->kitchen_area;
+        $apartment_model->price = $parser_model->price;
+        $apartment_model->source_info_id = 5;
+        $apartment_model->phone = $parser_model->phone;
+        $apartment_model->notesite = $parser_model->note;
+        $apartment_model->region_kharkiv_id = $parser_model->region_kharkiv_id;
+        $apartment_model->street_id = $parser_model->street_id;
+        $apartment_model->metro_id = $parser_model->metro_id;
+
+        if ($apartment_model->load(Yii::$app->request->post()) && $apartment_model->save()) {
+            return $this->redirect(['view', 'id' => $apartment_model->id]);
+        } else {
+            //return $this->render('update_from_parser', [
+            //    'model' => $apartment_model
+            //]);
+            return $this->render('update_from_parsercd', [
+                'model' => $apartment_model
             ]);
         }
     }

@@ -25,7 +25,8 @@
         "kartik-v/yii2-widget-datepicker": "@dev",
         "evgeniyrru/yii2-slick": "*",
         "bower-asset/font-awesome": "4.*",
-        "arogachev/yii2-excel": "^0.1.1"
+        "arogachev/yii2-excel": "^0.1.1",
+        "moonlandsoft/yii2-phpexcel": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

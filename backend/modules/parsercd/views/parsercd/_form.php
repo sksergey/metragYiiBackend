@@ -12,6 +12,12 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'region_kharkiv_id')->textInput() ?>
+
+    <?= $form->field($model, 'street_id')->textInput() ?>
+
+    <?= $form->field($model, 'metro_id')->textInput() ?>
+
     <?= $form->field($model, 'link1')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'link2')->textarea(['rows' => 6]) ?>

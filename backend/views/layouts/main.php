@@ -139,7 +139,8 @@ AppAsset::register($this);
             'label' => Yii::t('yii', 'Parser'),
             'items' => [
                  ['label' => Yii::t('yii', 'OLX apartments'), 'url' => ['/olxparser']],
-                 
+                 ['label' => Yii::t('yii', 'Parser CD'), 'url' => ['/parsercd']],
+
             ],
         ],
         [

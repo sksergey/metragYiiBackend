@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\parsercd\controllers;
+namespace app\modules\parsercd\controllers;
 
 use Yii;
-use backend\modules\parsercd\models\Parsercd;
-use backend\modules\parsercd\models\ParsercdSearch;
+use app\modules\parsercd\models\Parsercd;
+use app\modules\parsercd\models\ParsercdSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -103,7 +103,7 @@ class ParsercdController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['default/index']);
     }
 
     /**

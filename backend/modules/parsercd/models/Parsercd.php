@@ -1,7 +1,10 @@
 <?php
 
-namespace backend\modules\parsercd\models;
+namespace app\modules\parsercd\models;
 
+use backend\models\Metro;
+use backend\models\RegionKharkiv;
+use backend\models\Street;
 use Yii;
 
 /**
@@ -110,14 +113,18 @@ class Parsercd extends \yii\db\ActiveRecord
     public function saveFromParser($obj){
         $result = false;
         if(!empty($obj)){
-            if($obj['L']){
+            if(!empty($obj['L'])){
                 //$this->link = RegionKharkiv::$obj['L'];}
+                //$street = explode('ул.,пр. ');
+                $this->region_kharkiv_id = RegionKharkiv::findOne('like', ['name' => trim($obj['L'])])->region_kharkiv_id;
             }
-            if($obj['M']){
+            if(!empty($obj['M'])){
                 //$this->link = Street::$obj['M'];}
+                $this->street_id = Street::findOne('like', ['name' => trim($obj['M'])])->street_id;
             }
-            if($obj['N']){
+            if(!empty($obj['N'])){
                 //$this->link = Metro::$obj['N'];}
+                $this->metro_id = Metro::findOne('like', ['name' => trim($obj['N'])])->metro_id;
             }
             $this->link1 = $obj['Z'];
             $this->link2 = $obj['AA'];
@@ -137,7 +144,7 @@ class Parsercd extends \yii\db\ActiveRecord
             if(!empty(trim($obj['X']))){
                 $this->phone .= ', '.trim($obj['X']);
             }
-            $this->status = '1';
+            $this->status = 'wait';
             $this->note = $obj['AB'];
             $this->kolfoto = null;
             $this->image = null;

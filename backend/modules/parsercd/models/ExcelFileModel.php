@@ -1,5 +1,5 @@
 <?php
-namespace backend\modules\parsercd\models;
+namespace app\modules\parsercd\models;
 
 use yii\base\Model;
 use yii\web\UploadedFile;

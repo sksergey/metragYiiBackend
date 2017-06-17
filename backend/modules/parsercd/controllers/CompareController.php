@@ -1,12 +1,12 @@
 <?php
 
-namespace app\modules\olxparser\controllers;
+namespace app\modules\parsercd\controllers;
 
 use Yii;
 use yii\web\Controller;
 
-use app\modules\olxparser\models\Parser;
-use app\modules\olxparser\models\ParserSearch;
+use app\modules\parsercd\models\Parsercd;
+use app\modules\parsercd\models\ParsercdSearch;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
 
@@ -34,8 +34,8 @@ class CompareController extends Controller
 
     public function actionIndex()
     {
-        /** @var Parser[] $items */
-        $items = Parser::find()->all();
+        /** @var Parsercd[] $items */
+        $items = Parsercd::find()->all();
 
         foreach ($items as $item) {
             $numbers = self::normalizePhoneNumbersField($item->phone);
@@ -52,12 +52,12 @@ class CompareController extends Controller
 
             // Syntax sugar
             $update_status = function ($value) use ($item) {
-                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parser` SET 
+                Yii::$app->db->createCommand("UPDATE `parsercd` SET 
                     `status` = {$value} WHERE id = {$item->id}")->execute();
             };
 
             $update_counter = function ($value) use ($item) {
-                Yii::$app->db->createCommand("UPDATE `new_parser_olx_parser` SET 
+                Yii::$app->db->createCommand("UPDATE `parsercd` SET 
                     `count_similar_advs` = {$value} WHERE id = {$item->id}")->execute();
             };
 
@@ -109,13 +109,13 @@ class CompareController extends Controller
 
         }
 
-        return $this->redirect(Url::base(true).'/olxparser/default/index');
+        return $this->redirect(Url::base(true).'/parsercd/default/index');
     }
 
     public function actionSimilar($id)
     {
-        /** @var Parser $item */
-        $item = Parser::find()->where(['id' => $id])->one();
+        /** @var Parsercd $item */
+        $item = Parsercd::find()->where(['id' => $id])->one();
         if ($item === null) {
             throw new NotFoundHttpException();
         }

@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'total_area',
                 'label' => 'Общая пл',
                 'value' =>  function ($dataProvider) {
-                    return $dataProvider->floor_all;
+                    return $dataProvider->total_area;
                 },
                 'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
             ],
@@ -108,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'floor_area',
                 'label' => 'Жилая пл',
                 'value' =>  function ($dataProvider) {
-                    return $dataProvider->floor_all;
+                    return $dataProvider->floor_area;
                 },
                 'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
             ],
@@ -116,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'kitchen_area',
                 'label' => 'Кухни пл',
                 'value' =>  function ($dataProvider) {
-                    return $dataProvider->floor_all;
+                    return $dataProvider->kitchen_area;
                 },
                 'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
             ],
