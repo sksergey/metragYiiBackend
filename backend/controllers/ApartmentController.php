@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use backend\modules\parsercd\models\Parsercd;
+use app\modules\parsercd\models\Parsercd;
 use Yii;
 use common\models\Apartment;
 use common\models\ApartmentSearch;

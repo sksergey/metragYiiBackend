@@ -53,7 +53,7 @@ class DefaultController extends Controller
     }
 
     public function parserLiteStart(){
-        $fileName = 'C:\OpenServer\domains\yii-application\backend\web\excel\uploads\parse.xlsx';
+        $fileName = $_SERVER['DOCUMENT_ROOT'].'/backend/web/excel/uploads/parse.xlsx';
         $data = \moonland\phpexcel\Excel::widget([
             'mode' => 'import',
             'fileName' => $fileName,

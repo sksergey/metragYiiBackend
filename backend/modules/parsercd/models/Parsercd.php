@@ -138,10 +138,10 @@ class Parsercd extends \yii\db\ActiveRecord
             $this->kitchen_area = $obj['T'];
             $this->price = $obj['U'];
             $this->phone = trim($obj['V']);
-            if(!empty(trim($obj['W']))){
+            if(trim($obj['W']) != ''){
                 $this->phone .= ', '.trim($obj['W']);
             }
-            if(!empty(trim($obj['X']))){
+            if(trim($obj['X']) != ''){
                 $this->phone .= ', '.trim($obj['X']);
             }
             $this->status = 'wait';
