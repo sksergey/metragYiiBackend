@@ -21,6 +21,7 @@ use backend\models\Users;
 use backend\models\UserType;
 
 ?>
+<?php \yii\helpers\Url::remember(); ?>
 <?
 $this->title = Yii::t('app', 'Apartment Search');
 $this->params['breadcrumbs'][] = $this->title;
@@ -259,27 +260,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="col-xs-1 col-sm-1 col-md-1">
     <?
-        echo $form->field($model, 'middle_floor', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '0' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','Middle floor'));
+        echo $form->field($model, 'middle_floor', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '2' => \Yii::t('yii','No'), '0' => \Yii::t('yii','All')])->label(\Yii::t('yii','Middle floor'));
     ?>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1">
     <?
-        echo $form->field($model, 'no_mediators', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '0' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','No mediators'));
+        echo $form->field($model, 'no_mediators', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '2' => \Yii::t('yii','No'), '0' => \Yii::t('yii','All')])->label(\Yii::t('yii','No mediators'));
     ?>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1">
     <?
-        echo $form->field($model, 'exchange', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '0' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','Exchange'));
+        echo $form->field($model, 'exchange', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '2' => \Yii::t('yii','No'), '0' => \Yii::t('yii','All')])->label(\Yii::t('yii','Exchange'));
     ?>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1">
     <?
-        echo $form->field($model, 'enabled', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['0' => \Yii::t('yii','Yes'), '1' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','Archive'));
+        echo $form->field($model, 'enabled', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '2' => \Yii::t('yii','No'), '0' => \Yii::t('yii','All')])->label(\Yii::t('yii','Archive'));
     ?>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1">
     <?
-        echo $form->field($model, 'note', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '0' => \Yii::t('yii','No'), '2' => \Yii::t('yii','All')])->label(\Yii::t('yii','Note'));
+        echo $form->field($model, 'note', ['template' => "{label}<br>{input}", 'labelOptions' => ['class' => 'radio-btn-gp-label']])->radioList(['1' => \Yii::t('yii','Yes'), '2' => \Yii::t('yii','No'), '0' => \Yii::t('yii','All')])->label(\Yii::t('yii','Note'));
     ?>
         </div>
 

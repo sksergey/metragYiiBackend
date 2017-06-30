@@ -14,14 +14,14 @@ use backend\models\Metro;
 <?php Pjax::begin(); ?>    <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
-    /*'rowOptions' => function ($model, $key, $index, $grid)
-    {
-        if($model->is_active() == false) {
-            return ['style' => 'background-color:#DDA0DD;'];
-        }
-    },*/
+    'rowOptions' => function ($model) {
+        // В зависимости от статуса изменяем его div
+        return [
+            'class' => 'status-' . $model->status
+        ];
+    },
     'tableOptions' => [
-        'class' => 'table table-striped table-bordered',
+        'class' => 'table-bordered',
         'style' => 'font-size: 13px;'
     ],
     'columns' => [

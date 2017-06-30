@@ -79,12 +79,24 @@ class Apartment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_object_id', 'count_room', 'floor', 'floor_all', 'price', 'source_info_id', 'total_area', 'floor_area', 'kitchen_area'], 'required'],
+            [['phone', 'type_object_id', 'count_room', 'floor', 'floor_all', 'price', 'source_info_id', 'total_area', 'floor_area', 'kitchen_area', 'street_id', 'condit_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed'], 'required'],
             [['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
             [['date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone'], 'string', 'max' => 255],
+            [['region_kharkiv_admin_id', 'region_kharkiv_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 0;
+            }, 'whenClient' => "function(attribute, value) {
+                console.log($(\"input[name='Apartment[city_or_region]']:checked\").val());
+                return $(\"input[name='Apartment[city_or_region]']:checked\").val() == 0;
+            }"],
+            [['locality_id', 'course_id', 'region_id'], 'required', 'when' => function ($model) {
+                    return $model->city_or_region == 1;
+                }, 'whenClient' => "function(attribute, value) {
+                    console.log($(\"input[name='Apartment[city_or_region]']:checked\").val());
+                    return $(\"input[name='Apartment[city_or_region]']:checked\").val() == 1;
+                }"],
         ];
     }
 

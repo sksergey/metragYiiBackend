@@ -46,17 +46,17 @@ use yii\helpers\Url;
         <? if($model->id == null) $model->city_or_region = 0; ?>
 		<?= $form->field($model,'city_or_region',['inline' => true, 'template' => '{input}'])->radiolist(['0' => Yii::t('app', 'Kharkiv'), '1' => Yii::t('app', 'Region')])->label(false); ?>
 
-		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков'); ?>
+		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков', ['class' => 'required']); ?>
 		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
-    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков'); ?>
+    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков',['class' => 'required']); ?>
 		<?= $form->field($model, 'metro_id')->dropdownList(
     		Metro::find()->select(['name', 'metro_id'])->orderby('name')->indexBy('metro_id')->column(),['prompt'=>'Выберите станцию метро...'])->label('Метро'); ?>
 		
 		<?= $form->field($model, 'locality_id')->dropdownList(
-			Locality::find()->select(['name', 'locality_id'])->orderby('name')->indexBy('locality_id')->column(),['prompt'=>'Выберите населенный пункт...'])->label('Населенный пункт'); ?>
+			Locality::find()->select(['name', 'locality_id'])->orderby('name')->indexBy('locality_id')->column(),['prompt'=>'Выберите населенный пункт...'])->label('Населенный пункт', ['class' => 'required']); ?>
 		<?= $form->field($model, 'course_id')->dropdownList(
-    		Course::find()->select(['name', 'course_id'])->orderby('name')->indexBy('course_id')->column(),['prompt'=>'Выберите направление...'])->label('Направление'); ?>
-		<?= $form->field($model, 'region_id')->dropdownList(Region::find()->select(['name', 'region_id'])->orderby('name')->indexBy('region_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Область'); ?>
+    		Course::find()->select(['name', 'course_id'])->orderby('name')->indexBy('course_id')->column(),['prompt'=>'Выберите направление...'])->label('Направление', ['class' => 'required']); ?>
+		<?= $form->field($model, 'region_id')->dropdownList(Region::find()->select(['name', 'region_id'])->orderby('name')->indexBy('region_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Область', ['class' => 'required']); ?>
     	
 		<?= $form->field($model, 'street_id')->dropdownList(
     		Street::find()->select(['name', 'street_id'])->orderby('name')->indexBy('street_id')->column(),['prompt'=>'Выберите улицу...'])->label('Улица'); ?>
@@ -115,10 +115,10 @@ use yii\helpers\Url;
        	
         <div id="div_phone" style="display: none;">
         <input type="text" id="input_phone" class="span12" />
-        
+
         <?= Html::button(Yii::t('app', 'OK'), ['id' => 'ok_phone']) ?>
         <?= Html::button(Yii::t('app', 'Cancel'), ['id' => 'cancel_phone']) ?>
-        
+
         </div>
         <select size="5" class="span12" id="select_phone" style="width: 100%">
                                         <?php
@@ -130,7 +130,8 @@ use yii\helpers\Url;
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-        <?= $form->field($model,'phone')->hiddenInput(); ?>
+        <?//= $form->field($model,'phone')->hiddenInput()->label('Телефон', ['class' => 'required']); ?>
+        <?= $form->field($model,'phone')->hiddenInput()->label('Телефон'); ?>
         <? if($model->id == null) $model->enabled = 1; ?>
 		<?= $form->field($model,'enabled')->checkbox()->label('Активное') ?>
 
@@ -173,7 +174,8 @@ use yii\helpers\Url;
 	</div>
 
 	<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']);?>
-    <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+    <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']); ?>
+    <a href="<?php echo \yii\helpers\Url::previous(); ?>" class="btn btn-default">Отменить</a>
     <?
         if($model->id != '')
         {
@@ -191,7 +193,6 @@ use yii\helpers\Url;
     ?>
     
 <?php ActiveForm::end(); ?>
-
 
 <? $this->registerJs('
     $(document).ready(function () {

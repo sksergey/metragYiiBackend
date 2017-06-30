@@ -153,6 +153,8 @@ class ApartmentSearch extends Apartment
             ->andFilterWhere(['like', 'note', $this->note])
             ->andFilterWhere(['like', 'notesite', $this->notesite]);
 
+        $query->orderBy(['id' => SORT_DESC]);
+
         return $dataProvider;
     }
 }

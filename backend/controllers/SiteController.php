@@ -1,6 +1,9 @@
 <?php
 namespace backend\controllers;
 
+use backend\models\ApartmentFind;
+use backend\models\MainSearch;
+use common\models\Apartment;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -60,9 +63,48 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new MainSearch();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $searchModel = $this->searchModelSelect($model->type_realty);
+            if($searchModel){
+                $searchModel->id = $model->id;
+                $searchModel->phone = $model->phone;
+            }
+            $this->redirect('admin/apartment/searchresult?ApartmentFind%5Bphone%5D='.$model->phone.'&ApartmentFind%5Bid%5D='.$model->id);
+            //return $this->render('entry-confirm', ['model' => $model]);
+        } else {
+            return $this->render('index', ['model' => $model]);
+        }
+
     }
 
+    public function searchModelSelect($type_realty){
+        switch ($type_realty){
+            case 'apartment':{
+                $searchModel = new ApartmentFind();
+                break;
+            }
+            case 'rent':{
+                break;
+            }
+            case 'building':{
+                break;
+            }
+            case 'house':{
+                break;
+            }
+            case 'area':{
+                break;
+            }
+            case 'commercial':{
+                break;
+            }
+            default : {
+                $searchModel = null;
+            }
+        }
+        return $searchModel;
+    }
     /**
      * Login action.
      *

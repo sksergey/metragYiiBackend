@@ -34,11 +34,11 @@ class ApartmentFind extends Apartment
     public $file;
     public $del_img;
 
-    public $middle_floor = '2';
-    public $no_mediators = '2';
-    public $exchange = '2';
-    public $enabled = '1';
-    public $note = '2';
+    public $middle_floor = '0';
+    public $no_mediators = '0';
+    public $exchange = '0';
+    public $enabled = '2';
+    public $note = '0';
     public $phone;
 
     public function rules()

@@ -228,7 +228,7 @@ class SiteController extends Controller
     //---------------- realty menu items ----------------------
     public function actionApartment()
     {
-        $query = Addsite::find()->where(['base' => 'apartment']);
+        $query = Addsite::find()->where(['base' => 'apartment'])->orderBy(['id' => SORT_DESC]);
         $countQuery = clone $query;
         $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => '6']);
         $models = $query->offset($pages->offset)

@@ -43,7 +43,7 @@ class ApartmentController extends Controller
     {
         $searchModel = new ApartmentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        //$dataProvider->pagination->pageSize  = 10;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -179,6 +179,7 @@ class ApartmentController extends Controller
         //die;
         $query = Apartment::find();
         //begin filters
+        $query->andFilterWhere(['=', 'id', $get['ApartmentFind']['id']]);
         $query->andFilterWhere(['>=', 'id', $get['ApartmentFind']['idFrom']]);
         $query->andFilterWhere(['<=', 'id', $get['ApartmentFind']['idTo']]);
         $query->andFilterWhere(['>=', 'count_room', $get['ApartmentFind']['count_roomFrom']]);
@@ -215,39 +216,42 @@ class ApartmentController extends Controller
         $query->andFilterWhere(['exclusive_user_id' => $get['ApartmentFind']['exclusive_user_id']]);
         $query->andFilterWhere(['like', 'phone', $get['ApartmentFind']['phone']]);
         //TODO this filter
-        if($get['ApartmentFind']['middle_floor'] == '0'){
-            $query->andFilterWhere(['floor' => '1']);
-            //$query->orWhere(['like', 'floor', apartment.floor_all]);
+        if($get['ApartmentFind']['middle_floor'] == '2'){
+            $query->andFilterWhere(['or', 'floor = floor_all', 'floor=1']);
+        }
+        if($get['ApartmentFind']['middle_floor'] == '1'){
+            $query->andFilterWhere(['and', 'floor > 1', 'floor < floor_all']);
         }
 
         if($get['ApartmentFind']['no_mediators'] == '1' ){
             $query->andWhere(['is', 'mediator_id', NULL]);
         }
-        if($get['ApartmentFind']['no_mediators'] == '0' ){
+        if($get['ApartmentFind']['no_mediators'] == '2' ){
             $query->andWhere(['not',['mediator_id' => NULL]]);
         }
 
         if($get['ApartmentFind']['exchange'] == '1' ){
             $query->andWhere(['=', 'exchange', '1']);
         }
-        if($get['ApartmentFind']['exchange'] == '0' ){
+        if($get['ApartmentFind']['exchange'] == '2' ){
             $query->andWhere(['=', 'exchange', '0']);
         }
 
-        if($get['ApartmentFind']['enabled'] == '0' ){
+        if($get['ApartmentFind']['enabled'] == '1' ){
             $query->andFilterWhere(['=', 'enabled', '0']);
         }
-        if($get['ApartmentFind']['enabled'] == '1' ){
+        if($get['ApartmentFind']['enabled'] == '2' ){
             $query->andFilterWhere(['=', 'enabled', '1']);
         }
 
         if($get['ApartmentFind']['note'] == 1 ){
             $query->andFilterWhere(['>', 'length(note)', '0']);
         }
-        if($get['ApartmentFind']['note'] == 0 ){
+        if($get['ApartmentFind']['note'] == 2 ){
             $query->andFilterWhere(['=', 'length(note)', '0']);
         }
 
+        $query->orderBy(['id' => SORT_DESC]);
         //TODO phone filter
 
         $dataProvider = new ActiveDataProvider([
@@ -405,6 +409,7 @@ class ApartmentController extends Controller
         }
 
         $model->attributes = $values;
+        $model->date_modified = date("Y-m-d H:i:s");
         if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
         else $model['update_author_id'] = Yii::$app->user->id;
 
@@ -425,5 +430,11 @@ class ApartmentController extends Controller
         $apart = Apartment::findOne($data['id']);
         $apart->getResouseBoards('apartment');
         return $this->render('view', ['data' => $data, 'model' => $apart]);
+    }
+
+    public function actionPrint(){
+        var_dump($_COOKIE);
+        $data = $_SESSION['apartments'];
+        return $this->render('print', ['data' => $data]);
     }
 }

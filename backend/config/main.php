@@ -31,7 +31,10 @@ return [
         'parsercd' => [
             'class' => 'app\modules\parsercd\Module',
         ],
-        
+        'gridview' => [
+            'class' => 'kartik\grid\Module',
+        ],
+
     ],
     'components' => [
         'request' => [
