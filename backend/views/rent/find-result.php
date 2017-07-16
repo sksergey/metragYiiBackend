@@ -1,23 +1,24 @@
 <?
 use yii\helpers\Url;
 use yii\helpers\Html;
+
 use yii\data\ActiveDataProvider;
+
+
 use kartik\export\ExportMenu;
 //use kartik\grid\GridView;
 use yii\grid\GridView;
 
 use backend\models\RegionKharkivAdmin;
-use backend\models\Layout;
 use backend\models\TypeObject;
 use backend\models\User;
 use backend\models\RegionKharkiv;
 use backend\models\Street;
 use backend\models\Condit;
-use backend\models\WallMaterial;
-use backend\models\Mediator;
+use backend\models\Comfort;
 ?>
 <?php
-$url = explode('/admin/apartment/searchresult', Url::current());
+$url = explode('/admin/rent/searchresult', Url::current());
 $get = $url[1];
 $currentParams = Yii::$app->getRequest()->getQueryParams();
 ?>
@@ -36,8 +37,7 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
                         $url,
                         [
                             'title' => Yii::t('app', 'Edit'),
-                                                              
-                ]);
+                        ]);
                 },
 
             ],
@@ -74,6 +74,13 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
         'number_building',
         'count_room',
         [
+            'attribute' => 'count_room_rent',
+            'value' =>  function ($dataProvider) {
+                return $dataProvider->count_room_rent;
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
+        ],
+        [
             'attribute' => 'floor',
             'value' =>  function ($dataProvider) {
                 return $dataProvider->floor;
@@ -89,35 +96,6 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
             },
             'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
-        //'floor',
-        //'floor_all',
-        [
-            'attribute' => 'total_area',
-            'label' => 'Общая пл',
-            'value' =>  function ($dataProvider) {
-                return (int)$dataProvider->total_area;
-            },
-            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
-        ],
-        [
-            'attribute' => 'floor_area',
-            'label' => 'Жилая пл',
-            'value' =>  function ($dataProvider) {
-                return (int)$dataProvider->floor_area;
-            },
-            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
-        ],
-        [
-            'attribute' => 'kitchen_area',
-            'label' => 'Кухни пл',
-            'value' =>  function ($dataProvider) {
-                return (int)$dataProvider->kitchen_area;
-            },
-            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
-        ],
-        //'total_area',
-        //'floor_area',
-        //'kitchen_area',
         [
             'attribute' => 'condit_id',
             'label' => 'Сост.',
@@ -128,92 +106,88 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
         ],
         'price',
         [
-            'format' => 'html',
-            'attribute' => 'phone',
+            'attribute' => 'price_note',
+            'label' => 'Прим. к опл.',
             'value' =>  function ($dataProvider) {
-               //$str = str_replace(',', ',<br>', $dataProvider->phone);
-                $str = strpos($dataProvider->phone, ",") === false ? $dataProvider->phone : 
-                       substr($dataProvider->phone,0,strpos($dataProvider->phone, ","));
-
-                //$str = (($pos=strpos($dataProvider->phone, ",")==false)?strlen($dataProvider->phone):$pos);
-                return $str/*$dataProvider->phone*/;
-            }
-        ],
-        [
-            'attribute' => 'layout_id',
-            'label' => 'Плани-ровка',
-            'value' =>  function ($dataProvider) {
-                return Layout::findOne($dataProvider->layout_id)->name;
+                return $dataProvider->price_note;
             },
             'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'attribute' => 'wall_material_id',
-            'label' => 'Матер. стен',
-            'value' =>  function ($dataProvider) {
-                return WallMaterial::findOne($dataProvider->wall_material_id)->name;
+            'attribute' => 'comfort_id',
+            'label' => 'Удоб-ства',
+            'value' => function($dataProvider){
+                return Comfort::findOne(['comfort_id' => $dataProvider->comfort_id])->name;
             },
             'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'attribute' => 'count_balcony',
-            'label' => 'Кол-во балк-в',
-            'value' =>  function ($dataProvider) {
-                return $dataProvider->count_balcony;
+            'attribute' => 'tv',
+            'value' => function($dataProvider){
+                return $dataProvider->tv == '1' ? '+' : '-';
             },
             'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'attribute' => 'count_balcony_glazed',
-            'label' => 'Заст балк',
-            'value' =>  function ($dataProvider) {
-                return $dataProvider->count_balcony_glazed;
-            },
-            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
-        ],
-        //'count_balcony',
-        //'count_balcony_glazed',
-        [
-            'attribute' => 'mediator_id',
-            'label' => 'Посред-ник',
-            'value' =>  function ($dataProvider) {
-                return Mediator::findOne($dataProvider->mediator_id)->name;
+            'attribute' => 'refrigerator',
+            'label' => 'Холод-к',
+            'value' => function($dataProvider){
+                return $dataProvider->refrigerator == '1' ? '+' : '-';
             },
             'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'attribute' => 'author_id',
-            'value' =>  function ($dataProvider) {
-                return User::findOne($dataProvider->author_id)->username;
-            }
+            'attribute' => 'entry',
+            'value' => function($dataProvider){
+                return $dataProvider->entry == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'attribute' => 'exclusive_user_id',
-            'label' => 'Эксклю-зив',
-            'value' =>  function ($dataProvider) {
-                return User::findOne($dataProvider->exclusive_user_id)->username;
-            }
+            'attribute' => 'washer',
+            'label' => 'Стир. маш.',
+            'value' => function($dataProvider){
+                return $dataProvider->washer == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
         [
-            'label' => 'Фото',
-            'value' =>  function ($dataProvider) {
-                if((bool) array_filter($dataProvider->getImages())){
-                    return '+';
-                }else{
-                    return '-';
-                }
-                //return var_dump($dataProvider->getImages());
-            }
+            'attribute' => 'furniture',
+            'value' => function($dataProvider){
+                return $dataProvider->furniture == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
         ],
-
+        [
+            'attribute' => 'conditioner',
+            'label' => 'Конд-р',
+            'value' => function($dataProvider){
+                return $dataProvider->conditioner == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
+        ],
+        [
+            'attribute' => 'garage',
+            'value' => function($dataProvider){
+                return $dataProvider->garage == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
+        ],
+        [
+            'attribute' => 'phone_line',
+            'label' => 'Тел. лин.',
+            'value' => function($dataProvider){
+                return $dataProvider->phone_line == '1' ? '+' : '-';
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
+        ],
         [
             'format' => 'html',
             'attribute' => 'date_added',
-            //'label' => 'Дата добавлeybz',
             'value' =>  function ($dataProvider) {
                 //$str = str_replace(' ', ' <br>', $dataProvider->date_added);
                 //return /*$str*/$dataProvider->date_added;
-                 if($dataProvider->date_added=="0000-00-00 00:00:00")
+                if($dataProvider->date_added=="0000-00-00 00:00:00")
                     return "";
                 return Yii::$app->formatter->asDateTime($dataProvider->date_added, 'dd.MM.yyyy');
             },
@@ -232,8 +206,43 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
             },
             'contentOptions' => ['style' => 'max-width: 40px; overflow: hidden' ],
         ],
-        //'date_added',
-        /*[
+        [
+            'attribute' => 'author_id',
+            'value' =>  function ($dataProvider) {
+                return User::findOne($dataProvider->author_id)->username;
+            }
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'phone',
+            'value' =>  function ($dataProvider) {
+                //$str = str_replace(',', ',<br>', $dataProvider->phone);
+                $str = strpos($dataProvider->phone, ",") === false ? $dataProvider->phone :
+                    substr($dataProvider->phone,0,strpos($dataProvider->phone, ","));
+
+                //$str = (($pos=strpos($dataProvider->phone, ",")==false)?strlen($dataProvider->phone):$pos);
+                return $str/*$dataProvider->phone*/;
+            }
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'phone_site',
+            'value' =>  function ($dataProvider) {
+                $str = str_replace(',', ',<br>', $dataProvider->phone_site);
+                return $str;
+            }
+        ],
+        [
+            'label' => 'Фото',
+            'value' =>  function ($dataProvider) {
+                if((bool) array_filter($dataProvider->getImages())){
+                    return '+';
+                }else{
+                    return '-';
+                }
+            }
+        ],
+        [
             'attribute' => 'enabled',
             'value' => function($model) {
                 return $model->enabled == 0 ? Yii::t('app', 'Archive') : Yii::t('app', 'Active');
@@ -242,7 +251,8 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
                 0 => Yii::t('app', 'Archive'),
                 1 => Yii::t('app', 'Active')
             ]
-        ],*/
+        ],
+
     ];
     ?>
     <div class="export">
@@ -270,9 +280,9 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
             ],
         ]);
         ?>
-        
-        <a href="<?= Url::base(true);?>/apartment/search<?= $get;?>" class="btn btn-default">Вернуться к поиску</a>
-        <a href="<?= Url::base(true);?>/apartment/print<?= $get;?>" class="btn btn-success" style="float: right;" target="_blank">Печать</a>
+
+        <a href="<?= Url::base(true);?>/rent/search<?= $get;?>" class="btn btn-default">Вернуться к поиску</a>
+        <a href="<?= Url::base(true);?>/rent/print<?= $get;?>" class="btn btn-success" style="float: right;" target="_blank">Печать</a>
 
     </div>
 

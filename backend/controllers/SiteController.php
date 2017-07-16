@@ -70,7 +70,7 @@ class SiteController extends Controller
                 $searchModel->id = $model->id;
                 $searchModel->phone = $model->phone;
             }
-            $this->redirect('admin/apartment/searchresult?ApartmentFind%5Bphone%5D='.$model->phone.'&ApartmentFind%5Bid%5D='.$model->id);
+            $this->redirect('/admin/apartment/searchresult?ApartmentFind%5Bphone%5D='.$model->phone.'&ApartmentFind%5Bid%5D='.$model->id);
             //return $this->render('entry-confirm', ['model' => $model]);
         } else {
             return $this->render('index', ['model' => $model]);

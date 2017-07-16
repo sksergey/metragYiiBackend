@@ -2,11 +2,11 @@
 
 namespace common\models;
 
+use backend\models\Image;
 use backend\models\Course;
 use backend\models\Locality;
 use backend\models\Region;
 use Yii;
-use backend\models\Image;
 /**
  * This is the model class for table "house".
  *
@@ -57,7 +57,6 @@ use backend\models\Image;
  */
 class House extends \yii\db\ActiveRecord
 {
-    public $imageFiles;
     /**
      * @inheritdoc
      */
@@ -72,12 +71,25 @@ class House extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_object_id', 'count_room', 'partsite_id', 'parthouse_id', 'floor_all', 'city_or_region', 'street_id', 'condit_id', 'source_info_id', 'price', 'mediator_id', 'phone', 'total_area_house', 'total_area', 'building_year', 'sewage_id', 'wall_material_id', 'gas_id', 'water_id', 'enabled'], 'required'],
+            [['type_object_id', 'count_room', 'partsite_id', 'parthouse_id', 'floor_all', 'city_or_region', 'street_id', 'price', 'condit_id', 'source_info_id',
+                'sewage_id', 'wall_material_id', 'water_id', 'total_area_house', 'total_area', 'building_year', 'gas_id', 'phone', 'enabled'], 'required'],
             [['type_object_id', 'count_room', 'partsite_id', 'parthouse_id', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'building_year', 'sewage_id', 'wall_material_id', 'gas_id', 'water_id', 'comfort_id', 'exclusive_user_id', 'phone_line', 'state_act', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price', 'total_area_house', 'total_area'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
             [['date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['number_building', 'exchange_formula', 'landmark', 'phone'], 'string', 'max' => 255],
+            [['region_kharkiv_admin_id', 'region_kharkiv_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 0;
+            }, 'whenClient' => "function(attribute, value) {
+                console.log($(\"input[name='House[city_or_region]']:checked\").val());
+                return $(\"input[name='House[city_or_region]']:checked\").val() == 0;
+            }"],
+            [['locality_id', 'course_id', 'region_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 1;
+            }, 'whenClient' => "function(attribute, value) {
+                    console.log($(\"input[name='House[city_or_region]']:checked\").val());
+                    return $(\"input[name='House[city_or_region]']:checked\").val() == 1;
+                }"],
         ];
     }
 
@@ -144,6 +156,18 @@ class House extends \yii\db\ActiveRecord
                 'class' => 'common\behaviors\RealtyBehave',
             ]
         ];
+    }
+
+    public static function deleteImage($id)
+    {
+        $image = Image::findOne($id);
+        $model = Apartment::findOne($image->itemId);
+        $images = $model->getImages();
+        foreach ($images as $img)
+        {
+            if ($img->id == $id)
+                $model->removeImage($img);
+        }
     }
 
     public function getLocalitystring($model)

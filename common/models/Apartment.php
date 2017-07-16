@@ -2,11 +2,8 @@
 
 namespace common\models;
 
-use backend\models\Xml;
 use Yii;
 use backend\models\Image;
-use backend\models\ApartmentFind;
-use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\RegionKharkiv;
 use backend\models\Street;

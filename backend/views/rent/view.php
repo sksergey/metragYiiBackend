@@ -6,16 +6,12 @@ use yii\bootstrap\Html;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\Locality;
-use backend\models\Layout;
 use backend\models\RegionKharkiv;
 use backend\models\Region;
 use backend\models\Street;
 use backend\models\Course;
-use backend\models\WallMaterial;
 use backend\models\Condit;
-use backend\models\Wc;
-use backend\models\Users;
-use backend\models\Mediator;
+use backend\models\User;
 use backend\models\Metro;
 use backend\models\SourceInfo;
 use backend\models\Addsite;
@@ -70,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model,'price')->textInput(['readonly' => 'true'])->label('Цена'); ?>
     <?= $form->field($model,'price_note')->textInput(['readonly' => 'true'])->label('Примечание к оплате'); ?>
     <?= $form->field($model, 'exclusive_user_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->exclusive_user_id])->name ? Users::findOne(['id' => $model->exclusive_user_id])->name : ""])->label('Экслюзив'); ?>
+        'value' => User::findOne(['id' => $model->exclusive_user_id])->username ? User::findOne(['id' => $model->exclusive_user_id])->username : ""])->label('Экслюзив'); ?>
     <?= $form->field($model,'landmark')->textInput(['readonly' => 'true'])->label('Ориентир'); ?>
     <?= $form->field($model,'comment')->textInput(['readonly' => 'true'])->label('Причина удаления/восстановления'); ?>
     <?= $form->field($model, 'condit_id')->textInput(['readonly' => 'true',
@@ -96,11 +92,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model,'email_site')->textInput(['readonly' => 'true'])->label('E-mail для сайта'); ?>
 
     <?= $form->field($model, 'author_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->author_id])->name ? Users::findOne(['id' => $model->author_id])->name : ""]); ?>
+        'value' => User::findOne(['id' => $model->author_id])->username ? User::findOne(['id' => $model->author_id])->username : ""]); ?>
     <?= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->update_author_id])->name ? Users::findOne(['id' => $model->update_author_id])->name : ""])->label('Изменил дпи'); ?>
+        'value' => User::findOne(['id' => $model->update_author_id])->username ? User::findOne(['id' => $model->update_author_id])->username : ""])->label('Изменил дпи'); ?>
     <?= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->update_photo_user_id])->name ? Users::findOne(['id' => $model->update_photo_user_id])->name : ""])->label('Кто обновил фото'); ?>
+        'value' => User::findOne(['id' => $model->update_photo_user_id])->username ? User::findOne(['id' => $model->update_photo_user_id])->username : ""])->label('Кто обновил фото'); ?>
     <?= Html::label("Доски объявлений") ?>
     <?= $form->field($model,'besplatka')->checkbox(['disabled' => 'true'])->label('Бесплатка') ?>
     <?= $form->field($model,'est')->checkbox(['disabled' => 'true'])->label('EST') ?>
@@ -169,6 +165,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo Html::button(Yii::t('app', 'Add site'), ['id' => 'add_site','class' => 'btn btn-primary']);
     }
 ?>
+<a href="<?php echo \yii\helpers\Url::previous(); ?>" class="btn btn-default">Отменить</a>
 
 <?php ActiveForm::end(); ?>
 

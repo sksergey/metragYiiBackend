@@ -3,7 +3,6 @@
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
-use common\models\Building;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\Locality;
@@ -12,10 +11,9 @@ use backend\models\RegionKharkiv;
 use backend\models\Region;
 use backend\models\Street;
 use backend\models\Course;
-use backend\models\WallMaterial;
 use backend\models\Condit;
 use backend\models\Wc;
-use backend\models\Users;
+use backend\models\User;
 use backend\models\Mediator;
 use backend\models\Metro;
 use backend\models\SourceInfo;
@@ -75,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="col-xs-12 col-sm-3 col-md-3 ">
     <?= $form->field($model,'price')->textInput(['readonly' => 'true'])->label('Цена'); ?>
     <?= $form->field($model, 'exclusive_user_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->exclusive_user_id])->name ? Users::findOne(['id' => $model->exclusive_user_id])->name : ""])->label('Экслюзив'); ?>
+        'value' => User::findOne(['id' => $model->exclusive_user_id])->username ? User::findOne(['id' => $model->exclusive_user_id])->username : ""])->label('Экслюзив'); ?>
     <?= $form->field($model, 'mediator_id')->textInput(['readonly' => 'true',
         'value' => Mediator::findOne(['mediator_id' => $model->mediator_id])->name ? Mediator::findOne(['mediator_id' => $model->mediator_id])->name : ""])->label('Посредник'); ?>
     <?= $form->field($model,'landmark')->textInput(['readonly' => 'true'])->label('Ориентир'); ?>
@@ -103,11 +101,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model,'count_balcony')->textInput(['readonly' => 'true'])->label('Количество балконов'); ?>
     <?= $form->field($model,'count_balcony_glazed')->textInput(['readonly' => 'true'])->label('Застекленных балконов'); ?>
     <?= $form->field($model, 'author_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->author_id])->name ? Users::findOne(['id' => $model->author_id])->name : ""]); ?>
+        'value' => User::findOne(['id' => $model->author_id])->username ? User::findOne(['id' => $model->author_id])->username : ""]); ?>
     <?= $form->field($model, 'update_author_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->update_author_id])->name ? Users::findOne(['id' => $model->update_author_id])->name : ""])->label('Изменил дпи'); ?>
+        'value' => User::findOne(['id' => $model->update_author_id])->username ? User::findOne(['id' => $model->update_author_id])->username : ""])->label('Изменил дпи'); ?>
     <?= $form->field($model, 'update_photo_user_id')->textInput(['readonly' => 'true',
-        'value' => Users::findOne(['id' => $model->update_photo_user_id])->name ? Users::findOne(['id' => $model->update_photo_user_id])->name : ""])->label('Кто обновил фото'); ?>
+        'value' => User::findOne(['id' => $model->update_photo_user_id])->username ? User::findOne(['id' => $model->update_photo_user_id])->username : ""])->label('Кто обновил фото'); ?>
     <?= Html::label("Доски объявлений") ?>
     <?= $form->field($model,'besplatka')->checkbox(['disabled' => 'true'])->label('Бесплатка') ?>
     <?= $form->field($model,'est')->checkbox(['disabled' => 'true'])->label('EST') ?>
@@ -191,7 +189,7 @@ if($model->id != '')
     }
 }
 ?>
-
+<a href="<?php echo \yii\helpers\Url::previous(); ?>" class="btn btn-default">Отменить</a>
 <?php ActiveForm::end(); ?>
 
 <script>

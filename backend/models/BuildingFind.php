@@ -4,9 +4,9 @@ namespace backend\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\Apartment;
+use common\models\Building;
 
-class ApartmentFind extends Apartment
+class BuildingFind extends Building
 {
     public $idFrom;
     public $idTo;
@@ -24,34 +24,33 @@ class ApartmentFind extends Apartment
     public $floor_areaTo;
     public $kitchen_areaFrom;
     public $kitchen_areaTo;
-	public $date_addedFrom;
+    public $date_addedFrom;
     public $date_addedTo;
     public $date_modifiedFrom;
     public $date_modifiedTo;
-
     public $middle_floor = '0';
     public $no_mediators = '0';
     public $exchange = '0';
     public $enabled = '2';
     public $note = '0';
 
-   public function rules()
+    public function rules()
     {
         return [
-            [['idFrom', 'idTo', 'count_roomFrom', 'count_roomTo', 'priceFrom', 'priceTo', 'floorFrom', 'floorTo', 'floor_allFrom', 'floor_allTo',
-                'total_areaFrom', 'total_areaTo', 'floor_areaFrom', 'floor_areaTo', 'kitchen_areaFrom', 'kitchen_areaTo', 'middle_floor', 'no_mediators', 'exchange', 'note', 'id', 'type_object_id',
+            [['id', 'idFrom', 'idTo', 'count_roomFrom', 'count_roomTo', 'priceFrom', 'priceTo', 'floorFrom', 'floorTo', 'floor_allFrom', 'floor_allTo',
+                'total_areaFrom', 'total_areaTo', 'floor_areaFrom', 'floor_areaTo', 'kitchen_areaFrom', 'kitchen_areaTo', 'type_object_id',
                 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'region_kharkiv_admin_id', 'street_id', 'condit_id', 'mediator_id',
-                'wc_id', 'wall_material_id', 'exclusive_user_id', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+                'wc_id', 'wall_material_id', 'exclusive_user_id', 'author_id', 'update_author_id', 'update_photo_user_id', 'middle_floor', 'no_mediators', 'exchange', 'note', 'enabled'], 'integer'],
             [['number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone', 'comment', 'note', 'notesite'], 'safe'],
             [['price', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
             [['date_added', 'date_modified', 'date_modified_photo', 'date_addedFrom', 'date_addedTo', 'date_modifiedFrom', 'date_modifiedTo'], 'date']
         ];
     }
 
-   public function search()
+    public function search()
     {
-        $get = Yii::$app->request->get('ApartmentFind');
-        $query = Apartment::find();
+        $get = Yii::$app->request->get('BuildingFind');
+        $query = Building::find();
         //begin filters
         $query->andFilterWhere(['=', 'id', $get['id']]);
         $query->andFilterWhere(['>=', 'id', $get['idFrom']]);
@@ -74,25 +73,21 @@ class ApartmentFind extends Apartment
         if($get['date_addedFrom']){
             $date = explode('.', $get['date_addedFrom']);
             $date = $date[2].'-'.$date[1].'-'.$date[0]. ' 00:00:00';
-            //$query->andFilterWhere(['>=', 'date_added', $get['date_addedFrom'] . ' 00:00:00']);
             $query->andFilterWhere(['>=', 'date_added', $date]);
         }
         if($get['date_addedTo']){
             $date = explode('.', $get['date_addedTo']);
             $date = $date[2].'-'.$date[1].'-'.$date[0]. ' 23:59:59';
-            //$query->andFilterWhere(['<=', 'date_added', $get['date_addedTo'] . ' 23:59:59']);
             $query->andFilterWhere(['<=', 'date_added', $date]);
         }
         if($get['date_modifiedFrom']){
             $date = explode('.', $get['date_modifiedFrom']);
             $date = $date[2].'-'.$date[1].'-'.$date[0]. ' 00:00:00';
-            //$query->andFilterWhere(['>=', 'date_modified', $get['date_modifiedFrom'] . ' 00:00:00']);
             $query->andFilterWhere(['>=', 'date_modified', $date]);
         }
         if($get['date_modifiedTo']){
             $date = explode('.', $get['date_modifiedTo']);
             $date = $date[2].'-'.$date[1].'-'.$date[0]. ' 23:59:59';
-            //$query->andFilterWhere(['<=', 'date_modified', $get['date_modifiedTo'] . ' 23:59:59']);
             $query->andFilterWhere(['<=', 'date_modified', $date]);
         }
 
@@ -150,7 +145,7 @@ class ApartmentFind extends Apartment
         $query->orderBy(['id' => SORT_DESC]);
         return $query;
     }
-    
+
 }
 
 ?>

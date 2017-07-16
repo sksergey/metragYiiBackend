@@ -28,7 +28,8 @@
         "arogachev/yii2-excel": "^0.1.1",
         "moonlandsoft/yii2-phpexcel": "*",
         "kartik-v/yii2-export": "*",
-        "kartik-v/yii2-mpdf": "*"
+        "kartik-v/yii2-mpdf": "*",
+        "nterms/yii2-pagesize-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

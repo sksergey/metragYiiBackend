@@ -14,13 +14,13 @@ use backend\models\RegionKharkivAdmin;
 use backend\models\RegionKharkiv;
 use backend\models\Layout;
 use backend\models\TypeObject;
-use backend\models\Users;
+use backend\models\User;
 use backend\models\Street;
 use backend\models\Condit;
 use backend\models\WallMaterial;
 use backend\models\Mediator;
 
-\yii\helpers\Url::remember();
+    \yii\helpers\Url::remember();
 
 $this->title = Yii::t('app', 'Apartments');
 $this->params['breadcrumbs'][] = $this->title;
@@ -176,14 +176,14 @@ $this->params['breadcrumbs'][] = $this->title;
     [
         'attribute' => 'author_id',
         'value' =>  function ($dataProvider) {
-            return Users::findOne($dataProvider->author_id)->name;
+            return User::findOne($dataProvider->author_id)->username;
         }
     ],
     [
         'attribute' => 'exclusive_user_id',
         'label' => 'Эксклю-зив',
         'value' =>  function ($dataProvider) {
-            return Users::findOne($dataProvider->exclusive_user_id)->name;
+            return User::findOne($dataProvider->exclusive_user_id)->username;
         }
     ],
     [

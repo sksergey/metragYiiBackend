@@ -43,7 +43,6 @@ class ApartmentController extends Controller
     {
         $searchModel = new ApartmentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        //$dataProvider->pagination->pageSize  = 10;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -76,9 +75,6 @@ class ApartmentController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            /*return $this->render('create', [
-                'model' => $model,
-            ]);*/
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -136,165 +132,33 @@ class ApartmentController extends Controller
         }
     }
 
-    //-------------------------------------------------
-
     public function actionSearch()
     {
+        // fill with previous values
+        $values = Yii::$app->request->get('ApartmentFind');
         $model = new ApartmentFind();
+        $model->attributes = $values;
         return $this->render('find', ['model' => $model]);
-        /*if (Yii::$app->request->post()) {
-            //$dataProvider = $this->getSearchResult($post);
-            //return $this->render('search-result',
-            //['post' => $post, 'dataProvider' => $dataProvider]);
-            //return $this->render('apartments', ['post' => $post]);
-        } else {
-            // страница отображается первый раз
-            return $this->render('find', ['model' => $model]);
-        }
-        */
     }
-
-
-    /*public function actionSearchresult()
-    {
-        $findModel = new ApartmentFind();
-        //$dataProvider = $findModel->search(Yii::$app->request->queryParams);
-        $dataProvider = $findModel->search(Yii::$app->request->get());
-        //$findModel = new ApartmentSearch();
-        //$dataProvider = $findModel->search(Yii::$app->request->get());
-        //var_dump(Yii::$app->request->get());
-        //die;
-        //var_dump(Yii::$app->request->queryParams);
-        //die;
-        return $this->render('index', [
-            //'searchModel' => $findModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }*/
 
     public function actionSearchresult()
     {
-        $get = Yii::$app->request->get();
-        //var_dump($get);
-        //die;
-        $query = Apartment::find();
-        //begin filters
-        $query->andFilterWhere(['=', 'id', $get['ApartmentFind']['id']]);
-        $query->andFilterWhere(['>=', 'id', $get['ApartmentFind']['idFrom']]);
-        $query->andFilterWhere(['<=', 'id', $get['ApartmentFind']['idTo']]);
-        $query->andFilterWhere(['>=', 'count_room', $get['ApartmentFind']['count_roomFrom']]);
-        $query->andFilterWhere(['<=', 'count_room', $get['ApartmentFind']['count_roomTo']]);
-        $query->andFilterWhere(['>=', 'price', $get['ApartmentFind']['priceFrom']]);
-        $query->andFilterWhere(['<=', 'price', $get['ApartmentFind']['priceTo']]);
-        $query->andFilterWhere(['>=', 'floor', $get['ApartmentFind']['floorFrom']]);
-        $query->andFilterWhere(['<=', 'floor', $get['ApartmentFind']['floorTo']]);
-        $query->andFilterWhere(['>=', 'floor', $get['ApartmentFind']['floor_allFrom']]);
-        $query->andFilterWhere(['<=', 'floor', $get['ApartmentFind']['floor_allTo']]);
-        $query->andFilterWhere(['>=', 'total_area', $get['ApartmentFind']['total_areaFrom']]);
-        $query->andFilterWhere(['<=', 'total_area', $get['ApartmentFind']['total_areaTo']]);
-        $query->andFilterWhere(['>=', 'floor_area', $get['ApartmentFind']['floor_areaFrom']]);
-        $query->andFilterWhere(['<=', 'floor_area', $get['ApartmentFind']['floor_areaTo']]);
-        $query->andFilterWhere(['>=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaFrom']]);
-        $query->andFilterWhere(['<=', 'kitchen_area', $get['ApartmentFind']['kitchen_areaTo']]);
-        //TODO date filter some problem((
-        //$query->andFilterWhere(['>=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedFrom'], 'yyyy-MM-dd HH:mm:ss')]);
-        //$query->andFilterWhere(['<=', 'date_added', Yii::$app->formatter->asDateTime($get['ApartmentFind']['date_addedTo'], 'yyyy-MM-dd HH:mm:ss')]);
-
-        $query->andFilterWhere(['type_object_id' => $get['ApartmentFind']['type_object_id']]);
-        $query->andFilterWhere(['region_kharkiv_admin_id' => $get['ApartmentFind']['region_kharkiv_admin_id']]);
-        $query->andFilterWhere(['region_kharkiv_id' => $get['ApartmentFind']['region_kharkiv_id']]);
-        $query->andFilterWhere(['region_id' => $get['ApartmentFind']['region_id']]);
-        $query->andFilterWhere(['locality_id' => $get['ApartmentFind']['locality_id']]);
-        $query->andFilterWhere(['course_id' => $get['ApartmentFind']['course_id']]);
-        $query->andFilterWhere(['street_id' => $get['ApartmentFind']['street_id']]);
-        $query->andFilterWhere(['wall_material_id' => $get['ApartmentFind']['wall_material_id']]);
-        $query->andFilterWhere(['condit_id' => $get['ApartmentFind']['condit_id']]);
-        $query->andFilterWhere(['wc_id' => $get['ApartmentFind']['wc_id']]);
-        $query->andFilterWhere(['update_author_id' => $get['ApartmentFind']['update_author_id']]);
-        $query->andFilterWhere(['author_id' => $get['ApartmentFind']['author_id']]);
-        $query->andFilterWhere(['update_photo_user_id' => $get['ApartmentFind']['update_photo_user_id']]);
-        $query->andFilterWhere(['exclusive_user_id' => $get['ApartmentFind']['exclusive_user_id']]);
-        $query->andFilterWhere(['like', 'phone', $get['ApartmentFind']['phone']]);
-        //TODO this filter
-        if($get['ApartmentFind']['middle_floor'] == '2'){
-            $query->andFilterWhere(['or', 'floor = floor_all', 'floor=1']);
-        }
-        if($get['ApartmentFind']['middle_floor'] == '1'){
-            $query->andFilterWhere(['and', 'floor > 1', 'floor < floor_all']);
-        }
-
-        if($get['ApartmentFind']['no_mediators'] == '1' ){
-            $query->andWhere(['is', 'mediator_id', NULL]);
-        }
-        if($get['ApartmentFind']['no_mediators'] == '2' ){
-            $query->andWhere(['not',['mediator_id' => NULL]]);
-        }
-
-        if($get['ApartmentFind']['exchange'] == '1' ){
-            $query->andWhere(['=', 'exchange', '1']);
-        }
-        if($get['ApartmentFind']['exchange'] == '2' ){
-            $query->andWhere(['=', 'exchange', '0']);
-        }
-
-        if($get['ApartmentFind']['enabled'] == '1' ){
-            $query->andFilterWhere(['=', 'enabled', '0']);
-        }
-        if($get['ApartmentFind']['enabled'] == '2' ){
-            $query->andFilterWhere(['=', 'enabled', '1']);
-        }
-
-        if($get['ApartmentFind']['note'] == 1 ){
-            $query->andFilterWhere(['>', 'length(note)', '0']);
-        }
-        if($get['ApartmentFind']['note'] == 2 ){
-            $query->andFilterWhere(['=', 'length(note)', '0']);
-        }
-
-        $query->orderBy(['id' => SORT_DESC]);
-        //TODO phone filter
-
+        $model = new ApartmentFind();
+        $query = $model->search();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
         ]);
         return $this->render('find-result', ['dataProvider' => $dataProvider]);
-
-        //$searchModel = new ApartmentSearch();
-        return $this->render('index', [
-            //'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
-    public function andFilterWhereactionAdd()
-    {
-        $values = Yii::$app->request->post('Apartment');
-        if($values['id'] !='')
-        {
-            $model = Apartment::findOne($values['id']);
-        }
-        else
-        {
-            $model = new Apartment();
-        }
-        
-        $model->attributes = $values;
-        //$model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-        //var_dump($model->imageFiles);
-        //die;
-        if($model->save()){
-            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-            $model->upload();
-        }
-        
-        $data['id'] = $model->id;
-        //var_dump($data['id']);
-        //die;
-        $apart = Apartment::findOne($data['id']);
-        return $this->render('view', ['data' => $data, 'model' => $apart]);
+    public function actionPrint(){
+        $model = new ApartmentFind();
+        $query = $model->search();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
+        ]);
+        return $this->render('print', ['dataProvider' => $dataProvider]);
     }
 
     public function actionLinkConvertor()
@@ -353,7 +217,6 @@ class ApartmentController extends Controller
         $apartment_model->notesite = $parser_model->note;
         $images = unserialize($parser_model->image);
 
-
         if ($apartment_model->load(Yii::$app->request->post()) && $apartment_model->save()) {
             return $this->redirect(['view', 'id' => $apartment_model->id]);
         } else {
@@ -386,9 +249,6 @@ class ApartmentController extends Controller
         if ($apartment_model->load(Yii::$app->request->post()) && $apartment_model->save()) {
             return $this->redirect(['view', 'id' => $apartment_model->id]);
         } else {
-            //return $this->render('update_from_parser', [
-            //    'model' => $apartment_model
-            //]);
             return $this->render('update_from_parsercd', [
                 'model' => $apartment_model
             ]);
@@ -413,7 +273,6 @@ class ApartmentController extends Controller
         if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
         else $model['update_author_id'] = Yii::$app->user->id;
 
-        //if(!empty(UploadedFile::getInstances($model, 'imageFiles'))){ err WTF?
         if(UploadedFile::getInstances($model, 'imageFiles')){
             $model['update_photo_user_id'] = Yii::$app->user->id;
         }
@@ -432,9 +291,5 @@ class ApartmentController extends Controller
         return $this->render('view', ['data' => $data, 'model' => $apart]);
     }
 
-    public function actionPrint(){
-        var_dump($_COOKIE);
-        $data = $_SESSION['apartments'];
-        return $this->render('print', ['data' => $data]);
-    }
+
 }

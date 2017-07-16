@@ -6,16 +6,12 @@ use yii\bootstrap\Html;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\Locality;
-use backend\models\Layout;
 use backend\models\RegionKharkiv;
 use backend\models\Region;
 use backend\models\Street;
 use backend\models\Course;
-use backend\models\WallMaterial;
 use backend\models\Condit;
-use backend\models\Wc;
-use backend\models\Users;
-use backend\models\Mediator;
+use backend\models\User;
 use backend\models\Metro;
 use backend\models\SourceInfo;
 use backend\models\Addsite;
@@ -47,17 +43,17 @@ use yii\helpers\Url;
         <? if($model->id == null) $model->city_or_region = 0; ?>
 		<?= $form->field($model,'city_or_region',['inline' => true, 'template' => '{input}'])->radiolist(['0' => Yii::t('app', 'Kharkiv'), '1' => Yii::t('app', 'Region')])->label(false); ?>
 
-		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков'); ?>
+		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков', ['class' => 'required']); ?>
 		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
-    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков'); ?>
+    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков', ['class' => 'required']); ?>
 		<?= $form->field($model, 'metro_id')->dropdownList(
     		Metro::find()->select(['name', 'metro_id'])->orderby('name')->indexBy('metro_id')->column(),['prompt'=>'Выберите станцию метро...'])->label('Метро'); ?>
 		
 		<?= $form->field($model, 'locality_id')->dropdownList(
-			Locality::find()->select(['name', 'locality_id'])->orderby('name')->indexBy('locality_id')->column(),['prompt'=>'Выберите населенный пункт...'])->label('Населенный пункт'); ?>
+			Locality::find()->select(['name', 'locality_id'])->orderby('name')->indexBy('locality_id')->column(),['prompt'=>'Выберите населенный пункт...'])->label('Населенный пункт', ['class' => 'required']); ?>
 		<?= $form->field($model, 'course_id')->dropdownList(
-    		Course::find()->select(['name', 'course_id'])->orderby('name')->indexBy('course_id')->column(),['prompt'=>'Выберите направление...'])->label('Направление'); ?>
-		<?= $form->field($model, 'region_id')->dropdownList(Region::find()->select(['name', 'region_id'])->orderby('name')->indexBy('region_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Область'); ?>
+    		Course::find()->select(['name', 'course_id'])->orderby('name')->indexBy('course_id')->column(),['prompt'=>'Выберите направление...'])->label('Направление', ['class' => 'required']); ?>
+		<?= $form->field($model, 'region_id')->dropdownList(Region::find()->select(['name', 'region_id'])->orderby('name')->indexBy('region_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Область', ['class' => 'required']); ?>
     	
 		<?= $form->field($model, 'street_id')->dropdownList(
     		Street::find()->select(['name', 'street_id'])->orderby('name')->indexBy('street_id')->column(),['prompt'=>'Выберите улицу...'])->label('Улица'); ?>
@@ -69,7 +65,7 @@ use yii\helpers\Url;
         <?= $form->field($model,'price')->textInput()->label('Цена'); ?>
 		<?= $form->field($model,'price_note')->textInput()->label('Примечание к оплате'); ?>
 		<?= $form->field($model, 'exclusive_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
+    		User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
     	<?= $form->field($model,'landmark')->textInput()->label('Ориентир'); ?>
 		<?= $form->field($model,'comment')->textInput()->label('Причина удаления/восстановления'); ?>
 		<?= $form->field($model, 'condit_id')->dropdownList(
@@ -92,19 +88,15 @@ use yii\helpers\Url;
         <?= $form->field($model,'garage')->checkbox()->label('Гараж') ?>
 		<?= $form->field($model,'phone_line')->checkbox()->label('Телефонная линия') ?>
 
-
-
-
-
         <?= $form->field($model,'phone_site')->textInput()->label('Телефон для сайта'); ?>
 		<?= $form->field($model,'email_site')->textInput()->label('E-mail для сайта'); ?>
 		
 		<?= $form->field($model, 'author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
         <?= $form->field($model, 'update_author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
     	<?= $form->field($model, 'update_photo_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
         <?= Html::label("Доски объявлений") ?>
         <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
         <?= $form->field($model,'est')->checkbox()->label('EST') ?>
@@ -178,6 +170,7 @@ use yii\helpers\Url;
 
 	<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']);?>
     <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+    <a href="<?php echo \yii\helpers\Url::previous(); ?>" class="btn btn-default">Отменить</a>
     <?
         if($model->id != '')
         {

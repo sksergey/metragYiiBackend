@@ -63,7 +63,6 @@ class ParsercdSearch extends Parsercd
             'region_kharkiv_id' => $this->region_kharkiv_id,
             'street_id' => $this->street_id,
             'metro_id' => $this->metro_id,
-            'date' => $this->date,
             'type_object_id' => $this->type_object_id,
             'count_room' => $this->count_room,
             'floor' => $this->floor,
@@ -77,6 +76,8 @@ class ParsercdSearch extends Parsercd
 
         $query->andFilterWhere(['like', 'link1', $this->link1])
             ->andFilterWhere(['like', 'link2', $this->link2])
+            ->andFilterWhere(['like', 'link2', $this->link2])
+            ->andFilterWhere(['like', 'date', $this->date])
             ->andFilterWhere(['like', 'phone', $this->phone])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'note', $this->note])

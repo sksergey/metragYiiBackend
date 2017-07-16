@@ -1,12 +1,11 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 //use yii\widgets\ActiveForm;
 use yii\bootstrap\ActiveForm;
 //use yii\jui\DatePicker;
 use kartik\date\DatePicker;
 
-use common\models\Apartment;
-use backend\models\ApartmentFind;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\Locality;
@@ -17,9 +16,7 @@ use backend\models\Course;
 use backend\models\WallMaterial;
 use backend\models\Condit;
 use backend\models\Wc;
-use backend\models\Users;
-use backend\models\UserType;
-
+use backend\models\User;
 ?>
 <?php \yii\helpers\Url::remember(); ?>
 <?
@@ -41,17 +38,21 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="pull-right">
             <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
-            <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+            <?//= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+            <a href="<?= Url::base(true);?>/apartment/search" class="btn btn-default">Сбросить</a>
         </div>
         <div class="pull-right">
             <?= $form->field($model,'phone', [ 'labelOptions' => ['class' => 'header-search']])->textInput()->label(\Yii::t('yii','Phone')); ?>
+        </div>
+        <div class="pull-right">
+            <?= $form->field($model, 'id', [ 'labelOptions' => ['class' => 'header-search']])->textInput()->label('ID'); ?>
         </div>
 
 
     </div>
 
     <div class="container-fluid">
-    <?= $form->field($model, 'id')->hiddenInput()->label(false); ?>
+    <?//= $form->field($model, 'id')->hiddenInput()->label(false); ?>
 
     <?$template = "<div class=\"wrap-find\"><div class=\"col-lg-2 padding-null\">{label}</div>\n<div class=\"col-lg-10 find-input\">{input}</div>\n</div>" ?>
         
@@ -113,29 +114,63 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => $template, 'labelOptions' => ['class' => '']])->textInput()->label(\Yii::t('yii','to')); ?>
             </div>
             <? $template_date = "<div class=\"wrap-find\"><div class=\"col-lg-1 padding-null\">{label}</div>\n<div class=\"col-lg-11 find-input\">{input}</div>\n</div>"?>
-            <div class="col-xs-6 col-sm-4 col-md-3 ">
+
+        <div class="col-xs-6 col-sm-3 col-md-2 ">
            <label for="" class="from-to-label">Дата доб</label>
            <?= $form->field($model, 'date_addedFrom', [
                    'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
     'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
     'type' => DatePicker::TYPE_COMPONENT_APPEND,
+    'pickerButton' => false,
     'pluginOptions' => [
         'autoclose'=>true,
-        'format' => 'yyyy-mm-dd',
+        //'format' => 'yyyy-mm-dd',
+        'format' => 'dd.mm.yyyy',
         'todayHighlight' => true,
     ]
-])->label(\Yii::t('yii','from')); ?>    
+])->label(\Yii::t('yii','from')); ?>
            <?= $form->field($model, 'date_addedTo', [
                    'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
     'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
     'type' => DatePicker::TYPE_COMPONENT_APPEND,
+    'pickerButton' => false,
     'pluginOptions' => [
         'autoclose'=>true,
-        'format' => 'yyyy-mm-dd',
+        //'format' => 'yyyy-mm-dd',
+        'format' => 'dd.mm.yyyy',
         'todayHighlight' => true,
     ]
-])->label(\Yii::t('yii','to')); ?>  
+])->label(\Yii::t('yii','to')); ?>
            </div>
+
+        <div class="col-xs-6 col-sm-3 col-md-2 ">
+            <label for="" class="from-to-label">Дата ДПИ</label>
+            <?= $form->field($model, 'date_modifiedFrom', [
+                'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                'pickerButton' => false,
+                'pluginOptions' => [
+                    'autoclose'=>true,
+                    //'format' => 'yyyy-mm-dd',
+                    'format' => 'dd.mm.yyyy',
+                    'todayHighlight' => true,
+                ]
+            ])->label(\Yii::t('yii','from')); ?>
+            <?= $form->field($model, 'date_modifiedTo', [
+                'template' => $template_date, 'labelOptions' => ['class' => '']])->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => \Yii::t('yii','Enter date ...')],
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                'pickerButton' => false,
+                'pluginOptions' => [
+                    'autoclose'=>true,
+                    //'format' => 'yyyy-mm-dd',
+                    'format' => 'dd.mm.yyyy',
+                    'todayHighlight' => true,
+                ]
+            ])->label(\Yii::t('yii','to')); ?>
+        </div>
+
 <?
     /*        echo DatePicker::widget([
     'name' => 'dp_3',
@@ -232,28 +267,28 @@ $this->params['breadcrumbs'][] = $this->title;
     <?
         echo $form->field($model, 'author_id',[
             'template' => $scrollbox_template, 'labelOptions' => ['class' => '']])->checkboxList(
-        Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column())->label('Автор');
+        User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column())->label('Автор');
     ?>
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2">
     <?
         echo $form->field($model, 'update_author_id',[
             'template' => $scrollbox_template, 'labelOptions' => ['class' => '']])->checkboxList(
-        Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column())->label('Изменил дпи');
+        User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column())->label('Изменил дпи');
     ?>
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2">
     <?
         echo $form->field($model, 'update_photo_user_id',[
             'template' => $scrollbox_template, 'labelOptions' => ['class' => '']])->checkboxList(
-        Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column())->label(\Yii::t('yii', '(Кто обновил фото)'));
+        User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column())->label(\Yii::t('yii', '(Кто обновил фото)'));
     ?>
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2">    
     <?
         echo $form->field($model, 'exclusive_user_id',[
             'template' => $scrollbox_template, 'labelOptions' => ['class' => '']])->checkboxList(
-        Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column())->label('Экслюзив');
+        User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column())->label('Экслюзив');
     ?>
         </div>
     

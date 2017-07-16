@@ -8,7 +8,7 @@
 
 $this->title = Yii::t('yii', 'Metrag Admin');
 ?>
-<div class="site-index" style="width: 20%">
+<div class="site-index" style="width: 30%">
 
     <?php $form = ActiveForm::begin(); ?>
 

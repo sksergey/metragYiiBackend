@@ -76,12 +76,28 @@ class Building extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_object_id', 'count_room', 'floor', 'floor_all', 'city_or_region', 'street_id', 'condit_id', 'source_info_id', 'price', 'phone', 'total_area', 'floor_area', 'kitchen_area', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'enabled'], 'required'],
-            [['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'developer_id', 'condit_id', 'source_info_id', 'mediator_id', 'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['type_object_id', 'count_room', 'floor', 'floor_all', 'city_or_region', 'street_id', 'price', 'condit_id', 'source_info_id', 'wc_id',
+                'wall_material_id', 'total_area', 'floor_area', 'kitchen_area', 'count_balcony', 'count_balcony_glazed', 'phone', 'enabled'], 'required'],
+            [['type_object_id', 'count_room', 'layout_id', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id',
+                'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'exchange', 'developer_id', 'condit_id', 'source_info_id', 'mediator_id',
+                'metro_id', 'wc_id', 'wall_material_id', 'count_balcony', 'count_balcony_glazed', 'exclusive_user_id', 'phone_line', 'bath',
+                'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price', 'price_square_meter', 'total_area', 'floor_area', 'kitchen_area'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
             [['date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['number_building', 'corps', 'number_apartment', 'exchange_formula', 'landmark', 'phone'], 'string', 'max' => 255],
+            [['region_kharkiv_admin_id', 'region_kharkiv_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 0;
+            }, 'whenClient' => "function(attribute, value) {
+                console.log($(\"input[name='Building[city_or_region]']:checked\").val());
+                return $(\"input[name='Building[city_or_region]']:checked\").val() == 0;
+            }"],
+            [['locality_id', 'course_id', 'region_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 1;
+            }, 'whenClient' => "function(attribute, value) {
+                    console.log($(\"input[name='Building[city_or_region]']:checked\").val());
+                    return $(\"input[name='Building[city_or_region]']:checked\").val() == 1;
+                }"],
         ];
     }
 

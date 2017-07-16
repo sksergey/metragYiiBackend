@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
+use backend\models\HouseFind;
 /**
  * HouseController implements the CRUD actions for House model.
  */
@@ -53,7 +54,7 @@ class HouseController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $model->getResouseBoards('apartment');
+        $model->getResouseBoards('house');
         return $this->render('view', [
             'model' => $model,
         ]);
@@ -71,9 +72,6 @@ class HouseController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            /*return $this->render('create', [
-                'model' => $model,
-            ]);*/
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -89,7 +87,7 @@ class HouseController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->getResouseBoards('apartment');
+        $model->getResouseBoards('house');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //$model->setResourseBoards();
@@ -129,6 +127,35 @@ class HouseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionSearch()
+    {
+        // fill with previous values
+        $values = Yii::$app->request->get('ApartmentFind');
+        $model = new HouseFind();
+        $model->attributes = $values;
+        return $this->render('find', ['model' => $model]);
+    }
+
+    public function actionSearchresult()
+    {
+        $model = new HouseFind();
+        $query = $model->search();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        return $this->render('find-result', ['dataProvider' => $dataProvider]);
+    }
+
+    public function actionPrint(){
+        $model = new HouseFind();
+        $query = $model->search();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
+        ]);
+        return $this->render('print', ['dataProvider' => $dataProvider]);
     }
 
     public function actionLinkConvertor()
@@ -185,7 +212,6 @@ class HouseController extends Controller
         if(!$model['author_id']) $model['author_id'] = Yii::$app->user->id;
         else $model['update_author_id'] = Yii::$app->user->id;
 
-        //if(!empty(UploadedFile::getInstances($model, 'imageFiles'))){ err WTF?
         if(UploadedFile::getInstances($model, 'imageFiles')){
             $model['update_photo_user_id'] = Yii::$app->user->id;
         }

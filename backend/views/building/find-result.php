@@ -1,7 +1,7 @@
 <?
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\data\ActiveDataProvider;
+
 use kartik\export\ExportMenu;
 //use kartik\grid\GridView;
 use yii\grid\GridView;
@@ -17,7 +17,7 @@ use backend\models\WallMaterial;
 use backend\models\Mediator;
 ?>
 <?php
-$url = explode('/admin/apartment/searchresult', Url::current());
+$url = explode('/admin/building/searchresult', Url::current());
 $get = $url[1];
 $currentParams = Yii::$app->getRequest()->getQueryParams();
 ?>
@@ -28,7 +28,7 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
         //['class' => 'yii\grid\SerialColumn'],
         [
             'class' => 'yii\grid\ActionColumn',
-            'controller' => 'apartment',
+            'controller' => 'building',
             'buttons' => [
                 'update' => function ($url,$model) {
                     return Html::a(
@@ -36,8 +36,8 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
                         $url,
                         [
                             'title' => Yii::t('app', 'Edit'),
-                                                              
-                ]);
+
+                        ]);
                 },
 
             ],
@@ -128,12 +128,19 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
         ],
         'price',
         [
+            'attribute' => 'price_square_meter',
+            'value' =>  function ($dataProvider) {
+                return (int)$dataProvider->price_square_meter;
+            },
+            'contentOptions' => ['style' => 'max-width: 30px; overflow: hidden' ],
+        ],
+        [
             'format' => 'html',
             'attribute' => 'phone',
             'value' =>  function ($dataProvider) {
-               //$str = str_replace(',', ',<br>', $dataProvider->phone);
-                $str = strpos($dataProvider->phone, ",") === false ? $dataProvider->phone : 
-                       substr($dataProvider->phone,0,strpos($dataProvider->phone, ","));
+                //$str = str_replace(',', ',<br>', $dataProvider->phone);
+                $str = strpos($dataProvider->phone, ",") === false ? $dataProvider->phone :
+                    substr($dataProvider->phone,0,strpos($dataProvider->phone, ","));
 
                 //$str = (($pos=strpos($dataProvider->phone, ",")==false)?strlen($dataProvider->phone):$pos);
                 return $str/*$dataProvider->phone*/;
@@ -213,7 +220,7 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
             'value' =>  function ($dataProvider) {
                 //$str = str_replace(' ', ' <br>', $dataProvider->date_added);
                 //return /*$str*/$dataProvider->date_added;
-                 if($dataProvider->date_added=="0000-00-00 00:00:00")
+                if($dataProvider->date_added=="0000-00-00 00:00:00")
                     return "";
                 return Yii::$app->formatter->asDateTime($dataProvider->date_added, 'dd.MM.yyyy');
             },
@@ -270,9 +277,9 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
             ],
         ]);
         ?>
-        
-        <a href="<?= Url::base(true);?>/apartment/search<?= $get;?>" class="btn btn-default">Вернуться к поиску</a>
-        <a href="<?= Url::base(true);?>/apartment/print<?= $get;?>" class="btn btn-success" style="float: right;" target="_blank">Печать</a>
+
+        <a href="<?= Url::base(true);?>/building/search<?= $get;?>" class="btn btn-default">Вернуться к поиску</a>
+        <a href="<?= Url::base(true);?>/building/print<?= $get;?>" class="btn btn-success" style="float: right;" target="_blank">Печать</a>
 
     </div>
 
@@ -295,11 +302,10 @@ $currentParams = Yii::$app->getRequest()->getQueryParams();
         ],
         'columns' => $gridColumns,
         'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
-
     ]);
     ?>
 
-    <?php \yii\helpers\Url::remember(); ?>
+ <?php \yii\helpers\Url::remember(); ?>
 </div>
 
 

@@ -14,11 +14,11 @@ use backend\models\Course;
 use backend\models\WallMaterial;
 use backend\models\Condit;
 use backend\models\Wc;
-use backend\models\Users;
 use backend\models\Mediator;
 use backend\models\Metro;
 use backend\models\SourceInfo;
 use backend\models\Addsite;
+use backend\models\User;
 
 use kartik\file\FileInput;
 use yii\helpers\Url;
@@ -48,7 +48,7 @@ use yii\helpers\Url;
 
 		<?= $form->field($model, 'region_kharkiv_admin_id')->dropdownList(RegionKharkivAdmin::find()->select(['name', 'region_kharkiv_admin_id'])->orderby('name')->indexBy('region_kharkiv_admin_id')->column(),['prompt'=>'Выберите район...'])->label('РайонАдмин/Харьков', ['class' => 'required']); ?>
 		<?= $form->field($model, 'region_kharkiv_id')->dropdownList(
-    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков',['class' => 'required']); ?>
+    		RegionKharkiv::find()->select(['name', 'region_kharkiv_id'])->orderby('name')->indexBy('region_kharkiv_id')->column(),['prompt'=>'Выберите район...'])->label('Район/Харьков', ['class' => 'required']); ?>
 		<?= $form->field($model, 'metro_id')->dropdownList(
     		Metro::find()->select(['name', 'metro_id'])->orderby('name')->indexBy('metro_id')->column(),['prompt'=>'Выберите станцию метро...'])->label('Метро'); ?>
 		
@@ -67,7 +67,7 @@ use yii\helpers\Url;
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model,'price')->textInput()->label('Цена'); ?>
 		<?= $form->field($model, 'exclusive_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
+    		User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
     	<?= $form->field($model, 'mediator_id')->dropdownList(
     		Mediator::find()->select(['name', 'mediator_id'])->orderby('name')->indexBy('mediator_id')->column(),['prompt'=>'Выберите посредника...'])->label('Посредник'); ?>
 		<?= $form->field($model,'landmark')->textInput()->label('Ориентир'); ?>
@@ -95,11 +95,11 @@ use yii\helpers\Url;
 		<?= $form->field($model,'count_balcony')->textInput()->label('Количество балконов'); ?>
 		<?= $form->field($model,'count_balcony_glazed')->textInput()->label('Застекленных балконов'); ?>
 		<?= $form->field($model, 'author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
         <?= $form->field($model, 'update_author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
     	<?= $form->field($model, 'update_photo_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
         <?= Html::label("Доски объявлений") ?>    
         <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
         <?= $form->field($model,'est')->checkbox()->label('EST') ?>

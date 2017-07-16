@@ -3,7 +3,6 @@
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
-use common\models\Building;
 use backend\models\RegionKharkivAdmin;
 use backend\models\TypeObject;
 use backend\models\Locality;
@@ -15,7 +14,7 @@ use backend\models\Course;
 use backend\models\WallMaterial;
 use backend\models\Condit;
 use backend\models\Wc;
-use backend\models\Users;
+use backend\models\User;
 use backend\models\Mediator;
 use backend\models\Metro;
 use backend\models\SourceInfo;
@@ -70,7 +69,7 @@ use yii\helpers\Url;
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model,'price')->textInput()->label('Цена'); ?>
 		<?= $form->field($model, 'exclusive_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->orderby('name')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
+    		User::find()->select(['username', 'id'])->orderby('username')->indexBy('id')->column(),['prompt'=>'Выберите пользователя...'])->label('Экслюзив'); ?>
     	<?= $form->field($model, 'mediator_id')->dropdownList(
     		Mediator::find()->select(['name', 'mediator_id'])->orderby('name')->indexBy('mediator_id')->column(),['prompt'=>'Выберите посредника...'])->label('Посредник'); ?>
 		<?= $form->field($model,'landmark')->textInput()->label('Ориентир'); ?>
@@ -101,11 +100,11 @@ use yii\helpers\Url;
 		<?= $form->field($model,'count_balcony')->textInput()->label('Количество балконов'); ?>
 		<?= $form->field($model,'count_balcony_glazed')->textInput()->label('Застекленных балконов'); ?>
 		<?= $form->field($model, 'author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->author_id])->column(),['disabled' => 'true'])->label('Автор'); ?>
         <?= $form->field($model, 'update_author_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_author_id])->column(),['disabled' => 'true'])->label('Изменил дпи'); ?>
     	<?= $form->field($model, 'update_photo_user_id')->dropdownList(
-    		Users::find()->select(['name', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
+    		User::find()->select(['username', 'id'])->where(['id'=> $model->update_photo_user_id])->column(),['disabled' => 'true'])->label('Кто обновил фото'); ?>
 		<?= Html::label("Доски объявлений") ?>
         <?= $form->field($model,'besplatka')->checkbox()->label('Бесплатка') ?>
         <?= $form->field($model,'est')->checkbox()->label('EST') ?>
@@ -114,7 +113,6 @@ use yii\helpers\Url;
 	<div class="col-xs-12 col-sm-3 col-md-3 ">
 		<?= $form->field($model, 'note')->textarea(['rows'=>6])->label('Заметки'); ?>
 		<?= $form->field($model, 'notesite')->textarea(['rows'=>6])->label('Информация для показа на сайте'); ?>
-        <?//= $form->field($model, 'phone')->listBox(Apartment::getPhonesArr($model->phone))->label('Телефоны'); ?>
         <?= Html::button(Yii::t('app', 'Add'), ['id' => 'add_phone']) ?>
         <?= Html::button(Yii::t('app', 'Edit'), ['id' => 'edit_phone']) ?>
         <?= Html::button(Yii::t('app', 'Delete'), ['id' => 'delete_phone']) ?>
@@ -179,6 +177,7 @@ use yii\helpers\Url;
 
 	<?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']);?>
     <?= Html::resetButton('Сбросить', ['class' => 'btn btn-default']) ?>
+    <a href="<?php echo \yii\helpers\Url::previous(); ?>" class="btn btn-default">Отменить</a>
     <?
         if($model->id != '')
         {

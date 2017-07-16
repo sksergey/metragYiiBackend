@@ -19,7 +19,7 @@ use backend\models\WallMaterial;
 use backend\models\Condit;
 use backend\models\Wc;
 use backend\models\Metro;
-use backend\models\Users;
+use backend\models\User;
 use backend\models\UserType;
 use backend\models\Layout;
 use backend\models\SourceInfo;
@@ -299,22 +299,22 @@ class RealtyBehave extends Behavior
 
     public function getexclusiveUser()
     {
-        return Users::findOne($this->owner->exclusive_user_id);
+        return User::findOne($this->owner->exclusive_user_id);
     }
 
     public function getauthor()
     {
-        return Users::findOne($this->owner->author_id);
+        return User::findOne($this->owner->author_id);
     }
 
     public function getupdateAuthor()
     {
-        return Users::findOne($this->owner->update_author_id);
+        return User::findOne($this->owner->update_author_id);
     }
 
     public function getupdatePhotoUser()
     {
-        return Users::findOne($this->owner->update_photo_user_id);
+        return User::findOne($this->owner->update_photo_user_id);
     }
 
     public function getdeveloper()

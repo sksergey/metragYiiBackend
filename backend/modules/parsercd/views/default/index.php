@@ -111,7 +111,7 @@ use backend\models\Metro;
             }
         ],
         //'link2:ntext',
-        // 'date',
+        'date',
         // 'type_object_id',
         'count_room',
         [

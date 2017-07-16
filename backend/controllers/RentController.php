@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use app\modules\olxparser\models\Parser;
+use backend\models\RentFind;
+use yii\data\ActiveDataProvider;
 
 /**
  * RentController implements the CRUD actions for Rent model.
@@ -132,6 +134,25 @@ class RentController extends Controller
         }
     }
 
+    public function actionSearch()
+    {
+        // fill with previous values
+        $values = Yii::$app->request->get('RentFind');
+        $model = new RentFind();
+        $model->attributes = $values;
+        return $this->render('find', ['model' => $model]);
+    }
+
+    public function actionSearchresult()
+    {
+        $model = new RentFind();
+        $query = $model->search();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        return $this->render('find-result', ['dataProvider' => $dataProvider]);
+    }
+
     public function actionLinkConvertor()
     {
         $count = Rent::find()->count();
@@ -203,5 +224,15 @@ class RentController extends Controller
         $apart = Rent::findOne($data['id']);
         $apart->getResouseBoards('rent');
         return $this->render('view', ['data' => $data, 'model' => $apart]);
+    }
+
+    public function actionPrint(){
+        $model = new RentFind();
+        $query = $model->search();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
+        ]);
+        return $this->render('print', ['dataProvider' => $dataProvider]);
     }
 }

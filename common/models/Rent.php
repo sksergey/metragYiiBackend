@@ -72,12 +72,28 @@ class Rent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_object_id', 'count_room', 'floor', 'floor_all', 'city_or_region', 'street_id', 'condit_id', 'source_info_id', 'price', 'phone', 'enabled'], 'required'],
-            [['type_object_id', 'count_room', 'count_room_rent', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id', 'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'condit_id', 'source_info_id', 'comfort_id', 'metro_id', 'exclusive_user_id', 'tv', 'refrigerator', 'entry', 'washer', 'furniture', 'conditioner', 'garage', 'phone_line', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
+            [['type_object_id', 'count_room', 'floor', 'floor_all', 'city_or_region', 'street_id', 'condit_id',
+                'source_info_id', 'price', 'phone', 'enabled'], 'required'],
+            [['type_object_id', 'count_room', 'count_room_rent', 'floor', 'floor_all', 'city_or_region', 'region_kharkiv_admin_id',
+                'locality_id', 'course_id', 'region_id', 'region_kharkiv_id', 'street_id', 'condit_id', 'source_info_id', 'comfort_id',
+                'metro_id', 'exclusive_user_id', 'tv', 'refrigerator', 'entry', 'washer', 'furniture', 'conditioner', 'garage',
+                'phone_line', 'author_id', 'update_author_id', 'update_photo_user_id', 'enabled'], 'integer'],
             [['price'], 'number'],
             [['comment', 'note', 'notesite'], 'string'],
             [['date_added', 'date_modified', 'date_modified_photo'], 'safe'],
             [['number_building', 'corps', 'number_apartment', 'landmark', 'price_note', 'phone', 'phone_site', 'email_site'], 'string', 'max' => 255],
+            [['region_kharkiv_admin_id', 'region_kharkiv_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 0;
+            }, 'whenClient' => "function(attribute, value) {
+                console.log($(\"input[name='Rent[city_or_region]']:checked\").val());
+                return $(\"input[name='Rent[city_or_region]']:checked\").val() == 0;
+            }"],
+            [['locality_id', 'course_id', 'region_id'], 'required', 'when' => function ($model) {
+                return $model->city_or_region == 1;
+            }, 'whenClient' => "function(attribute, value) {
+                    console.log($(\"input[name='Rent[city_or_region]']:checked\").val());
+                    return $(\"input[name='Rent[city_or_region]']:checked\").val() == 1;
+                }"],
         ];
     }
 
